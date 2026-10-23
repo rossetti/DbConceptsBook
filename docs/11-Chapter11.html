@@ -1,0 +1,3036 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>11&nbsp; Data Warehousing and Decision Support – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./12-Chapter12.html" rel="next">
+<link href="./10-Chapter10.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-Chapter10.html">Databases in Practice</a></li><li class="breadcrumb-item"><a href="./11-Chapter11.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-dw-oltp-olap" id="toc-sec-dw-oltp-olap" class="nav-link active" data-scroll-target="#sec-dw-oltp-olap"><span class="header-section-number">11.1</span> Operational and analytical processing</a></li>
+  <li><a href="#sec-dw-star" id="toc-sec-dw-star" class="nav-link" data-scroll-target="#sec-dw-star"><span class="header-section-number">11.2</span> Dimensional modeling</a></li>
+  <li><a href="#sec-dw-etl" id="toc-sec-dw-etl" class="nav-link" data-scroll-target="#sec-dw-etl"><span class="header-section-number">11.3</span> Extract, transform, and load</a></li>
+  <li><a href="#sec-dw-scd" id="toc-sec-dw-scd" class="nav-link" data-scroll-target="#sec-dw-scd"><span class="header-section-number">11.4</span> Slowly changing dimensions</a></li>
+  <li><a href="#sec-dw-olap" id="toc-sec-dw-olap" class="nav-link" data-scroll-target="#sec-dw-olap"><span class="header-section-number">11.5</span> Multidimensional queries</a></li>
+  <li><a href="#sec-warehousing-summary" id="toc-sec-warehousing-summary" class="nav-link" data-scroll-target="#sec-warehousing-summary"><span class="header-section-number">11.6</span> Summary</a></li>
+  <li><a href="#sec-warehousing-exercises" id="toc-sec-warehousing-exercises" class="nav-link" data-scroll-target="#sec-warehousing-exercises"><span class="header-section-number">11.7</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-Chapter10.html">Databases in Practice</a></li><li class="breadcrumb-item"><a href="./11-Chapter11.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-warehousing" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled" title="Learning objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After reading this chapter you should be able to:</p>
+<ul>
+<li>contrast an operational database with a data warehouse, and say what each is designed for</li>
+<li>design a star schema by choosing a business process, a grain, dimensions, and facts</li>
+<li>explain why a warehouse’s dimension tables are denormalized, and when a measure can be summed</li>
+<li>describe an extract, transform, and load process, and load a warehouse incrementally</li>
+<li>keep or overwrite a dimension’s history when it changes</li>
+<li>write roll-up, drill-down, slice, and dice queries with ROLLUP, CUBE, and GROUPING SETS</li>
+</ul>
+</div>
+</div>
+<p>Every database in this book so far has been designed to <em>run</em> the business: to take an order, ship it, inspect a lot. Such a database answers the questions of the moment well, which order is late, what is in stock, and it answers the questions of a manager poorly. How did sales of hand trucks compare with garden carts, quarter by quarter, in each sales region? The answer is in the operational tables, spread across a year of orders, several schemas, and attributes that no table stores.</p>
+<p>This chapter presents the other kind of database, the <strong>data warehouse</strong>, which is designed to <em>analyze</em> the business. It is built from the operational databases, holds their history, and is shaped for the questions managers and engineers ask of history. HG Industries’ warehouse is the <code>sales</code> schema of stage S, which the chapter designs, loads, and queries.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Following along">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Following along
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The warehouse is stage S (<code>code/sql/load/through-s.sql</code>), built from the operational data and year of history of stage G. Its script, <code>code/sql/sales/s-star-schema.sql</code>, is the design this chapter arrives at and the load process it reads.</p>
+</div>
+</div>
+<section id="sec-dw-oltp-olap" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="sec-dw-oltp-olap"><span class="header-section-number">11.1</span> Operational and analytical processing</h2>
+<p>This section contrasts the two uses of a database, and says what a data warehouse is.</p>
+<p>The work of an operational database is called <strong>online transaction processing</strong> (OLTP): many short transactions, each reading or changing a few rows, run by the clerks and programs that operate the business, against the current state of the data. The work of analysis is called <strong>online analytical processing</strong> (OLAP): fewer, longer queries, each reading many rows, usually of history, and summarizing them for someone who must decide something. The two make opposite demands on a design.</p>
+<p>Consider the sales manager’s question above, for the last two quarters of the history. The operational tables of stage G can answer it, as chapter 4’s queries did, but the query must join three tables and derive a product line that no table stores, from the pattern of the product number:</p>
+<div id="tbl-dw-oltp-question" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="g">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-oltp-question-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.1: Sales by Quarter and Product Line, from the Operational Tables
+</figcaption>
+<div aria-describedby="tbl-dw-oltp-question-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> line <span class="kw">AS</span> (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="fu">EXTRACT</span>(<span class="dt">YEAR</span> <span class="kw">FROM</span> o.order_date) <span class="kw">AS</span> order_year,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">EXTRACT</span>(QUARTER <span class="kw">FROM</span> o.order_date)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>           <span class="kw">AS</span> order_quarter,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>         <span class="cf">CASE</span> <span class="cf">WHEN</span> p.product_number <span class="kw">LIKE</span> <span class="st">'HT-%'</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              <span class="cf">THEN</span> <span class="st">'Hand trucks'</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>              <span class="cf">ELSE</span> <span class="st">'Garden carts'</span> <span class="cf">END</span> <span class="kw">AS</span> product_line,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         l.quantity <span class="op">*</span> l.unit_price <span class="kw">AS</span> amount</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> o.customer_order_pk <span class="op">=</span> l.customer_order_fk</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> o.order_date <span class="op">&gt;=</span> <span class="dt">DATE</span> <span class="st">'2026-10-01'</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_year, order_quarter, product_line,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(amount) <span class="kw">AS</span> sales</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> line</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> order_year, order_quarter, product_line</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> order_year, order_quarter, product_line;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+order_year
+</th>
+<th style="text-align:right;">
+order_quarter
+</th>
+<th style="text-align:left;">
+product_line
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:right;">
+213852.52
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:right;">
+225600.08
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:right;">
+187203.83
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:right;">
+140291.17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The same question, asked of the warehouse, names what it wants directly: the calendar year and quarter from a date dimension, the product line from a product dimension, and the sales amount from a table of facts, with no derivation:</p>
+<div id="tbl-dw-olap-question" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-olap-question-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.2: The Same Sales, from the Warehouse
+</figcaption>
+<div aria-describedby="tbl-dw-olap-question-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> d.calendar_year, d.calendar_quarter,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>       p.product_line, <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> p</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_dim_pk <span class="op">=</span> f.product_dim_fk</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> d.full_date <span class="op">&gt;=</span> <span class="dt">DATE</span> <span class="st">'2026-10-01'</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> d.calendar_year, d.calendar_quarter,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>         p.product_line</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> d.calendar_year, d.calendar_quarter,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>         p.product_line;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+calendar_year
+</th>
+<th style="text-align:right;">
+calendar_quarter
+</th>
+<th style="text-align:left;">
+product_line
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:right;">
+213852.52
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:right;">
+225600.08
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:right;">
+187203.83
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:right;">
+140291.17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-dw-oltp-question" class="quarto-xref">Table&nbsp;<span>11.1</span></a> and <a href="#tbl-dw-olap-question" class="quarto-xref">Table&nbsp;<span>11.2</span></a> agree to the cent, as they must, since the warehouse was loaded from the same order lines. The difference is in the asking. The warehouse’s query needs no knowledge of how the business numbers its products or dates its orders; what an analyst groups by is a column of a dimension, named for what it means. And a product line decided in one place, when the warehouse is loaded, is the same in every report, rather than re-derived, perhaps differently, in each query. <a href="#tbl-dw-oltp-olap" class="quarto-xref">Table&nbsp;<span>11.3</span></a> sets the two kinds of processing side by side.</p>
+<div id="tbl-dw-oltp-olap" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-oltp-olap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.3: Operational and Analytical Processing Compared
+</figcaption>
+<div aria-describedby="tbl-dw-oltp-olap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Operational processing (OLTP)</th>
+<th style="text-align: left;">Analytical processing (OLAP)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Serves</td>
+<td style="text-align: left;">the people and programs that run the business</td>
+<td style="text-align: left;">the people who analyze and plan it</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Typical work</td>
+<td style="text-align: left;">short transactions touching a few rows</td>
+<td style="text-align: left;">long queries reading many rows</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Data</td>
+<td style="text-align: left;">current, changed constantly</td>
+<td style="text-align: left;">history, added to in periodic loads</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Design</td>
+<td style="text-align: left;">normalized, so each fact is stored once (<a href="07-Chapter7.html" class="quarto-xref"><span>Chapter 7</span></a>)</td>
+<td style="text-align: left;">dimensional, so each question is easy to ask</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">At HG Industries</td>
+<td style="text-align: left;"><code>distribution</code>, <code>production</code>, <code>quality</code></td>
+<td style="text-align: left;"><code>sales</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A <strong>data warehouse</strong> is a database built for analysis, loaded from the operational databases, that keeps their history. The usual definition, due to W. H. Inmon <span class="citation" data-cites="inmon2005building">(<a href="references.html#ref-inmon2005building" role="doc-biblioref">Inmon 2005</a>)</span>, names four properties, and HG’s <code>sales</code> schema shows each. It is <em>subject-oriented</em>: organized around sales, a subject of the business, rather than around the transactions of taking orders. It is <em>integrated</em>: it combines distribution’s orders with production’s standard costs, which no operational schema holds together. It is <em>time-variant</em>: every fact is tied to a date, so trends can be followed. And it is <em>nonvolatile</em>: rows are added by periodic loads and are not updated by the business’s daily work. A warehouse limited to one department’s subject is often called a <strong>data mart</strong>; the <code>sales</code> schema, with its one subject, is one.</p>
+<p>The two kinds of database are kept apart for practical reasons as well. An analyst’s query that reads a year of orders would compete with the clerks’ transactions for the same tables, and, as <a href="09-Chapter9.html" class="quarto-xref"><span>Chapter 9</span></a> showed, a report that runs while orders are changing may not add up. A warehouse loaded once a night, after the day’s business, gives the analyst a stable copy and leaves the operational database to its work. The next section designs the warehouse.</p>
+</section>
+<section id="sec-dw-star" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="sec-dw-star"><span class="header-section-number">11.2</span> Dimensional modeling</h2>
+<p>This section presents how a warehouse is designed, as a process and then step by step on HG’s sales.</p>
+<p>A warehouse is designed as a <strong>dimensional model</strong>, the approach of Ralph Kimball <span class="citation" data-cites="kimball2013data">(<a href="references.html#ref-kimball2013data" role="doc-biblioref">Kimball and Ross 2013</a>)</span>. Its central idea is to divide what is recorded about a business process into two kinds of data. <strong>Facts</strong> are the numbers the process produces, which an analyst adds up: a quantity, an amount of money, a time. <strong>Dimensions</strong> are the contexts in which the facts occurred, which an analyst groups and filters by: when, who, what, where. A dimensional model is designed in four steps:</p>
+<ol type="1">
+<li><strong>Choose the business process.</strong> The warehouse describes one activity of the business at a time, such as taking orders or inspecting lots.</li>
+<li><strong>Declare the grain.</strong> State what one row of the fact table records: one order line, one order, one product per day. The grain is the most important decision of the design, and every later step must agree with it.</li>
+<li><strong>Identify the dimensions.</strong> Ask what describes one fact at that grain: its date, its customer, its product.</li>
+<li><strong>Identify the facts.</strong> Ask what numbers are measured at that grain.</li>
+</ol>
+<p>The facts go into a <strong>fact table</strong>, with one row per occurrence at the grain, and each dimension into a <strong>dimension table</strong>, with one row per member (one per day, per customer, per product). Each fact row refers to one row of each dimension through a foreign key, and a diagram of the tables, the fact table in the middle and the dimensions around it, looks like a star. Such a design is called a <strong>star schema</strong>.</p>
+<div id="exm-dw-sales-star" class="theorem example">
+<p><span class="theorem-title"><strong>Example 11.1 (Designing the sales warehouse)</strong></span> HG Industries’ sales manager reviews the business every quarter. The questions come in many forms: sales by product line and region, by month, by customer; how much was given away in discounts; what margin each product earned over its standard cost. Each question is different, and each groups and sums the same underlying activity: customers ordering products.</p>
+<p><em>The request.</em> Design a warehouse in which each of these questions is a single grouping query.</p>
+<p><em>The design.</em> We follow the four steps.</p>
+<ol type="1">
+<li><strong>The business process</strong> is order taking: customers placing orders for products, as stage D3 records it.</li>
+<li><strong>The grain</strong> is one order line: a quantity of one product, on the order one customer placed on one date. It is the finest grain the operational data holds, and the finest grain is the safest choice, since any coarser summary, by order, by month, can be computed from it, and nothing finer can.</li>
+<li><strong>The dimensions</strong> of an order line are its order date, its customer, and its product. Each gets a table of the attributes an analyst groups by: the date’s year, quarter, month, and day of the week; the customer’s city, state, and sales region; the product’s description and product line.</li>
+<li><strong>The facts</strong> of an order line are its quantity; its sales amount, the quantity times the unit price; its discount amount, the quantity times the difference between the list price and the unit price; and its cost amount, the quantity times the standard cost from production.</li>
+</ol>
+<p><a href="#fig-dw-star" class="quarto-xref">Figure&nbsp;<span>11.1</span></a> draws the result, the star schema of stage S.</p>
+<div id="fig-dw-star" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dw-star-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/sales-star-schema.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dw-star-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.1: The Sales Star Schema of Stage S
+</figcaption>
+</figure>
+</div>
+<p>Read <a href="#fig-dw-star" class="quarto-xref">Figure&nbsp;<span>11.1</span></a> from the center. <code>OrderLineFact</code>, the fact table, holds a row per order line: its three foreign keys, one to each dimension, the order and line numbers, and the four facts. Each of the three dimension tables around it holds a row per date, customer, or product, with a surrogate key and the attributes to group by. The multiplicities are those of <a href="05-Chapter5.html#sec-cm-associations" class="quarto-xref"><span>Section 5.4</span></a>: each fact refers to one member of each dimension, and each member may have any number of facts. <a href="#lst-dw-sales" class="quarto-xref">Listing&nbsp;<span>11.1</span></a> gives the tables as a relational schema.</p>
+<!-- schema: s sales.date_dim sales.customer_dim sales.product_dim sales.order_line_fact -->
+<div id="lst-dw-sales" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-dw-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;11.1: The Relational Schema of the Sales Warehouse
+</figcaption>
+<div aria-describedby="lst-dw-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>date_dim (date_dim_pk, full_date, calendar_year,
+          calendar_quarter, calendar_month, month_name,
+          day_of_month, day_of_week, day_name, is_weekend)
+    primary key: date_dim_pk
+    alternate key: full_date
+
+customer_dim (customer_dim_pk, customer_number, name, city,
+              state, sales_region)
+    primary key: customer_dim_pk
+    alternate key: customer_number
+
+product_dim (product_dim_pk, product_number, description,
+             product_line, list_price, standard_cost)
+    primary key: product_dim_pk
+    alternate key: product_number
+
+order_line_fact (order_line_fact_pk, order_date_fk,
+                 customer_dim_fk, product_dim_fk,
+                 order_number, line_number, quantity,
+                 sales_amount, discount_amount, cost_amount)
+    primary key: order_line_fact_pk
+    alternate key: (order_number, line_number)
+    order_date_fk references date_dim_pk in date_dim,
+        must not be NULL
+    customer_dim_fk references customer_dim_pk in
+        customer_dim, must not be NULL
+    product_dim_fk references product_dim_pk in product_dim,
+        must not be NULL</code></pre>
+</div>
+</figure>
+</div>
+<!-- end schema -->
+<p><em>The result.</em> The stage S script creates these tables and loads them, as <a href="#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a> reads it. Their sizes are:</p>
+<div id="tbl-dw-sizes" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.4: Order Lines, Facts, and Dimension Members, Stage S
+</figcaption>
+<div aria-describedby="tbl-dw-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> distribution.order_line)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">AS</span> order_lines,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> sales.order_line_fact) <span class="kw">AS</span> facts,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> sales.date_dim) <span class="kw">AS</span> dates,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> sales.customer_dim)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">AS</span> customers,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> sales.product_dim) <span class="kw">AS</span> products;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+order_lines
+</th>
+<th style="text-align:right;">
+facts
+</th>
+<th style="text-align:right;">
+dates
+</th>
+<th style="text-align:right;">
+customers
+</th>
+<th style="text-align:right;">
+products
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1065
+</td>
+<td style="text-align:right;">
+1065
+</td>
+<td style="text-align:right;">
+730
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> At the grain of an order line, the fact table must have one row for every order line of the operational data, and <a href="#tbl-dw-sizes" class="quarto-xref">Table&nbsp;<span>11.4</span></a> shows 1,065 of each. The dimensions have one row per member: 30 customers and 4 products, as the operational tables hold, and 730 dates, every day of 2026 and 2027, whether or not anyone ordered that day.</p>
+<p><em>Interpretation.</em> Each of the manager’s questions is now a grouping query over the fact table, joined to the dimensions it groups by. Sales by product line and region join <code>product_dim</code> and <code>customer_dim</code>; the margin is <code>SUM(sales_amount) - SUM(cost_amount)</code>, grouped by product; discounts given are <code>SUM(discount_amount)</code>. None needs a derivation, and all give the same answer for the same question.</p>
+<p><em>Where it breaks.</em> The grain limits the facts. A fact that belongs to a whole order, such as a freight charge, has no place in a table of order lines: stored on every line of the order, it would be added once per line. It belongs in a second fact table, at the grain of an order. In the same way, the design records each order at its order date only; a question about shipping, such as how often orders ship on time, needs the shipment process and a fact table of its own.</p>
+</div>
+<p>A dimension table uses a surrogate key, as almost every table of the book’s database does, and in a warehouse the reason is stronger than elsewhere. A dimension may need several rows for one business object, when the object changes and the warehouse must keep both versions, as <a href="#sec-dw-scd" class="quarto-xref"><span>Section 11.4</span></a> shows; the business identifier, <code>customer_number</code>, then repeats, and only a surrogate key tells the rows apart. The order and line numbers, by contrast, sit in the fact table itself, with no dimension table: an identifier kept on the fact, with nothing to describe it, is called a <strong>degenerate dimension</strong>. It lets an analyst go back from a fact to the order it came from. The date’s foreign key, finally, is named for its role, <code>order_date_fk</code>, since an order line has other dates, such as its requested ship date, which a later design could add as a second foreign key to the same date dimension.</p>
+<p>Notice that the dimension tables are not normalized. In <code>customer_dim</code>, the sales region depends on the state, a transitive dependency of the kind <a href="07-Chapter7.html#sec-nf-forms" class="quarto-xref"><span>Section 7.4</span></a> removes:</p>
+<div id="tbl-dw-denormalized" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-denormalized-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.5: States and Sales Regions in the Customer Dimension
+</figcaption>
+<div aria-describedby="tbl-dw-denormalized-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> state, sales_region,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> customers</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.customer_dim</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> state, sales_region</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> sales_region, state;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+state
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:right;">
+customers
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+AR
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MO
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OK
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TX
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Each state of <a href="#tbl-dw-denormalized" class="quarto-xref">Table&nbsp;<span>11.5</span></a> has one region, repeated on every customer row of the state; normalized, the regions would be a table of their own, keyed by state. The repetition is deliberate. Recall from <a href="07-Chapter7.html#sec-nf-classmodels" class="quarto-xref"><span>Section 7.6</span></a> that denormalization trades the anomalies of repeated facts for simpler reading, and a warehouse is where the trade pays: its rows are written by a load process, not by clerks, so update anomalies cannot arise from daily work, and every query that groups by region saves a join. A dimensional design whose dimensions are normalized into further tables is called a <strong>snowflake schema</strong>, from the shape of its diagram; it saves little space, since dimensions are small, and costs a join in every query, so the star is the usual choice.</p>
+<p>The facts differ in how they may be summed. A fact is <strong>additive</strong> when summing it over any dimension gives a meaningful total: the sales amount of all customers, of all products, of all days. All four facts of <code>order_line_fact</code> are additive, which is why the design stores amounts, the quantity times a price, rather than prices. A unit price is <strong>non-additive</strong>: the sum of the unit prices of two order lines means nothing, and an average price must be computed from additive facts, <code>SUM(sales_amount) / SUM(quantity)</code>. A fact is <strong>semi-additive</strong> when it can be summed over some dimensions but not over time: a stock level can be summed over warehouses, giving the stock on hand in all of them, but not over days, since the quantity on hand on Monday and on Tuesday are largely the same carts.</p>
+<p>The fact table is by far the largest table of a warehouse, and its size can be estimated before it is built. The combinations of its dimensions’ members give the estimate: about one row for each combination, and in practice a small fraction of them, since not every customer orders every product every day. The combinations are an estimate rather than a bound when the grain is the order line, since one order may list a product on two lines; it is the order number and line number that make each fact unique. For the sales warehouse the combinations of date, customer, and product come to 730 × 30 × 4 = 87,600, and the 1,065 facts of <a href="#tbl-dw-sizes" class="quarto-xref">Table&nbsp;<span>11.4</span></a> are about 1.2 percent of that number. A warehouse at a finer grain, or with more dimensions, grows by the product of their sizes, which is the first thing to estimate when you design one. The next section loads the warehouse.</p>
+</section>
+<section id="sec-dw-etl" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="sec-dw-etl"><span class="header-section-number">11.3</span> Extract, transform, and load</h2>
+<p>This section loads the warehouse from the operational databases, first entirely and then with only what is new.</p>
+<p>The process that fills a warehouse is called <strong>extract, transform, and load</strong> (ETL), after its three steps. <strong>Extract</strong> reads the data from the operational sources, often several databases or files. <strong>Transform</strong> turns it into the warehouse’s form: it derives the attributes the dimensions carry, computes the facts at the declared grain, and repairs or rejects what is wrong, as <a href="08-Chapter8.html#sec-ddl-loading" class="quarto-xref"><span>Section 8.5</span></a>’s staging queries did. <strong>Load</strong> writes the result into the dimension and fact tables, looking up each dimension’s surrogate key from the business identifier the source carries. Organizations run ETL with dedicated tools and schedulers, but the three steps are the same in every one, and HG’s are a single SQL script, <code>code/sql/sales/s-star-schema.sql</code>.</p>
+<p>The dimensions are loaded first, since the facts refer to them. The date dimension is not extracted from anywhere: it is generated, one row for every day of the years the warehouse covers, with PostgreSQL’s <code>generate_series</code>, and its attributes are computed from each date:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> sales.date_dim</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    (full_date, calendar_year, calendar_quarter,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     calendar_month, month_name, day_of_month,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>     day_of_week, day_name, is_weekend)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> d:<span class="ch">:DATE</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       <span class="fu">EXTRACT</span>(<span class="dt">YEAR</span> <span class="kw">FROM</span> d):<span class="ch">:INTEGER</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       <span class="fu">EXTRACT</span>(QUARTER <span class="kw">FROM</span> d):<span class="ch">:INTEGER</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">EXTRACT</span>(<span class="dt">MONTH</span> <span class="kw">FROM</span> d):<span class="ch">:INTEGER</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>       <span class="fu">TO_CHAR</span>(d, <span class="st">'FMMonth'</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>       <span class="fu">EXTRACT</span>(<span class="dt">DAY</span> <span class="kw">FROM</span> d):<span class="ch">:INTEGER</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       <span class="fu">EXTRACT</span>(ISODOW <span class="kw">FROM</span> d):<span class="ch">:INTEGER</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>       <span class="fu">TO_CHAR</span>(d, <span class="st">'FMDay'</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="fu">EXTRACT</span>(ISODOW <span class="kw">FROM</span> d) <span class="kw">IN</span> (<span class="dv">6</span>, <span class="dv">7</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> generate_series(<span class="dt">DATE</span> <span class="st">'2026-01-01'</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">DATE</span> <span class="st">'2027-12-31'</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">INTERVAL</span> <span class="st">'1 day'</span>) <span class="kw">AS</span> d;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>generate_series</code> (PostgreSQL’s) returns one row per day between the two dates, and each column is a transformation of the date. Two details prevent errors that are easy to make. The year is <code>EXTRACT(YEAR ...)</code>, the calendar year; a widely copied template uses the ISO week-numbering year instead, which puts January 1, 2027, a Friday, in 2026. And <code>TO_CHAR</code> pads month and day names with spaces to a fixed width unless its format begins with <code>FM</code>, which would make <code>'May'</code> unequal to <code>'May      '</code> in every later comparison.</p>
+<p>The customer and product dimensions are extracted from the operational tables, and transformed on the way: the customer dimension derives each customer’s sales region from the state, and the product dimension derives the product line from the product number and brings in the standard cost from production. Both transformations are <code>CASE</code> expressions, of the kind <a href="04-Chapter4.html#sec-agg-case" class="quarto-xref"><span>Section 4.4</span></a> wrote.</p>
+<p>The facts come last. Each order line is extracted with its order, customer, and product; its measures are computed; and each business identifier, the order date, the customer number, the product number, is joined to its dimension to find the surrogate key the fact table stores. A warehouse is refreshed on a schedule, nightly for example, and each refresh should add only what is new. The fact load therefore carries a condition that skips order lines already loaded, found by the degenerate dimension, the order and line numbers:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> sales.order_line_fact</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    (order_date_fk, customer_dim_fk, product_dim_fk,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>     order_number, line_number, quantity,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>     sales_amount, discount_amount, cost_amount)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> dd.date_dim_pk, cd.customer_dim_pk,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>       pd.product_dim_pk, o.order_number, l.line_number,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>       l.quantity,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       l.quantity <span class="op">*</span> l.unit_price,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       l.quantity <span class="op">*</span> (pd.list_price <span class="op">-</span> l.unit_price),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>       l.quantity <span class="op">*</span> pd.standard_cost</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> o.customer_order_pk <span class="op">=</span> l.customer_order_fk</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> dd <span class="kw">ON</span> dd.full_date <span class="op">=</span> o.order_date</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> cd</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> cd.customer_number <span class="op">=</span> c.customer_number</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> pd</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> pd.product_number <span class="op">=</span> p.product_number</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> (</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> f.order_number <span class="op">=</span> o.order_number</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">AND</span> f.line_number <span class="op">=</span> l.line_number);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The stage S script’s fact load is the same statement without the last condition, since it loads an empty table. Read the statement in its three steps. The first three joins extract each order line with the rows it belongs to; the three expressions of the select list transform it into the facts of the grain; and the three joins to <code>sales</code> tables load it, replacing each business identifier with a surrogate key. Notice that the joins to the dimensions are inner joins: an order line whose customer is missing from the customer dimension would be dropped without a word, so the dimensions must be loaded, with the same kind of condition, before the facts.</p>
+<div id="exm-dw-incremental" class="theorem example">
+<p><span class="theorem-title"><strong>Example 11.2 (Loading a new customer’s first order)</strong></span> On April 1, 2027, the day after the history of stage S ends, Arkansas Valley Supply of Ozark, Arkansas, became customer C-1031 and placed order SO-5615: twelve HT-100 hand trucks at the list price of $89.00 and six GC-400 poly carts at $149.00. The warehouse was last loaded on March 31. The example assumes stage S.</p>
+<p><em>The request.</em> Refresh the warehouse with the new order, loading only what is new, and confirm that loading twice adds nothing.</p>
+<p><em>The design.</em> The sales department’s systems record the customer and the order in the operational tables, as <a href="08-Chapter8.html#exm-ddl-new-order" class="quarto-xref">Example&nbsp;<span>8.2</span></a> did:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1031'</span>, <span class="st">'Arkansas Valley Supply'</span>, <span class="st">'Ozark'</span>, <span class="st">'AR'</span>);</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer_order</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    (order_number, order_date, requested_ship_date,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>     customer_fk)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'SO-5615'</span>, <span class="dt">DATE</span> <span class="st">'2027-04-01'</span>, <span class="dt">DATE</span> <span class="st">'2027-04-08'</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">SELECT</span> customer_pk <span class="kw">FROM</span> distribution.customer</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>         <span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1031'</span>));</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>     quantity, unit_price)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> o.customer_order_pk, v.line_number,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>       p.product_pk, v.quantity, v.unit_price</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">VALUES</span> (<span class="dv">1</span>, <span class="st">'HT-100'</span>, <span class="dv">12</span>, <span class="fl">89.00</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>             (<span class="dv">2</span>, <span class="st">'GC-400'</span>, <span class="dv">6</span>, <span class="fl">149.00</span>))</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>       <span class="kw">AS</span> v (line_number, product_number, quantity,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>             unit_price)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_number <span class="op">=</span> v.product_number</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> o.order_number <span class="op">=</span> <span class="st">'SO-5615'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The order’s two lines are inserted with one statement: a <code>VALUES</code> list with a name and column names, <code>AS v (line_number, ...)</code>, can stand in a <code>FROM</code> clause as a small table, which is joined to <code>product</code> to find each product’s key.</p>
+<p>The refresh loads the new customer into the customer dimension, with the same transformation and a condition that skips customers already there, and then runs the fact load above:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> sales.customer_dim</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state, sales_region)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.customer_number, c.name, c.city, c.state,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>       <span class="cf">CASE</span> <span class="cf">WHEN</span> c.state <span class="kw">IN</span> (<span class="st">'OK'</span>, <span class="st">'KS'</span>, <span class="st">'TX'</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">THEN</span> <span class="st">'Tulsa region'</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">ELSE</span> <span class="st">'Fayetteville region'</span> <span class="cf">END</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> (</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> sales.customer_dim <span class="kw">AS</span> cd</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> cd.customer_number <span class="op">=</span> c.customer_number);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>The result.</em> After the refresh, the new facts are:</p>
+<div id="tbl-dw-new-facts" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;etl-new-order&quot;,&quot;etl-load-customers&quot;,&quot;etl-load-facts&quot;]" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-new-facts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.6: The Facts of Order SO-5615 After the Refresh
+</figcaption>
+<div aria-describedby="tbl-dw-new-facts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> f.order_number, f.line_number,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>       c.customer_number, c.sales_region,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>       p.product_number, f.sales_amount, f.cost_amount</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> p</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_dim_pk <span class="op">=</span> f.product_dim_fk</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> f.order_number <span class="op">=</span> <span class="st">'SO-5615'</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> f.line_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:right;">
+line_number
+</th>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:right;">
+sales_amount
+</th>
+<th style="text-align:right;">
+cost_amount
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5615
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+C-1031
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+1068.00
+</td>
+<td style="text-align:right;">
+628.80
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5615
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+C-1031
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:left;">
+GC-400
+</td>
+<td style="text-align:right;">
+894.00
+</td>
+<td style="text-align:right;">
+475.80
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>A second refresh, run at once, finds nothing new:</p>
+<div id="tbl-dw-refresh-twice" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;etl-new-order&quot;,&quot;etl-load-customers&quot;,&quot;etl-load-facts&quot;,&quot;etl-load-customers&quot;,&quot;etl-load-facts&quot;]" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-refresh-twice-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.7: Facts and Customers After Loading Twice
+</figcaption>
+<div aria-describedby="tbl-dw-refresh-twice-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> facts,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> sales.customer_dim)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> customers</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+facts
+</th>
+<th style="text-align:right;">
+customers
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1067
+</td>
+<td style="text-align:right;">
+31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> The sales amounts are 12 × 89.00 = 1,068.00 and 6 × 149.00 = 894.00, and the cost amounts 12 × 52.40 = 628.80 and 6 × 79.30 = 475.80, from the standard costs the product dimension holds for the HT-100 and the GC-400. The warehouse held 1,065 facts and 30 customers; one refresh adds two facts and one customer, and <a href="#tbl-dw-refresh-twice" class="quarto-xref">Table&nbsp;<span>11.7</span></a> shows 1,067 and 31 after two refreshes, so the second added nothing.</p>
+<p><em>Interpretation.</em> The refresh can run every night without anyone deciding what to load: whatever the operational tables hold that the warehouse lacks is loaded, and nothing is loaded twice. A refresh that fails halfway can simply be run again.</p>
+<p><em>Where it breaks.</em> The refresh adds new rows but never changes old ones. If Arkansas Valley Supply later corrected its city in the operational table, the customer dimension would keep the old one, since the condition skips customer numbers already loaded; and an order line changed after it was loaded, a quantity corrected, would not reach the warehouse at all. Changed dimension rows are the subject of the next section; changed facts are usually handled by loading a correcting fact, so that the history of the change is kept.</p>
+</div>
+<p>Two habits make an ETL process trustworthy. Reconcile after every load: count the order lines of the source and the facts of the warehouse, and sum the sales amounts of both, as <a href="#tbl-dw-sizes" class="quarto-xref">Table&nbsp;<span>11.4</span></a> and <a href="#tbl-dw-oltp-question" class="quarto-xref">Table&nbsp;<span>11.1</span></a> did; a difference means a lost or doubled row. And make every step safe to run twice, as the conditions above do, so that a failed night can be rerun without cleaning up first.</p>
+</section>
+<section id="sec-dw-scd" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="sec-dw-scd"><span class="header-section-number">11.4</span> Slowly changing dimensions</h2>
+<p>This section considers what a warehouse should do when a dimension’s member changes: keep its history, or rewrite it.</p>
+<p>Dimensions change more slowly than facts, but they change. A customer moves, a product is renamed, a territory is redrawn. A dimension whose members change from time to time is called a <strong>slowly changing dimension</strong>, and the question each change raises is what the warehouse should say about the past. Every fact refers to a dimension row, and the dimension row says where the customer is. If that row changes, every fact that refers to it moves with it, including facts from before the change.</p>
+<p>Suppose that Prairie Garden Center (C-1005), of Fort Smith, Arkansas, moved across the state line to Sallisaw, Oklahoma, on January 1, 2027, and became a customer of the Tulsa region. Before the change, the warehouse reports sales by year and region as:</p>
+<div id="tbl-dw-scd-before" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-scd-before-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.8: Sales by Year and Region, Before the Move
+</figcaption>
+<div aria-describedby="tbl-dw-scd-before-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> d.calendar_year, c.sales_region,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> d.calendar_year, c.sales_region</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> d.calendar_year, c.sales_region;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+calendar_year
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+580451.72
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+621080.27
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+165070.05
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+162424.95
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The simplest response, called <strong>type 1</strong>, overwrites the dimension row with the new values:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> sales.customer_dim</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> city <span class="op">=</span> <span class="st">'Sallisaw'</span>, state <span class="op">=</span> <span class="st">'OK'</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    sales_region <span class="op">=</span> <span class="st">'Tulsa region'</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1005'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-dw-scd-type1" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="scd-type1" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-scd-type1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.9: Sales by Year and Region After a Type 1 Change
+</figcaption>
+<div aria-describedby="tbl-dw-scd-type1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> d.calendar_year, c.sales_region,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> d.calendar_year, c.sales_region</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> d.calendar_year, c.sales_region;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+calendar_year
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+554401.72
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+647130.27
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+157138.05
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+170356.95
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Compare <a href="#tbl-dw-scd-type1" class="quarto-xref">Table&nbsp;<span>11.9</span></a> with <a href="#tbl-dw-scd-before" class="quarto-xref">Table&nbsp;<span>11.8</span></a>. The 2027 figures are right: the customer’s $7,932.00 of 2027 sales now count in the Tulsa region. But the 2026 figures have changed too. Prairie Garden Center’s $26,050.00 of 2026 sales, made while it was a Fayetteville customer, have moved to Tulsa, and a report of 2026 run today disagrees with the same report run last month. The warehouse has rewritten its own history.</p>
+<p>The response that keeps history, called <strong>type 2</strong>, adds a new row for the customer, with the new values, and keeps the old row for the facts that belong to it. Each row then needs the dates between which it describes the customer, and a flag for the current row, and the customer number is no longer unique in the dimension; which is the reason, noted in <a href="#sec-dw-star" class="quarto-xref"><span>Section 11.2</span></a>, that dimensions use surrogate keys. Stage S’s customer dimension has no such columns, so the demonstration adds them, giving every existing row the whole period and marking it current:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> sales.customer_dim</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ADD</span> <span class="kw">COLUMN</span> valid_from <span class="dt">DATE</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">DEFAULT</span> <span class="dt">DATE</span> <span class="st">'2026-01-01'</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ADD</span> <span class="kw">COLUMN</span> valid_to <span class="dt">DATE</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">DEFAULT</span> <span class="dt">DATE</span> <span class="st">'9999-12-31'</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ADD</span> <span class="kw">COLUMN</span> is_current <span class="dt">BOOLEAN</span> <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DEFAULT</span> <span class="kw">true</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">DROP</span> <span class="kw">CONSTRAINT</span> customer_dim_customer_number_key;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The move then closes the old row on December 31, 2026, and inserts a new row from January 1, 2027:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> sales.customer_dim</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> valid_to <span class="op">=</span> <span class="dt">DATE</span> <span class="st">'2026-12-31'</span>, is_current <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1005'</span>;</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> sales.customer_dim</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state, sales_region,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>     valid_from)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1005'</span>, <span class="st">'Prairie Garden Center'</span>, <span class="st">'Sallisaw'</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'OK'</span>, <span class="st">'Tulsa region'</span>, <span class="dt">DATE</span> <span class="st">'2027-01-01'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-dw-scd-versions" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;scd-type2-columns&quot;,&quot;scd-type2-move&quot;]" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-scd-versions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.10: The Two Rows of Customer C-1005 After the Move
+</figcaption>
+<div aria-describedby="tbl-dw-scd-versions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_dim_pk, customer_number, city,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>       sales_region, valid_from, valid_to, is_current</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.customer_dim</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1005'</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> valid_from;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+customer_dim_pk
+</th>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:left;">
+city
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:left;">
+valid_from
+</th>
+<th style="text-align:left;">
+valid_to
+</th>
+<th style="text-align:left;">
+is_current
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+C-1005
+</td>
+<td style="text-align:left;">
+Fort Smith
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:left;">
+2026-01-01
+</td>
+<td style="text-align:left;">
+2026-12-31
+</td>
+<td style="text-align:left;">
+false
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:left;">
+C-1005
+</td>
+<td style="text-align:left;">
+Sallisaw
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:left;">
+2027-01-01
+</td>
+<td style="text-align:left;">
+9999-12-31
+</td>
+<td style="text-align:left;">
+true
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>A fact must now refer to the row that was valid on its date. The fact load of <a href="#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a> finds it by adding the dates to the customer join, <code>ON cd.customer_number = c.customer_number AND o.order_date BETWEEN cd.valid_from AND cd.valid_to</code>, so that orders from 2027 on refer to the new row. Stage S’s facts for 2027 were loaded before the move, so the demonstration repoints them, as a reload would:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> sales.order_line_fact</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> customer_dim_fk <span class="op">=</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> cd.customer_dim_pk</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>     <span class="kw">FROM</span> sales.customer_dim <span class="kw">AS</span> cd</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>     <span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>       <span class="kw">ON</span> d.full_date <span class="kw">BETWEEN</span> cd.valid_from</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                          <span class="kw">AND</span> cd.valid_to</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>     <span class="kw">WHERE</span> cd.customer_number <span class="op">=</span> <span class="st">'C-1005'</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>       <span class="kw">AND</span> d.date_dim_pk <span class="op">=</span> order_line_fact.order_date_fk)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_dim_fk <span class="kw">IN</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> customer_dim_pk <span class="kw">FROM</span> sales.customer_dim</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>     <span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1005'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-dw-scd-type2" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;scd-type2-columns&quot;,&quot;scd-type2-move&quot;,&quot;scd-type2-facts&quot;]" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-scd-type2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.11: Sales by Year and Region After a Type 2 Change
+</figcaption>
+<div aria-describedby="tbl-dw-scd-type2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> d.calendar_year, c.sales_region,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> d.calendar_year, c.sales_region</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> d.calendar_year, c.sales_region;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+calendar_year
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+580451.72
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2026
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+621080.27
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+157138.05
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+170356.95
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-dw-scd-type2" class="quarto-xref">Table&nbsp;<span>11.11</span></a> has the 2026 figures of <a href="#tbl-dw-scd-before" class="quarto-xref">Table&nbsp;<span>11.8</span></a>, unchanged, and the 2027 figures of <a href="#tbl-dw-scd-type1" class="quarto-xref">Table&nbsp;<span>11.9</span></a>: each fact is reported in the region its customer was in when the order was placed. A query that wants the customer as it is now, rather than as it was, joins through the customer number to the current row instead: the customer number and <code>is_current</code> together. The customer number alone matches both rows of C-1005 and counts its facts twice.</p>
+<p>A third response, <strong>type 3</strong>, adds a column for the previous value beside the current one, <code>previous_sales_region</code>, so that a report can use either; it keeps one step of history and no more. The choice is made attribute by attribute, and it is a business decision, not a technical one. A misspelled name should be corrected everywhere, so type 1. A sales region decides whose results a sale counts toward, so a region change that should not rewrite last year’s commissions calls for type 2. You should decide, for each attribute of each dimension, which history the business needs before the first load, since a type 1 overwrite cannot be undone later.</p>
+</section>
+<section id="sec-dw-olap" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="sec-dw-olap"><span class="header-section-number">11.5</span> Multidimensional queries</h2>
+<p>This section writes the queries a warehouse exists for: totals at several levels at once, and the moves an analyst makes between them.</p>
+<p>An analyst looks at a warehouse’s facts through its dimensions, and moves among them with a few standard operations, named for a picture of the facts as a <strong>cube</strong>, one axis per dimension: date, customer, product, with each cell holding the facts where the three meet.</p>
+<ul>
+<li>To <strong>roll up</strong> is to summarize to a coarser level of a dimension: from quarters to years, from products to product lines.</li>
+<li>To <strong>drill down</strong> is the reverse: to break a total into the finer levels beneath it, from years to quarters to months.</li>
+<li>To <strong>slice</strong> is to fix one dimension at one value, as a report of 2026 alone does, which leaves a thinner cube of the other dimensions.</li>
+<li>To <strong>dice</strong> is to select a sub-cube with conditions on several dimensions at once: hand trucks, in the Tulsa region, in the first quarter of 2027.</li>
+</ul>
+<p>A slice and a dice are <code>WHERE</code> conditions on dimension attributes. A roll-up is a <code>GROUP BY</code> on fewer or coarser columns, and a report that shows several levels together, each quarter and each year and the grand total, needs several groupings at once, which SQL writes with <code>ROLLUP</code>, <code>CUBE</code>, and <code>GROUPING SETS</code>.</p>
+<p>Let’s evaluate a roll-up by hand first. For the first quarter of 2027, the sales by product line and region are:</p>
+<div id="tbl-dw-q1-cells" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-q1-cells-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.12: Sales by Product Line and Region, First Quarter of 2027
+</figcaption>
+<div aria-describedby="tbl-dw-q1-cells-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> p.product_line, c.sales_region,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> p</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_dim_pk <span class="op">=</span> f.product_dim_fk</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> d.calendar_year <span class="op">=</span> <span class="dv">2027</span> <span class="kw">AND</span> d.calendar_quarter <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> p.product_line, c.sales_region</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> p.product_line, c.sales_region;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product_line
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+92824.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+94379.36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+72245.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+68045.59
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>A report of these cells with subtotals by product line and a grand total needs three groupings: by product line and region (the four cells of <a href="#tbl-dw-q1-cells" class="quarto-xref">Table&nbsp;<span>11.12</span></a>), by product line alone, and by nothing, the whole slice. The subtotals are sums of the cells:</p>
+<div id="tbl-dw-rollup-ledger" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-rollup-ledger-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.13: Rolling Up the First Quarter of 2027 by Hand
+</figcaption>
+<div aria-describedby="tbl-dw-rollup-ledger-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Product line</th>
+<th style="text-align: left;">Region</th>
+<th style="text-align: left;">Grouping</th>
+<th style="text-align: right;">Sales</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Garden carts</td>
+<td style="text-align: left;">Fayetteville region</td>
+<td style="text-align: left;">line and region</td>
+<td style="text-align: right;">92,824.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Garden carts</td>
+<td style="text-align: left;">Tulsa region</td>
+<td style="text-align: left;">line and region</td>
+<td style="text-align: right;">94,379.36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Garden carts</td>
+<td style="text-align: left;">(all)</td>
+<td style="text-align: left;">line</td>
+<td style="text-align: right;">92,824.47 + 94,379.36 = 187,203.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hand trucks</td>
+<td style="text-align: left;">Fayetteville region</td>
+<td style="text-align: left;">line and region</td>
+<td style="text-align: right;">72,245.58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hand trucks</td>
+<td style="text-align: left;">Tulsa region</td>
+<td style="text-align: left;">line and region</td>
+<td style="text-align: right;">68,045.59</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hand trucks</td>
+<td style="text-align: left;">(all)</td>
+<td style="text-align: left;">line</td>
+<td style="text-align: right;">72,245.58 + 68,045.59 = 140,291.17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">(all)</td>
+<td style="text-align: left;">(all)</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">187,203.83 + 140,291.17 = 327,495.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><code>GROUP BY ROLLUP (a, b)</code> asks for these three groupings in one query: by <code>a</code> and <code>b</code>, by <code>a</code>, and by nothing. It produces every row of <a href="#tbl-dw-rollup-ledger" class="quarto-xref">Table&nbsp;<span>11.13</span></a>:</p>
+<div id="tbl-dw-rollup" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-rollup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.14: The Same Roll-Up in SQL
+</figcaption>
+<div aria-describedby="tbl-dw-rollup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> p.product_line, c.sales_region,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> p</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_dim_pk <span class="op">=</span> f.product_dim_fk</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> d.calendar_year <span class="op">=</span> <span class="dv">2027</span> <span class="kw">AND</span> d.calendar_quarter <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">ROLLUP</span> (p.product_line, c.sales_region)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> p.product_line, c.sales_region;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product_line
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+92824.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+94379.36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+NULL
+</td>
+<td style="text-align:right;">
+187203.83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+72245.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+68045.59
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+NULL
+</td>
+<td style="text-align:right;">
+140291.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NULL
+</td>
+<td style="text-align:left;">
+NULL
+</td>
+<td style="text-align:right;">
+327495.00
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>In a subtotal row, a column that was rolled up holds NULL: the region of a product line’s subtotal, and both columns of the grand total. The NULL there means “all”, not a value that is unknown or does not apply, which <a href="03-Chapter3.html#sec-q-null" class="quarto-xref"><span>Section 3.3</span></a>’s NULL meant. The function <code>GROUPING(column)</code> tells the two apart: it returns 1 when the column was rolled up in that row and 0 otherwise, so a report can label its subtotals.</p>
+<p>A roll-up follows a hierarchy, and the order of <code>ROLLUP</code>’s columns must be the hierarchy’s, from coarse to fine. The date dimension’s hierarchy is year, quarter, month, and a quarter means nothing without its year. The history of stage S runs from January 2026 to March 2027, so grouping by quarter alone silently merges two first quarters:</p>
+<div id="tbl-dw-quarter-trap" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-quarter-trap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.15: Sales by Quarter Alone: Two Years in One Row
+</figcaption>
+<div aria-describedby="tbl-dw-quarter-trap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> d.calendar_quarter, <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> d.calendar_quarter</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> d.calendar_quarter;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+calendar_quarter
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+349063.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+437131.67
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+303379.72
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+439452.60
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The first row of <a href="#tbl-dw-quarter-trap" class="quarto-xref">Table&nbsp;<span>11.15</span></a> adds the first quarters of 2026 and 2027, a number no one asked for. Rolled up along the hierarchy, with <code>GROUPING</code> to label the subtotals, the quarters stay in their years:</p>
+<div id="tbl-dw-year-quarter" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-year-quarter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.16: Sales by Year and Quarter, with Subtotals
+</figcaption>
+<div aria-describedby="tbl-dw-year-quarter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">GROUPING</span>(d.calendar_year) <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>            <span class="cf">THEN</span> <span class="st">'All years'</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>            <span class="cf">ELSE</span> d.calendar_year:<span class="ch">:TEXT</span> <span class="cf">END</span> <span class="kw">AS</span> year_label,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>       <span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">GROUPING</span>(d.calendar_quarter) <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">THEN</span> <span class="st">'All quarters'</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">ELSE</span> <span class="st">'Q'</span> <span class="op">||</span> d.calendar_quarter <span class="cf">END</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> quarter_label,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">ROLLUP</span> (d.calendar_year, d.calendar_quarter)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> d.calendar_year, d.calendar_quarter;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+year_label
+</th>
+<th style="text-align:left;">
+quarter_label
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2026
+</td>
+<td style="text-align:left;">
+Q1
+</td>
+<td style="text-align:right;">
+21568.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2026
+</td>
+<td style="text-align:left;">
+Q2
+</td>
+<td style="text-align:right;">
+437131.67
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2026
+</td>
+<td style="text-align:left;">
+Q3
+</td>
+<td style="text-align:right;">
+303379.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2026
+</td>
+<td style="text-align:left;">
+Q4
+</td>
+<td style="text-align:right;">
+439452.60
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2026
+</td>
+<td style="text-align:left;">
+All quarters
+</td>
+<td style="text-align:right;">
+1201531.99
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2027
+</td>
+<td style="text-align:left;">
+Q1
+</td>
+<td style="text-align:right;">
+327495.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2027
+</td>
+<td style="text-align:left;">
+All quarters
+</td>
+<td style="text-align:right;">
+327495.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+All years
+</td>
+<td style="text-align:left;">
+All quarters
+</td>
+<td style="text-align:right;">
+1529026.99
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Each year of <a href="#tbl-dw-year-quarter" class="quarto-xref">Table&nbsp;<span>11.16</span></a> is followed by its subtotal, and the last row is the grand total, $1,529,026.99. The first row of <a href="#tbl-dw-quarter-trap" class="quarto-xref">Table&nbsp;<span>11.15</span></a>, 349,063.00, is the first quarter of 2026, 21,568.00, plus the first quarter of 2027, 327,495.00; the history of stage G begins in April 2026, so the first quarter of 2026 holds only the base orders. To drill down from <a href="#tbl-dw-year-quarter" class="quarto-xref">Table&nbsp;<span>11.16</span></a> to months, add <code>d.calendar_month</code> as the third column of the <code>ROLLUP</code>.</p>
+<p><code>ROLLUP</code> produces the groupings of one hierarchy. When the columns are independent dimensions, a report may want every combination of them: the cells, the subtotals by each dimension, and the total. <code>GROUP BY CUBE (a, b)</code> produces all of them, the four groupings (<code>a</code>, <code>b</code>), (<code>a</code>), (<code>b</code>), and (). For 2026, a slice of the cube, by product line and region:</p>
+<div id="tbl-dw-cube" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-cube-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.17: Sales of 2026 by Every Combination of Product Line and Region
+</figcaption>
+<div aria-describedby="tbl-dw-cube-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">GROUPING</span>(p.product_line) <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>            <span class="cf">THEN</span> <span class="st">'(all)'</span> <span class="cf">ELSE</span> p.product_line <span class="cf">END</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> product_line,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>       <span class="cf">CASE</span> <span class="cf">WHEN</span> <span class="fu">GROUPING</span>(c.sales_region) <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">THEN</span> <span class="st">'(all)'</span> <span class="cf">ELSE</span> c.sales_region <span class="cf">END</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> sales_region,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> p</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_dim_pk <span class="op">=</span> f.product_dim_fk</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> d.calendar_year <span class="op">=</span> <span class="dv">2026</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">CUBE</span> (p.product_line, c.sales_region)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">GROUPING</span>(p.product_line),</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>         <span class="fu">GROUPING</span>(c.sales_region),</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>         p.product_line, c.sales_region;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product_line
+</th>
+<th style="text-align:left;">
+sales_region
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+253811.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+270799.22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+326640.68
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+350281.05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Garden carts
+</td>
+<td style="text-align:left;">
+(all)
+</td>
+<td style="text-align:right;">
+524610.26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hand trucks
+</td>
+<td style="text-align:left;">
+(all)
+</td>
+<td style="text-align:right;">
+676921.73
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+(all)
+</td>
+<td style="text-align:left;">
+Fayetteville region
+</td>
+<td style="text-align:right;">
+580451.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+(all)
+</td>
+<td style="text-align:left;">
+Tulsa region
+</td>
+<td style="text-align:right;">
+621080.27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+(all)
+</td>
+<td style="text-align:left;">
+(all)
+</td>
+<td style="text-align:right;">
+1201531.99
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The nine rows of <a href="#tbl-dw-cube" class="quarto-xref">Table&nbsp;<span>11.17</span></a> are the four cells, two subtotals by product line, two by region, and the total. <code>GROUPING SETS</code> names the groupings wanted explicitly, when neither <code>ROLLUP</code> nor <code>CUBE</code> gives the groupings wanted: <code>GROUP BY GROUPING SETS ((p.product_line), (c.sales_region))</code> gives the two sets of subtotals without the cells or the total. In fact <code>ROLLUP</code> and <code>CUBE</code> are shorthand for grouping sets: <code>ROLLUP (a, b)</code> is <code>GROUPING SETS ((a, b), (a), ())</code>. All three are standard SQL, and PostgreSQL supports them. The pivot of <a href="04-Chapter4.html#sec-agg-case" class="quarto-xref"><span>Section 4.4</span></a>, with <code>FILTER</code>, lays the same numbers out as a crosstab, one dimension across the columns.</p>
+<p>A report that many people run, a monthly summary by product, reads the whole fact table each time. A warehouse often stores such a summary instead, as a table of its own, refreshed with each load. In PostgreSQL, a materialized view (<a href="09-Chapter9.html#sec-tx-views" class="quarto-xref"><span>Section 9.1</span></a>) does this: it stores its query’s result, and <code>REFRESH MATERIALIZED VIEW</code> recomputes it after the nightly load:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">MATERIALIZED</span> <span class="kw">VIEW</span> sales.monthly_product_sales <span class="kw">AS</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> d.calendar_year, d.calendar_month,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>       p.product_number, <span class="fu">SUM</span>(f.quantity) <span class="kw">AS</span> quantity,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount) <span class="kw">AS</span> sales</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> p</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_dim_pk <span class="op">=</span> f.product_dim_fk</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> d.calendar_year, d.calendar_month,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>         p.product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-dw-monthly-view" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="dw-monthly-view" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dw-monthly-view-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;11.18: The Monthly Summary for March 2027
+</figcaption>
+<div aria-describedby="tbl-dw-monthly-view-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> calendar_year, calendar_month, product_number,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>       quantity, sales</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.monthly_product_sales</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> calendar_year <span class="op">=</span> <span class="dv">2027</span> <span class="kw">AND</span> calendar_month <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+calendar_year
+</th>
+<th style="text-align:right;">
+calendar_month
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:right;">
+quantity
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+421
+</td>
+<td style="text-align:right;">
+48775.72
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+GC-400
+</td>
+<td style="text-align:right;">
+505
+</td>
+<td style="text-align:right;">
+73026.39
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+237
+</td>
+<td style="text-align:right;">
+20695.17
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2027
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+228
+</td>
+<td style="text-align:right;">
+30994.22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The summary has one row per month and product, 15 months of four products at most, where the fact table has 1,065 rows; a report of any month reads a few rows. Because the summary holds sums, which are additive, it can be rolled up further, to quarters or years, without returning to the facts; a summary of averages could not.</p>
+</section>
+<section id="sec-warehousing-summary" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="sec-warehousing-summary"><span class="header-section-number">11.6</span> Summary</h2>
+<p><strong>Operational databases run the business; a data warehouse analyzes it.</strong> Online transaction processing is many short transactions on current data; online analytical processing is long queries over history. A warehouse is loaded from the operational databases, keeps their history, and is subject-oriented, integrated, time-variant, and nonvolatile.</p>
+<p><strong>A dimensional model divides a business process into facts and dimensions.</strong> It is designed in four steps: choose the business process, declare the grain, identify the dimensions, and identify the facts. The facts go into a fact table at the declared grain, the dimensions into tables around it, and the result is a star schema.</p>
+<p><strong>A warehouse’s dimensions are denormalized, and its facts should be additive.</strong> Repeated attributes in a dimension save joins and cannot drift, since a load process writes them. Additive facts can be summed over any dimension; non-additive ones must be computed from additive ones, and semi-additive ones cannot be summed over time.</p>
+<p><strong>Extract, transform, and load fills the warehouse, and a refresh loads only what is new.</strong> Extract reads the sources, transform derives attributes and computes facts at the grain, and load replaces business identifiers with surrogate keys, dimensions before facts. A condition that skips rows already loaded makes each step safe to run twice; reconcile counts and sums after every load.</p>
+<p><strong>A slowly changing dimension either rewrites history or keeps it.</strong> Type 1 overwrites the dimension row, so old facts move with the change; type 2 adds a row with the dates it is valid, so each fact keeps the member as it was; type 3 keeps one previous value in a column. The choice is the business’s, made attribute by attribute before the first load.</p>
+<p><strong>ROLLUP, CUBE, and GROUPING SETS compute several levels of totals in one query.</strong> Roll-up and drill-down move along a dimension’s hierarchy, and slice and dice select part of the cube. <code>ROLLUP</code> follows one hierarchy from coarse to fine, <code>CUBE</code> takes every combination, <code>GROUPING SETS</code> names the groupings, and <code>GROUPING()</code> tells a subtotal’s NULL from a missing value. Keep a hierarchy’s levels together, a quarter with its year.</p>
+</section>
+<section id="sec-warehousing-exercises" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="sec-warehousing-exercises"><span class="header-section-number">11.7</span> Exercises</h2>
+<div id="exr-ch11-terms" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.1</strong></span> Match each term on the left with the phrase on the right that defines it.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a. grain</td>
+<td style="text-align: left;">1. an identifier kept on a fact, with no dimension table</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b. fact table</td>
+<td style="text-align: left;">2. what one row of the fact table records</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">c.&nbsp;dimension table</td>
+<td style="text-align: left;">3. a dimensional design whose dimensions are normalized</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d.&nbsp;degenerate dimension</td>
+<td style="text-align: left;">4. the rows of measurements at the declared grain</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">e. snowflake schema</td>
+<td style="text-align: left;">5. the members of one context of the facts, with their attributes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exr-ch11-true-false" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.2</strong></span> Mark each statement true or false, and correct each false one.</p>
+<ol type="a">
+<li>A data warehouse should be normalized to third normal form, like the operational databases it is loaded from.</li>
+<li>The grain of <code>order_line_fact</code> could be changed to one row per order without losing any question the warehouse can answer.</li>
+<li><code>SUM(quantity_on_hand)</code> over all days of a month gives the stock on hand during the month.</li>
+<li>The fact table of a star schema is usually much larger than any of its dimension tables.</li>
+<li>A dimension table’s business identifier, such as <code>customer_number</code>, is always unique within the table.</li>
+</ol>
+</div>
+<div id="exr-ch11-additivity" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.3</strong></span> Classify each measure as additive, semi-additive, or non-additive, and say how you would report it for a month of the history.</p>
+<ol type="a">
+<li>The quantity ordered on an order line.</li>
+<li>The unit price of an order line.</li>
+<li>The quantity on hand of a product in a warehouse, recorded daily.</li>
+<li>The discount amount of an order line.</li>
+<li>A product’s margin as a percentage of its sales amount.</li>
+</ol>
+</div>
+<div id="exr-ch11-inspection-star" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.4</strong></span> HG Industries’ quality department wants a warehouse of its inspections (stage Q), to analyze how its parts measure over time, by part, characteristic, inspector, and lot.</p>
+<ol type="a">
+<li>Apply the four steps of dimensional design: name the business process, declare the grain, and list the dimensions and the facts.</li>
+<li>Draw the star schema in the manner of <a href="#fig-dw-star" class="quarto-xref">Figure&nbsp;<span>11.1</span></a>, with the columns of each table.</li>
+<li>Is the measured value an additive fact? What fact would you add so that the fraction of measurements out of specification can be computed with <code>SUM</code>?</li>
+<li>Estimate the largest number of rows the fact table could have for one year, if the plant inspected one lot of each part that has characteristics on each of 250 working days, and compare it with the rows stage Q actually holds.</li>
+</ol>
+</div>
+<div id="exr-ch11-scd-choice" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.5</strong></span> For each change below to HG Industries’ customer dimension, say whether you would handle it as type 1 or type 2, and give the business reason.</p>
+<ol type="a">
+<li>Riverside Hardware’s name was loaded misspelled, and is corrected.</li>
+<li>Lakeside Distributors moves from Springfield, Missouri, to Tulsa, Oklahoma.</li>
+<li>The sales department splits the Tulsa region into a Tulsa region and a Dallas region, and assigns the Texas customers to Dallas from July 1.</li>
+<li>A customer’s telephone number, which no report groups by, changes.</li>
+</ol>
+</div>
+<div id="exr-ch11-load-order" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.6</strong></span> In <a href="#exm-dw-incremental" class="quarto-xref">Example&nbsp;<span>11.2</span></a>, suppose that the nightly refresh ran the fact load before the customer load.</p>
+<ol type="a">
+<li>What would the fact load have done with the two lines of SO-5615, and would anything have reported it?</li>
+<li>What would the next night’s refresh do, if it ran in the right order?</li>
+<li>What reconciliation of <a href="#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a> would have caught the problem on the first night?</li>
+</ol>
+</div>
+<div id="exr-ch11-region-margin" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.7</strong></span> Using stage S, write one query that reports, for 2026, the sales amount and the margin (sales amount less cost amount) by sales region and product line, with a subtotal for each region and a grand total, and with each subtotal row labeled <code>(all)</code> in place of its NULL. Check the grand total of the sales amount against <a href="#tbl-dw-scd-before" class="quarto-xref">Table&nbsp;<span>11.8</span></a>.</p>
+</div>
+<div id="exr-ch11-cube-rows" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.8</strong></span> At stage S, the query below groups the facts by <code>CUBE</code> over three dimension attributes.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> p.product_line, c.sales_region, d.calendar_year,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(f.sales_amount)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sales.order_line_fact <span class="kw">AS</span> f</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.date_dim <span class="kw">AS</span> d</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.date_dim_pk <span class="op">=</span> f.order_date_fk</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.product_dim <span class="kw">AS</span> p</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_dim_pk <span class="op">=</span> f.product_dim_fk</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> c</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_dim_pk <span class="op">=</span> f.customer_dim_fk</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">CUBE</span> (p.product_line, c.sales_region,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>               d.calendar_year);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="a">
+<li>How many groupings does <code>CUBE</code> of three columns produce? Name them.</li>
+<li>Predict the number of rows the query returns, given two product lines, two regions, and two years with sales, and assuming every combination has sales.</li>
+<li>Run the query and compare its row count with your prediction.</li>
+</ol>
+</div>
+<div id="exr-ch11-chinook-media-rollup" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 11.9</strong></span> Using the Chinook database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-public" class="quarto-xref"><span>Section C.11</span></a>, loaded with the book’s loader (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a>):</p>
+<ol type="a">
+<li>Name the grain, the dimensions, and the facts of a star schema for the store’s sales, following the four steps of <a href="#sec-dw-star" class="quarto-xref"><span>Section 11.2</span></a>.</li>
+<li>Without building it, compute from the operational tables the sales of 2024 and 2025 by year and media type, with a subtotal for each year and a grand total, using <code>ROLLUP</code> (<a href="#sec-dw-olap" class="quarto-xref"><span>Section 11.5</span></a>).</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-inmon2005building" class="csl-entry" role="listitem">
+Inmon, W. H. 2005. <em>Building the Data Warehouse</em>. 4th ed. Wiley.
+</div>
+<div id="ref-kimball2013data" class="csl-entry" role="listitem">
+Kimball, Ralph, and Margy Ross. 2013. <em>The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling</em>. 3rd ed. Wiley.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./10-Chapter10.html" class="pagination-link" aria-label="Programming with Databases">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./12-Chapter12.html" class="pagination-link" aria-label="Databases for Simulation and Analytics">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

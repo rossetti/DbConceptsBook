@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>2&nbsp; The Relational Model – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03-Chapter3.html" rel="next">
+<link href="./01-Chapter1.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-Chapter2.html">Reading and Querying a Database</a></li><li class="breadcrumb-item"><a href="./02-Chapter2.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-rm-tables" id="toc-sec-rm-tables" class="nav-link active" data-scroll-target="#sec-rm-tables"><span class="header-section-number">2.1</span> Tables, rows, and domains</a>
+  <ul>
+  <li><a href="#sec-rm-properties" id="toc-sec-rm-properties" class="nav-link" data-scroll-target="#sec-rm-properties"><span class="header-section-number">2.1.1</span> The properties of a relation</a></li>
+  </ul></li>
+  <li><a href="#sec-rm-keys" id="toc-sec-rm-keys" class="nav-link" data-scroll-target="#sec-rm-keys"><span class="header-section-number">2.2</span> Keys</a></li>
+  <li><a href="#sec-rm-integrity" id="toc-sec-rm-integrity" class="nav-link" data-scroll-target="#sec-rm-integrity"><span class="header-section-number">2.3</span> Integrity rules</a></li>
+  <li><a href="#sec-rm-schema-notation" id="toc-sec-rm-schema-notation" class="nav-link" data-scroll-target="#sec-rm-schema-notation"><span class="header-section-number">2.4</span> Writing down a schema</a></li>
+  <li><a href="#sec-rm-catalog" id="toc-sec-rm-catalog" class="nav-link" data-scroll-target="#sec-rm-catalog"><span class="header-section-number">2.5</span> A database describes itself</a></li>
+  <li><a href="#sec-rm-tools" id="toc-sec-rm-tools" class="nav-link" data-scroll-target="#sec-rm-tools"><span class="header-section-number">2.6</span> Exploring a database: DataGrip, DBeaver, psql, and pgAdmin</a></li>
+  <li><a href="#sec-rm-other-models" id="toc-sec-rm-other-models" class="nav-link" data-scroll-target="#sec-rm-other-models"><span class="header-section-number">2.7</span> Other ways to organize data</a></li>
+  <li><a href="#sec-relationalmodel-summary" id="toc-sec-relationalmodel-summary" class="nav-link" data-scroll-target="#sec-relationalmodel-summary"><span class="header-section-number">2.8</span> Summary</a></li>
+  <li><a href="#sec-relationalmodel-exercises" id="toc-sec-relationalmodel-exercises" class="nav-link" data-scroll-target="#sec-relationalmodel-exercises"><span class="header-section-number">2.9</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-Chapter2.html">Reading and Querying a Database</a></li><li class="breadcrumb-item"><a href="./02-Chapter2.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-relationalmodel" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled" title="Learning objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After reading this chapter you should be able to:</p>
+<ul>
+<li>define a table, a row, a column, and a domain, and state the properties of a relation and why each matters</li>
+<li>identify candidate keys, primary keys, and foreign keys</li>
+<li>state the entity integrity and referential integrity rules, and explain which changes to a table can break referential integrity</li>
+<li>read and write a relational schema, and trace how its tables connect through their keys</li>
+<li>explain what it means for a database to be self-describing, and query its catalog for the tables and columns it holds</li>
+<li>connect to a PostgreSQL database with DataGrip or DBeaver and browse its schemas and tables</li>
+<li>run a script with psql and browse a database with pgAdmin, the tools distributed with PostgreSQL</li>
+<li>contrast the relational model with hierarchical, network, object, and document databases</li>
+</ul>
+</div>
+</div>
+<p>Most engineers meet a database that someone else built. An intern is handed a connection to the plant’s order system and asked how many orders shipped late last quarter; a quality engineer needs the inspection results for one lot. In both cases the first task is the same: find out what the database holds, and how its parts fit together. This chapter presents the ideas that make that possible.</p>
+<p><a href="01-Chapter1.html" class="quarto-xref"><span>Chapter 1</span></a> described why industrial data belongs in a database and introduced HG Industries, the manufacturer of hand trucks and garden carts whose databases this book uses. This chapter presents the <em>relational model</em>, the way nearly every database in industrial use organizes its data. We begin with tables, rows, columns, and the values they may hold, and with the properties that set a table apart from a spreadsheet. We then take up keys, which identify rows and connect tables, and the integrity rules a database enforces to keep those connections sound. With those ideas in place, we write a database’s schema down in a compact notation that shows every table’s keys and how they connect, and we find that the database stores the same description of itself. We then explore a real database with the tools you will use throughout the book. The chapter closes with a brief look at the other ways databases organize data.</p>
+<p>The chapter does not ask you to design anything. Every table in it already exists, and our job is to read it. Designing tables of your own begins in <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a>, after the SQL chapters have shown what a well-built database lets you do.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Following along">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Following along
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The examples use stages D1 and D2 of the book’s database for the early sections and stage D5 for the whole distribution schema. <a href="15-AppSampleDatabases.html#sec-appsampledbs-loading" class="quarto-xref"><span>Section C.2</span></a> explains how to load a stage; loading <code>through-d5.sql</code> gives you every table the chapter mentions.</p>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" title="Reading the SQL in this chapter">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reading the SQL in this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The chapter shows SQL statements so that the database itself supplies every result and every refusal. You are not asked to write SQL yet. A <code>SELECT</code> reads rows, an <code>INSERT</code> adds a row, an <code>UPDATE</code> changes the rows its <code>WHERE</code> names, and a <code>DELETE</code> removes them. Read each statement in three parts: the sentence before it says what it attempts, the statement does it, and the table or message after it is PostgreSQL’s reply. You need not decode the syntax; <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a> teaches queries, and <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> teaches defining tables and changing their rows (<a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>).</p>
+</div>
+</div>
+<section id="sec-rm-tables" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="sec-rm-tables"><span class="header-section-number">2.1</span> Tables, rows, and domains</h2>
+<p>This section presents the building blocks of the relational model: tables, their rows and columns, and the values a column may hold.</p>
+<p><span class="citation" data-cites="codd1970relational">Codd (<a href="references.html#ref-codd1970relational" role="doc-biblioref">1970</a>)</span> proposed the relational model in 1970, and it has been the basis of commercial databases ever since. In the model, all data is held in <strong>relations</strong>. A relation has a fixed set of named <strong>attributes</strong>, and each attribute draws its values from a <strong>domain</strong>, the set of values that are allowed for it. Formally, a relation is a set of <strong>tuples</strong>, and each tuple holds one value for each attribute. That is, if a relation has the attributes of a customer, each tuple describes one customer.</p>
+<p>In practice a relation is drawn and stored as a <strong>table</strong>. Each attribute is a <strong>column</strong>, and each tuple is a <strong>row</strong>. This book uses the words table, row, and column throughout, and it treats <em>tuple</em> and <em>row</em> as meaning the same thing. A table looks like a spreadsheet, but it obeys rules that a spreadsheet does not, and <a href="#sec-rm-properties" class="quarto-xref"><span>Section 2.1.1</span></a> states them.</p>
+<p>Let’s look at a real table. HG Industries’ distribution department keeps a table of its customers. The following query asks for every column (the <code>*</code>) of every row of the table named after <code>FROM</code>. Queries are the subject of <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a>; for now, notice only what comes back.</p>
+<div id="tbl-rm-customer" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-customer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: The Customer Table
+</figcaption>
+<div aria-describedby="tbl-rm-customer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+customer_pk
+</th>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:left;">
+city
+</th>
+<th style="text-align:left;">
+state
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+C-1001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:left;">
+Fayetteville
+</td>
+<td style="text-align:left;">
+AR
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+C-1002
+</td>
+<td style="text-align:left;">
+Summit Farm Supply
+</td>
+<td style="text-align:left;">
+Springdale
+</td>
+<td style="text-align:left;">
+AR
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+C-1003
+</td>
+<td style="text-align:left;">
+Cedar Creek Home Center
+</td>
+<td style="text-align:left;">
+Tulsa
+</td>
+<td style="text-align:left;">
+OK
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+C-1004
+</td>
+<td style="text-align:left;">
+Midtown Tool Supply
+</td>
+<td style="text-align:left;">
+Joplin
+</td>
+<td style="text-align:left;">
+MO
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+C-1005
+</td>
+<td style="text-align:left;">
+Prairie Garden Center
+</td>
+<td style="text-align:left;">
+Fort Smith
+</td>
+<td style="text-align:left;">
+AR
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+C-1006
+</td>
+<td style="text-align:left;">
+Lakeside Distributors
+</td>
+<td style="text-align:left;">
+Springfield
+</td>
+<td style="text-align:left;">
+MO
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+C-1007
+</td>
+<td style="text-align:left;">
+Tri-County Farm and Home
+</td>
+<td style="text-align:left;">
+Bentonville
+</td>
+<td style="text-align:left;">
+AR
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+C-1008
+</td>
+<td style="text-align:left;">
+Northgate Hardware
+</td>
+<td style="text-align:left;">
+Little Rock
+</td>
+<td style="text-align:left;">
+AR
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> shows the eight rows of the <code>customer</code> table in stage D1. Each row describes one customer, and each column records one fact about every customer: an internal key (<code>customer_pk</code>), the customer number the business uses, the customer’s name, and the city and state where it is located.</p>
+<p>The structure of a table (its name, its columns, and their domains) is called its <strong>schema</strong>, and the rows it holds at a given moment are called its <strong>state</strong>. The schema changes rarely, when the database is redesigned; the state changes every time a row is added, changed, or removed. A <strong>database schema</strong> is the collection of all its tables’ schemas. In other words, the schema is what the database <em>can</em> hold, and the state is what it holds <em>now</em>. <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a> shows why the difference matters when we look for keys.</p>
+<section id="sec-rm-properties" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="sec-rm-properties"><span class="header-section-number">2.1.1</span> The properties of a relation</h3>
+<p>This subsection presents the six properties that every relation has and that a well-built table keeps. A row holds one value in each column, and the place where a row and a column meet is called a <strong>cell</strong>, as in a spreadsheet. The six properties are:</p>
+<ol type="1">
+<li>Each cell holds one value that cannot be broken into parts, or none at all.</li>
+<li>The values of each column come from one domain.</li>
+<li>Each column has a name that no other column of its table shares.</li>
+<li>No two rows are identical.</li>
+<li>The order of the rows carries no meaning.</li>
+<li>The order of the columns carries no meaning.</li>
+</ol>
+<p>For each property, we state what it says, see what it means for the <code>customer</code> table of <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a>, and see what goes wrong without it.</p>
+<p>The first property concerns what one cell may hold. Notice in <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> that each value is a single item, one name or one state. A value that is one member of its column’s domain, rather than several values joined in one, is called <strong>atomic</strong>, and the relational model requires every value to be atomic. A column holding “Fayetteville, AR” would break that rule. A query for the customers in Arkansas would have to pick the state out of the text, and an entry typed as “Fayetteville AR” or “Fayetteville, Ark.” would slip past it. That is why the city and the state are separate columns.</p>
+<p>Whether a value is atomic depends on its domain and on how it is used; how it looks does not settle it. Prairie Garden Center’s city in <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> is “Fort Smith”, two words with a space between them, and it is atomic. “Fort Smith” is one member of the domain of cities, and no query, rule, or sort ever needs “Fort” alone. Nor does atomic mean a single character: AR is two characters, one value, and no one ever needs the A alone. A date has a year, a month, and a day, yet it is one value of the date domain. Its data type defines those parts and keeps them well formed, so a query can ask for a date’s month (<a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a>) and no date can have a 13th month. “Fayetteville, AR” joins members of two domains, a city and a state, in a text value whose parts the database does not know. Thus, the database cannot pick out the state reliably, and it cannot check that the state is a real one. The test is a question about use: does any query, rule, or sort need part of the value on its own, in a way the value’s domain does not supply? If so, the parts belong in separate columns.</p>
+<p>The same test settles values that have a structure of their own. A telephone number that is always stored and searched whole is atomic, since nothing needs its area code alone. A location’s latitude and longitude are two values, because a question such as which warehouse lies north of Joplin, or which is nearest a customer, needs each one alone. An address is atomic only if nothing ever asks for its city or its ZIP code. <a href="05-Chapter5.html#sec-cm-attribute-parts" class="quarto-xref"><span>Section 5.3.1</span></a> returns to such values when it models attributes that have parts.</p>
+<p>The first property allows one thing besides an atomic value: a cell with no value at all. A <strong>NULL</strong> marks a value that is unknown or that does not apply. For example, an order placed without a requested ship date has NULL in that column. NULL is neither zero nor an empty string, and <a href="03-Chapter3.html#sec-q-null" class="quarto-xref"><span>Section 3.3</span></a> explains how queries treat it. Every row of <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> has a value in every column, because each column of the <code>customer</code> table is declared to require one.</p>
+<p>The first property has a companion that spreadsheets break just as often. Suppose that HG Industries recorded up to two telephone numbers per customer, in columns named <code>phone1</code> and <code>phone2</code>. Each cell then holds one value, yet the two columns hold the same attribute, a telephone number, told apart only by position. Several columns that hold the same attribute are called a <strong>repeating group</strong>, and the relational model forbids them. A customer with a third number would need a new column, and a search for one number would have to look in every column of the group. The model records such facts as rows of a table of their own, one row per telephone number, and <a href="07-Chapter7.html#sec-nf-forms" class="quarto-xref"><span>Section 7.4</span></a> returns to repeating groups when it defines first normal form.</p>
+<p>The second property says that a column’s values all come from its domain. A domain is more than a data type, although in SQL the data type is its main expression. For example, the <code>state</code> column is declared <code>CHAR(2)</code>, a string of exactly two characters. The domain of US state codes is smaller than that: it has about fifty members, and <code>ZZ</code> is not one of them. A database can narrow a column’s domain further with a rule that every value must pass, a <code>CHECK</code> constraint, which <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> presents. Thus, the data type is the first line of defense for a domain, and it is usually not the last.</p>
+<p>The data type is enforced on every value. The <code>customer_pk</code> column is declared <code>INTEGER</code>. An <code>UPDATE</code> changes values in the rows its <code>WHERE</code> names; the following one tries to set Riverside Hardware’s <code>customer_pk</code> to the text <code>'ten'</code>. PostgreSQL refuses it:</p>
+<div class="cell" data-stage="d1" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.customer</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> customer_pk <span class="op">=</span> <span class="st">'ten'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1001'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  invalid input syntax for type integer: "ten"
+LINE 2: SET customer_pk = 'ten'
+                          ^</code></pre>
+</div>
+<p>Notice that the message names the type and the value, and points to the value in the statement. PostgreSQL refuses the statement for the type alone, before it considers anything else about the change (<a href="#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a> shows that it refuses a new number in <code>customer_pk</code> too, for another reason). A refused statement changes nothing, so the table is as it was before. Without the second property, a column of quantities could hold <code>10</code>, <code>ten</code>, and <code>a dozen</code>, and no sum or comparison over it would mean anything.</p>
+<p>The third property says that each column of a table has its own name. A query finds a column by its name: <code>city</code> means the same column of the <code>customer</code> table whatever other columns the table holds. Two columns named <code>city</code> would make every mention of <code>city</code> ambiguous, and PostgreSQL refuses to create a table that has them. Suppose that a designer wanted both a billing city and a shipping city for each customer. The designer names each column for its role, <code>billing_city</code> and <code>shipping_city</code>, and every mention of either is then clear. A query result is more lenient than a table: a query may ask for the same column twice, and its result then has two columns with one name. Thus, the third property is enforced for the tables a database stores, and a query that repeats a name is best avoided.</p>
+<p>The fourth property says that no two rows of a relation are identical. Each row states a fact (here, that a customer with this number, name, city, and state exists), and a fact stated twice is still one fact. Were Riverside Hardware’s row stored twice, a count of the customers in Arkansas would report six where there are five, and every sum over the rows would count its figures twice. In addition, the two copies could not be told apart: no condition in a query could pick out one of them and leave the other. Here SQL departs from the model. SQL does not require a table to be a true set, so a table with no key can hold two identical rows, which a relation never can. The keys of <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a> are what prevent that, and every table in the book’s database has one. A query result has no key and may also repeat a row, and a query can ask for each different row only once (<a href="03-Chapter3.html#sec-q-select" class="quarto-xref"><span>Section 3.1</span></a>).</p>
+<p>The fifth property says that the rows of a table have no order. A spreadsheet has a row 1 and a row 2; a table does not, and a database may return the same rows in a different order the next time you ask. When order matters, a query must ask for its rows in an order (<a href="03-Chapter3.html#sec-q-orderby" class="quarto-xref"><span>Section 3.4</span></a>). Suppose that someone treated the last row of the <code>customer</code> table as the newest customer. That meaning would vanish the first time the rows came back in another order. A fact that matters, such as the date a customer was added, belongs in a column of its own.</p>
+<p>The sixth property says that the columns of a relation have no order either. Each column is known by its name (the third property), so <code>name</code> holds the customer’s name whether it is the third column or the fifth. Here SQL departs from the model again. A table keeps the order in which its columns were declared, and a query that asks for every column returns them in that order, as <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> shows. A statement that adds a row without naming its columns also depends on that order, matching its values to the columns by position. A new column changes what a query for every column returns. A table rebuilt with its columns in another order would send such a statement’s values into the wrong columns, or have it refused. Thus, a statement that must keep working as the table changes should name its columns, and a statement that adds a row should always name them.</p>
+<p><a href="#tbl-rm-properties" class="quarto-xref">Table&nbsp;<span>2.2</span></a> collects the six properties, what goes wrong without each, and where SQL departs from the model. Notice that the second and fifth properties hold in SQL as the model states them, and that each departure has a remedy in how you write a table or a query.</p>
+<div id="tbl-rm-properties" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-properties-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.2: The Properties of a Relation
+</figcaption>
+<div aria-describedby="tbl-rm-properties-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 37%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">What goes wrong without it</th>
+<th style="text-align: left;">Where SQL departs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1. One atomic value or NULL per cell</td>
+<td style="text-align: left;">A query must pick values out of text, and variants slip past it</td>
+<td style="text-align: left;">PostgreSQL also offers array and document types, which the book uses only in its appendix on NoSQL (<a href="20-AppNoSQL.html#sec-appnosql-jsonb" class="quarto-xref"><span>Section H.4</span></a>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2. One domain per column</td>
+<td style="text-align: left;">Sums and comparisons over the column mean nothing</td>
+<td style="text-align: left;">None: the data type enforces the domain, and <code>CHECK</code> narrows it</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3. Unique column names</td>
+<td style="text-align: left;">A mention of a column is ambiguous</td>
+<td style="text-align: left;">A query result may repeat a name, as in <code>SELECT city, city</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4. No identical rows</td>
+<td style="text-align: left;">Counts and sums are inflated, and the copies cannot be told apart</td>
+<td style="text-align: left;">A table with no key, and a query result, may hold identical rows; keys and <code>DISTINCT</code> restore the rule</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5. No order of rows</td>
+<td style="text-align: left;">Meaning carried by position is lost when the order changes</td>
+<td style="text-align: left;">None: order must be asked for with <code>ORDER BY</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6. No order of columns</td>
+<td style="text-align: left;">Meaning carried by position is lost when a column is added</td>
+<td style="text-align: left;">A table keeps its declared column order, so <code>SELECT *</code> and an <code>INSERT</code> with no column list depend on it; name the columns</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The properties are easiest to see where they are broken. <a href="#tbl-rm-spreadsheet" class="quarto-xref">Table&nbsp;<span>2.3</span></a> shows how the same customers might be kept in a spreadsheet. Its rows are customers of <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a>, and its telephone numbers are invented, since the book’s database holds none.</p>
+<div id="tbl-rm-spreadsheet" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-spreadsheet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.3: A Spreadsheet Version of the Customer List (Hypothetical)
+</figcaption>
+<div aria-describedby="tbl-rm-spreadsheet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 26%">
+<col style="width: 22%">
+<col style="width: 18%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Customer</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Location</th>
+<th style="text-align: left;">Phone 1</th>
+<th style="text-align: left;">Phone 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">C-1001</td>
+<td style="text-align: left;">Riverside Hardware</td>
+<td style="text-align: left;">Fayetteville, AR</td>
+<td style="text-align: left;">479-555-0101</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C-1002</td>
+<td style="text-align: left;">Summit Farm Supply</td>
+<td style="text-align: left;">Springdale, AR</td>
+<td style="text-align: left;">479-555-0144</td>
+<td style="text-align: left;">479-555-0145</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C-1001</td>
+<td style="text-align: left;">Riverside Hardware</td>
+<td style="text-align: left;">Fayetteville, AR</td>
+<td style="text-align: left;">479-555-0101</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Missouri customers</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C-1004</td>
+<td style="text-align: left;">Midtown Tool Supply</td>
+<td style="text-align: left;">Joplin</td>
+<td style="text-align: left;">417-555-0120</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C-1006</td>
+<td style="text-align: left;">Lakeside Distributors</td>
+<td style="text-align: left;">Springfield</td>
+<td style="text-align: left;">417-555-0188</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Let’s walk through <a href="#tbl-rm-spreadsheet" class="quarto-xref">Table&nbsp;<span>2.3</span></a> one break at a time.</p>
+<ul>
+<li>The Location cells hold a city and a state together, which breaks the first property: “Fayetteville, AR” is not atomic.</li>
+<li>Phone 1 and Phone 2 hold the same attribute, which makes them a repeating group. Summit Farm Supply’s third number would need a third column.</li>
+<li>Riverside Hardware appears twice, which breaks the fourth property. A count of the sheet’s customers gives five where there are four.</li>
+<li>The row “Missouri customers” describes no customer, so its Customer cell holds a value outside the column’s domain, which breaks the second property. Joplin and Springfield are in Missouri only because their rows sit under that heading, which breaks the fifth property. Sort the sheet by name, and the two customers lose their state.</li>
+</ul>
+<p>Undoing each break gives back the <code>customer</code> table. Splitting Location into a City column and a State column makes every value atomic. Moving the telephone numbers to a table of their own removes the repeating group, and the <code>customer</code> table of stage D1 holds no telephone numbers at all. Deleting the second Riverside Hardware row leaves each customer once. Finally, deleting the heading row and writing MO in the State cell of each Missouri customer puts the meaning of the heading into values. What remains has the columns of <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> except <code>customer_pk</code>, the internal key that <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a> explains.</p>
+<p>Taken together, the six properties say one thing: a table’s meaning lives in its values and its names, never in the position of a row or a column or in the layout of a sheet. That is what lets a query say what it wants (the customers whose <code>state</code> is MO) without saying how to walk through the rows to find them. It is also why a new column leaves a query that names its columns unaffected, and why the database is free to return rows in whatever order is quickest without changing an answer. One property takes more than care to keep: a table holds no identical rows only if it has a way to tell its rows apart, and that is the subject of keys.</p>
+</section>
+</section>
+<section id="sec-rm-keys" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="sec-rm-keys"><span class="header-section-number">2.2</span> Keys</h2>
+<p>This section presents keys: the columns that identify a row and, in another role, connect one table to another.</p>
+<p>A table must give us a way to tell its rows apart. A <strong>superkey</strong> is a set of one or more columns whose values identify a row: no two rows of the table may ever have the same values in all of them. The set of all of a table’s columns is always a superkey, since two rows that agree in every column would be the same row. Superkeys usually carry more columns than they need, so the model asks for the smallest ones. A <strong>candidate key</strong> is a superkey from which no column can be removed without losing the property. That is, a candidate key satisfies two conditions:</p>
+<ol type="1">
+<li>The table will never contain two rows that agree on all the columns of the candidate key.</li>
+<li>No smaller set of those columns satisfies the first condition.</li>
+</ol>
+<p>The word <em>never</em> in the first condition is the important one. A candidate key is a rule about every state the table could ever be in, which makes it a fact about the business the table describes. The rows the table holds today can show that a set of columns is <em>not</em> a key, by containing two rows that agree on it; however, they can never prove that it is one.</p>
+<div id="exm-rm-customer-keys" class="theorem example">
+<p><span class="theorem-title"><strong>Example 2.1 (Finding the candidate keys of the customer table)</strong></span> <em>The system.</em> HG Industries records each customer it sells to in the <code>customer</code> table of <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a>, which has the columns <code>customer_pk</code>, <code>customer_number</code>, <code>name</code>, <code>city</code>, and <code>state</code>.</p>
+<p><em>The request.</em> Which columns, alone or together, identify a customer?</p>
+<p>Let’s examine each column against the eight rows of <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a>, and then against what we know about the business. The following table records the check.</p>
+<div id="tbl-rm-customer-key-check" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-customer-key-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.4: Checking the Columns of the Customer Table
+</figcaption>
+<div aria-describedby="tbl-rm-customer-key-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 19%">
+<col style="width: 44%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column</th>
+<th style="text-align: center;">Two rows share a value?</th>
+<th style="text-align: left;">A rule of the business makes it unique?</th>
+<th style="text-align: center;">Candidate key?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>customer_pk</code></td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">The database generates a different value for every row</td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>customer_number</code></td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">The company assigns each customer one number, never reused</td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>name</code></td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">No: two stores may share a name</td>
+<td style="text-align: center;">No</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>city</code></td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">No: a second customer may open in the same city</td>
+<td style="text-align: center;">No</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>state</code></td>
+<td style="text-align: center;">Yes (AR appears five times)</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: center;">No</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Notice that the data rules out only <code>state</code>. The names and cities of the eight customers happen to be different, yet neither column is a candidate key, because nothing about the business stops a second hardware store from opening in Fayetteville. Indeed, the year of history in stage G adds a second customer in Springfield, Missouri. In contrast, <code>customer_number</code> is a key because the company promises it is: it is the identifier on every invoice.</p>
+<p><em>The check.</em> Each candidate key found has a single column, so the second condition holds automatically: there is no smaller set to try. The same condition settles the columns taken together. Any larger set that contains <code>customer_pk</code> or <code>customer_number</code> identifies a customer, but it is not minimal, so it is not a candidate key. The only sets left are combinations of <code>name</code>, <code>city</code>, and <code>state</code>, and no rule of the business makes any of them unique: two stores of the same name may open in the same city.</p>
+<p><em>Interpretation.</em> The <code>customer</code> table has two candidate keys, <code>customer_pk</code> and <code>customer_number</code>. A query that must find one customer should look it up by one of them. A report that groups customers by city is doing something else: it gathers customers together, and it never needs a city to single one out.</p>
+<p><em>Where it breaks.</em> If the company ever reused the number of a customer who had closed, <code>customer_number</code> would stop being a key, and every report that assumed it was one would silently merge two customers’ histories.</p>
+</div>
+<p>A table often has more than one candidate key, and the designer chooses one to be the <strong>primary key</strong>, the key by which the table’s rows are identified and referred to. The candidate keys not chosen are called <strong>alternate keys</strong>. In <a href="#exm-rm-customer-keys" class="quarto-xref">Example&nbsp;<span>2.1</span></a>, the primary key is <code>customer_pk</code> and <code>customer_number</code> is an alternate key. The database enforces both: it rejects any row that would repeat a value of either. For example, when we tried to add a second customer numbered C-1001, PostgreSQL refused with this message:</p>
+<pre class="text"><code>ERROR:  duplicate key value violates unique constraint "customer_customer_number_key"
+DETAIL:  Key (customer_number)=(C-1001) already exists.</code></pre>
+<p>The two candidate keys of the customer table are of different kinds. A <strong>natural key</strong> is made of data that means something to the business, such as a customer number or a part number. A <strong>surrogate key</strong> is a value the database generates only to identify rows, such as <code>customer_pk</code>, and it means nothing outside the database. Almost every table in the book’s database has a surrogate primary key, named for its table with the suffix <code>_pk</code>, and keeps its natural key as an alternate key. <a href="06-Chapter6.html#sec-map-keys" class="quarto-xref"><span>Section 6.6</span></a> discusses when each kind is the better choice. For reading a database, it is enough to recognize both.</p>
+<p>A key may also need more than one column. A key of several columns is called a <strong>composite key</strong>. For example, HG Industries numbers the lines of each order 1, 2, 3, and so on. A line number alone identifies nothing, since every order has a line 1; the order and the line number together identify one line. Thus, the pair (<code>customer_order_fk</code>, <code>line_number</code>) is a candidate key of the <code>order_line</code> table, which <a href="#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a> shows.</p>
+<p>The last kind of key connects tables. A <strong>foreign key</strong> is a set of columns in one table whose values must match the values of a candidate key in another table (or, occasionally, in the same table). The foreign key refers to the other table’s rows. Recall that each customer places orders. The following query lists the orders of stage D2, the stage in which the <code>customer_order</code> table first appears.</p>
+<div id="tbl-rm-orders" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d2">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.5: The Customer Order Table
+</figcaption>
+<div aria-describedby="tbl-rm-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+customer_order_pk
+</th>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:left;">
+order_date
+</th>
+<th style="text-align:left;">
+requested_ship_date
+</th>
+<th style="text-align:right;">
+customer_fk
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:left;">
+2026-01-05
+</td>
+<td style="text-align:left;">
+2026-01-12
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+SO-5002
+</td>
+<td style="text-align:left;">
+2026-01-07
+</td>
+<td style="text-align:left;">
+2026-01-14
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:left;">
+2026-01-12
+</td>
+<td style="text-align:left;">
+NULL
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+2026-01-15
+</td>
+<td style="text-align:left;">
+2026-01-22
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+SO-5005
+</td>
+<td style="text-align:left;">
+2026-01-21
+</td>
+<td style="text-align:left;">
+2026-02-02
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+SO-5006
+</td>
+<td style="text-align:left;">
+2026-01-28
+</td>
+<td style="text-align:left;">
+2026-02-04
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+SO-5007
+</td>
+<td style="text-align:left;">
+2026-02-03
+</td>
+<td style="text-align:left;">
+2026-02-10
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+SO-5008
+</td>
+<td style="text-align:left;">
+2026-02-11
+</td>
+<td style="text-align:left;">
+NULL
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+SO-5009
+</td>
+<td style="text-align:left;">
+2026-02-18
+</td>
+<td style="text-align:left;">
+2026-02-25
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+SO-5010
+</td>
+<td style="text-align:left;">
+2026-02-24
+</td>
+<td style="text-align:left;">
+2026-03-03
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:left;">
+SO-5011
+</td>
+<td style="text-align:left;">
+2026-03-04
+</td>
+<td style="text-align:left;">
+2026-03-11
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+SO-5012
+</td>
+<td style="text-align:left;">
+2026-03-10
+</td>
+<td style="text-align:left;">
+2026-03-17
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-rm-orders" class="quarto-xref">Table&nbsp;<span>2.5</span></a> shows the twelve orders placed in January through March 2026. Notice the last column, <code>customer_fk</code>. Its value in each row is the <code>customer_pk</code> of the customer who placed the order, so it is a foreign key that refers to the <code>customer</code> table. For example, order SO-5001 has <code>customer_fk</code> 1, and the customer whose <code>customer_pk</code> is 1 in <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> is Riverside Hardware. Notice also that orders SO-5003 and SO-5008 have NULL for their requested ship dates: those customers did not ask for a date.</p>
+<p>Customer 1 appears three times in the <code>customer_fk</code> column, and customer 8 (Northgate Hardware) does not appear at all. That pattern, one customer with many orders and some customers with none, is what a foreign key records. The next section presents the rules that keep such references sound.</p>
+</section>
+<section id="sec-rm-integrity" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="sec-rm-integrity"><span class="header-section-number">2.3</span> Integrity rules</h2>
+<p>This section presents the two rules that every relational database enforces on its keys.</p>
+<p>The first rule protects primary keys. The <strong>entity integrity</strong> rule states that no column of a primary key may be NULL. The reason is simple: a primary key is how a row is identified, and a row whose identifier is unknown cannot be found or referred to. PostgreSQL applies the rule automatically; declaring a column part of a primary key also declares that it may not be NULL.</p>
+<p>The second rule protects foreign keys. The <strong>referential integrity</strong> rule states that every value of a foreign key must either match a value of the key it refers to or be NULL. In other words, a reference must point to a row that exists. An order that refers to customer 9 when there is no customer 9 would be an <em>orphan</em>: an order that no one placed. The database enforces the rule in both directions, as the following attempts on stage D2 illustrate.</p>
+<p>First, suppose that we try to record an order for customer 9, who does not exist. An <code>INSERT</code> adds a row to the table it names, with the values it lists for the columns it lists:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer_order</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    (order_number, order_date, customer_fk)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'SO-5013'</span>, <span class="st">'2026-03-12'</span>, <span class="dv">9</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>PostgreSQL rejects the new row and names the rule it would break:</p>
+<pre class="text"><code>ERROR:  insert or update on table "customer_order" violates foreign key constraint "customer_order_customer_fk_fkey"
+DETAIL:  Key (customer_fk)=(9) is not present in table "customer".</code></pre>
+<p>Second, suppose that we try to remove Riverside Hardware (C-1001), who has placed three orders. A <code>DELETE</code> removes the rows its <code>WHERE</code> names; this one names Riverside Hardware’s row:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> distribution.customer</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1001'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Deleting the customer would leave its three orders pointing at nothing, so PostgreSQL refuses again:</p>
+<pre class="text"><code>ERROR:  update or delete on table "customer" violates foreign key constraint "customer_order_customer_fk_fkey" on table "customer_order"
+DETAIL:  Key (customer_pk)=(1) is still referenced from table "customer_order".</code></pre>
+<p>Notice what the second message says: the key is <em>still referenced</em>. The same statement for Northgate Hardware (C-1008), which has no orders, succeeds, because no row refers to it. Thus, referential integrity depends on the state of the database as well as on its schema.</p>
+<p>Notice that the two attempts changed different tables. The first added a row to the table that holds the foreign key; the second removed a row from the table the foreign key refers to. A change to either table can break referential integrity, but not every change can. <a href="#tbl-rm-ri-changes" class="quarto-xref">Table&nbsp;<span>2.6</span></a> considers each kind of change to the two tables of stage D2.</p>
+<div id="tbl-rm-ri-changes" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-ri-changes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.6: Changes That Can Break Referential Integrity
+</figcaption>
+<div aria-describedby="tbl-rm-ri-changes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 23%">
+<col style="width: 14%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table</th>
+<th style="text-align: left;">Change</th>
+<th style="text-align: center;">Can it break the rule?</th>
+<th style="text-align: left;">What the database can do</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>customer</code></td>
+<td style="text-align: left;">add a row</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">Nothing is needed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>customer</code></td>
+<td style="text-align: left;">change <code>customer_pk</code></td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: left;">Refuse, cascade, set NULL, or set a default</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>customer</code></td>
+<td style="text-align: left;">remove a row</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: left;">Refuse, cascade, set NULL, or set a default</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>customer_order</code></td>
+<td style="text-align: left;">add a row</td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: left;">Refuse</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>customer_order</code></td>
+<td style="text-align: left;">change <code>customer_fk</code></td>
+<td style="text-align: center;">Yes</td>
+<td style="text-align: left;">Refuse</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>customer_order</code></td>
+<td style="text-align: left;">remove a row</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">Nothing is needed</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Let’s read <a href="#tbl-rm-ri-changes" class="quarto-xref">Table&nbsp;<span>2.6</span></a> one table at a time. A new customer is referred to by no order, so adding one is always safe; removing an order leaves no reference behind, so it is always safe too. An order that is added, or whose <code>customer_fk</code> is changed, may refer to a customer who does not exist. The only sound response is to refuse the change, as PostgreSQL did with order SO-5013.</p>
+<p>The remaining rows change the table that is referred to. When a customer who has orders is removed, or its <code>customer_pk</code> is changed, the database has four possible responses. The designer chooses one for each foreign key when the table is defined:</p>
+<ul>
+<li>refuse the change, as PostgreSQL did with Riverside Hardware (<code>NO ACTION</code>, the default, or <code>RESTRICT</code>);</li>
+<li>cascade the change: remove the customer’s orders along with it, or change their <code>customer_fk</code> to the new value (<code>CASCADE</code>);</li>
+<li>set NULL: keep the orders but set their <code>customer_fk</code> to NULL, so that they refer to no customer (<code>SET NULL</code>);</li>
+<li>set a default: set their <code>customer_fk</code> to the column’s default value, which must itself match a customer that exists (<code>SET DEFAULT</code>).</li>
+</ul>
+<p>In PostgreSQL, <code>NO ACTION</code> and <code>RESTRICT</code> both refuse; they differ only in when the check is made, which matters only inside the transactions of <a href="09-Chapter9.html" class="quarto-xref"><span>Chapter 9</span></a>.</p>
+<p>Almost every foreign key in the book’s database refuses: its definition names no response, so it takes the default. The exceptions cascade deletions from a whole to its parts, such as an order’s lines, which cannot exist without their order; <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> explains why. The foreign key of <code>customer_order</code> refuses, as the Riverside Hardware attempt showed. Setting NULL could never succeed in the book’s database, since every foreign key column in it is declared <code>NOT NULL</code>. In addition, the surrogate key <code>customer_pk</code> refuses any value we supply. PostgreSQL generates its values, and it rejects an attempt to set one:</p>
+<div class="cell" data-stage="d2" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.customer</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> customer_pk <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1001'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  column "customer_pk" can only be updated to DEFAULT
+DETAIL:  Column "customer_pk" is an identity column defined as GENERATED ALWAYS.</code></pre>
+</div>
+<p>Notice that the message allows one change: the column may be set to <code>DEFAULT</code>, which draws a new generated value. Nothing about a customer ever requires that, because the value means nothing outside the database. Thus, a surrogate key is not meant to change, and a reference to one never needs to follow a change. That is one reason for surrogate keys, which <a href="06-Chapter6.html#sec-map-keys" class="quarto-xref"><span>Section 6.6</span></a> takes up, and <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> shows how to declare each response. For reading a database, the lesson is that a foreign key is a promise the database keeps. When you query a table with a foreign key, every value in it that is not NULL has a matching row in the table it refers to, and a query can rely on that.</p>
+</section>
+<section id="sec-rm-schema-notation" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="sec-rm-schema-notation"><span class="header-section-number">2.4</span> Writing down a schema</h2>
+<p>This section presents a compact way to write down a database’s schema: its tables, their keys, and the references that connect them.</p>
+<p>Recall from <a href="#sec-rm-tables" class="quarto-xref"><span>Section 2.1</span></a> that a database schema is the collection of all its tables’ schemas. To read a database, we need that collection in front of us, with the keys of <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a> marked. This book writes a database schema down in a compact text notation, which we call a <strong>relational schema</strong>. At a minimum, a relational schema gives:</p>
+<ul>
+<li>each table’s name, followed by its columns in parentheses;</li>
+<li>each table’s primary key, and its alternate keys;</li>
+<li>each foreign key, with the key it refers to, the table that holds that key, and whether the foreign key may be NULL.</li>
+</ul>
+<p>A key of several columns is written in parentheses. <a href="#lst-rm-schema-d2" class="quarto-xref">Listing&nbsp;<span>2.1</span></a> gives the relational schema of stage D2.</p>
+<!-- schema: d2 -->
+<div id="lst-rm-schema-d2" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-schema-d2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2.1: The Relational Schema of Stage D2
+</figcaption>
+<div aria-describedby="lst-rm-schema-d2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>customer (customer_pk, customer_number, name, city, state)
+    primary key: customer_pk
+    alternate key: customer_number
+
+customer_order (customer_order_pk, order_number, order_date,
+                requested_ship_date, customer_fk)
+    primary key: customer_order_pk
+    alternate key: order_number
+    customer_fk references customer_pk in customer,
+        must not be NULL</code></pre>
+</div>
+</figure>
+</div>
+<!-- end schema -->
+<p>The first entry of <a href="#lst-rm-schema-d2" class="quarto-xref">Listing&nbsp;<span>2.1</span></a> says that the <code>customer</code> table has five columns, that <code>customer_pk</code> is its primary key, and that <code>customer_number</code> is its alternate key: the keys found in <a href="#exm-rm-customer-keys" class="quarto-xref">Example&nbsp;<span>2.1</span></a>. The last line of the <code>customer_order</code> entry is its foreign key. It says that <code>customer_fk</code> refers to <code>customer_pk</code> in the <code>customer</code> table and must not be NULL, so every order has a customer. Read in the other direction, the same line says that a customer may be referred to by any number of orders, including none.</p>
+<p>Notice that the book’s key names do some of the work. A column ending in <code>_pk</code> is its table’s primary key, and a column ending in <code>_fk</code> is a foreign key named for the table it refers to, or sometimes for the role the referenced row plays (a bill of materials line names an assembly and one of its components, as <code>assembly_fk</code> and <code>component_fk</code>). The relational schema states the keys anyway, because a key of several columns, an alternate key, and a database named by someone else’s rules all need saying.</p>
+<p>The minimal form leaves out what is needed to build the tables rather than read them. A <strong>complete relational schema</strong> adds each column’s data type and whether it may be NULL, the <code>CHECK</code> constraints that narrow each domain, and each foreign key’s response to deleting or updating the row it refers to (<a href="#tbl-rm-ri-changes" class="quarto-xref">Table&nbsp;<span>2.6</span></a>). <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a> gives the complete relational schema of the <code>customer_order</code> table.</p>
+<!-- schema: d2 complete customer_order -->
+<div id="lst-rm-order-complete" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-order-complete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2.2: The Complete Relational Schema of the Customer Order Table
+</figcaption>
+<div aria-describedby="lst-rm-order-complete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>customer_order
+    customer_order_pk    INTEGER      not NULL, generated
+    order_number         VARCHAR(10)  not NULL
+    order_date           DATE         not NULL
+    requested_ship_date  DATE         may be NULL
+    customer_fk          INTEGER      not NULL
+    primary key: customer_order_pk
+    alternate key: order_number
+    customer_fk references customer_pk in customer,
+        must not be NULL
+    customer_fk: on delete no action, on update no action
+    check: requested_ship_date &gt;= order_date</code></pre>
+</div>
+</figure>
+</div>
+<!-- end schema -->
+<p>The column lines of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a> confirm what <a href="#tbl-rm-orders" class="quarto-xref">Table&nbsp;<span>2.5</span></a> showed: <code>requested_ship_date</code> is the one column that may be NULL. The word <em>generated</em> on <code>customer_order_pk</code> says that the database generates its values, which is what makes it a surrogate key. The line that begins <code>customer_fk: on delete</code> records the response chosen for the foreign key, no action, which means refuse. The <code>check</code> line narrows the domain of <code>requested_ship_date</code>: a customer cannot ask for an order to ship before the order was placed. In other words, a complete relational schema holds everything needed to write the statements that create the tables, which <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> presents.</p>
+<p>The relational schema of stage D5, the whole distribution schema, is too long for one listing, so it is given in two. <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> gives the tables of orders and products, and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a> the tables of warehouses and shipments.</p>
+<!-- schema: d5 customer customer_order product order_line -->
+<div id="lst-rm-schema-d5-orders" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-schema-d5-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2.3: The Relational Schema of Stage D5: Orders and Products
+</figcaption>
+<div aria-describedby="lst-rm-schema-d5-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>customer (customer_pk, customer_number, name, city, state)
+    primary key: customer_pk
+    alternate key: customer_number
+
+customer_order (customer_order_pk, order_number, order_date,
+                requested_ship_date, customer_fk)
+    primary key: customer_order_pk
+    alternate key: order_number
+    customer_fk references customer_pk in customer,
+        must not be NULL
+
+product (product_pk, product_number, description,
+         list_price)
+    primary key: product_pk
+    alternate key: product_number
+
+order_line (order_line_pk, customer_order_fk, line_number,
+            product_fk, quantity, unit_price)
+    primary key: order_line_pk
+    alternate key: (customer_order_fk, line_number)
+    customer_order_fk references customer_order_pk in
+        customer_order, must not be NULL
+    product_fk references product_pk in product,
+        must not be NULL</code></pre>
+</div>
+</figure>
+</div>
+<!-- end schema -->
+<!-- schema: d5 warehouse stock_level shipment shipment_line -->
+<div id="lst-rm-schema-d5-shipping" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-schema-d5-shipping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2.4: The Relational Schema of Stage D5: Warehouses and Shipments
+</figcaption>
+<div aria-describedby="lst-rm-schema-d5-shipping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>warehouse (warehouse_pk, warehouse_code, city, state)
+    primary key: warehouse_pk
+    alternate key: warehouse_code
+
+stock_level (stock_level_pk, warehouse_fk, product_fk,
+             quantity_on_hand, reorder_point)
+    primary key: stock_level_pk
+    alternate key: (warehouse_fk, product_fk)
+    warehouse_fk references warehouse_pk in warehouse,
+        must not be NULL
+    product_fk references product_pk in product,
+        must not be NULL
+
+shipment (shipment_pk, shipment_number, shipped_on, carrier,
+          customer_order_fk, warehouse_fk)
+    primary key: shipment_pk
+    alternate key: shipment_number
+    customer_order_fk references customer_order_pk in
+        customer_order, must not be NULL
+    warehouse_fk references warehouse_pk in warehouse,
+        must not be NULL
+
+shipment_line (shipment_line_pk, shipment_fk, order_line_fk,
+               quantity)
+    primary key: shipment_line_pk
+    alternate key: (shipment_fk, order_line_fk)
+    shipment_fk references shipment_pk in shipment,
+        must not be NULL
+    order_line_fk references order_line_pk in order_line,
+        must not be NULL</code></pre>
+</div>
+</figure>
+</div>
+<!-- end schema -->
+<p>The foreign key lines of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a> sort the eight tables into three groups. Three tables have none, so they refer to nothing: <code>customer</code>, <code>product</code>, and <code>warehouse</code>. Four refer only to those three or to each other: an order refers to a customer, an order line to an order and a product, a stock level to a warehouse and a product, and a shipment to an order and a warehouse. The last, <code>shipment_line</code>, refers to a shipment and to the order line it ships. Notice also the three alternate keys written in parentheses. The first, in <code>order_line</code>, is the composite key of <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a>, an order and a line number. The second, in <code>stock_level</code>, says that a warehouse holds at most one stock level for each product. The third, in <code>shipment_line</code>, says that a shipment ships a given order line at most once.</p>
+<p>The tables of the book’s database also carry a schema name, the name of a group of tables within the database. The distribution tables belong to the schema <code>distribution</code>, so a query names the customer table <code>distribution.customer</code>, as the queries of this chapter have. The production and quality departments’ tables belong to schemas of their own, and <a href="15-AppSampleDatabases.html" class="quarto-xref"><span>Appendix C</span></a> shows all of them.</p>
+<p>The main use of a relational schema is to find where the answer to a question lives, before any query is written. The following example illustrates the process.</p>
+<div id="exm-rm-trace-request" class="theorem example">
+<p><span class="theorem-title"><strong>Example 2.2 (Tracing a request through the schema)</strong></span> <em>The system.</em> The distribution schema of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>.</p>
+<p><em>The request.</em> The sales manager asks: which customers have ordered the GC-300 steel garden cart?</p>
+<p>The request names two things, customers and a product, so we begin by finding the tables that describe them: <code>customer</code> and <code>product</code>. Neither refers to the other, so we look for a path of foreign keys between them. The foreign keys of <code>order_line</code> refer to <code>product</code> and to <code>customer_order</code>, and the foreign key of <code>customer_order</code> refers to <code>customer</code>. Thus, the path runs from <code>product</code> to <code>order_line</code>, then to <code>customer_order</code>, and finally to <code>customer</code>. The columns along the path are the keys that connect each pair:</p>
+<div id="tbl-rm-trace" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-trace-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.7: The Path from a Product to Its Customers
+</figcaption>
+<div aria-describedby="tbl-rm-trace-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Foreign key</th>
+<th style="text-align: left;">Refers to</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>order_line.product_fk</code></td>
+<td style="text-align: left;"><code>product.product_pk</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>order_line.customer_order_fk</code></td>
+<td style="text-align: left;"><code>customer_order.customer_order_pk</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>customer_order.customer_fk</code></td>
+<td style="text-align: left;"><code>customer.customer_pk</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> Every step of <a href="#tbl-rm-trace" class="quarto-xref">Table&nbsp;<span>2.7</span></a> is a foreign key line of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>, and every step matches a foreign key to the primary key it refers to, so each connection is guaranteed by referential integrity.</p>
+<p><em>Interpretation.</em> Four tables answer the question. A query needs the product’s number from <code>product</code>, the customers’ names from <code>customer</code>, and the two tables between them only to make the connection.</p>
+<p><em>Where it breaks.</em> The path finds customers who <em>ordered</em> the cart. A manager who asks which customers <em>received</em> one needs a different path, through <code>shipment_line</code> and <code>shipment</code>, because an order line that has not shipped is still an order.</p>
+</div>
+<p>Tracing a path of keys through a schema is the reasoning behind a join, the operation <a href="03-Chapter3.html#sec-q-inner-joins" class="quarto-xref"><span>Section 3.6</span></a> presents. So far the schema has been given to us as a listing. The next section shows that the database holds the same description itself, where anyone can ask for it.</p>
+</section>
+<section id="sec-rm-catalog" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="sec-rm-catalog"><span class="header-section-number">2.5</span> A database describes itself</h2>
+<p>This section shows that a relational database stores the description of its own tables, and that the description is queried like any other data.</p>
+<p>Recall from <a href="01-Chapter1.html#sec-dbms" class="quarto-xref"><span>Section 1.3</span></a> that a DBMS keeps a <em>catalog</em> of <em>metadata</em>, the data about the data. The relational schemas of <a href="#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a> are metadata: they say what tables exist, what columns each has, and which keys and rules apply, without listing a single customer. A database that stores this description inside itself, where people and programs can read it, is called <strong>self-describing</strong>. Every relational database is self-describing, and it holds the description the relational way, in tables.</p>
+<p>Compare the sales office’s order log of <a href="01-Chapter1.html#tbl-intro-order-log" class="quarto-xref">Table&nbsp;<span>1.1</span></a>. Its only description is its heading row. The heading “Qty” names a column, but nothing in the spreadsheet records that a quantity must be a positive whole number or that an order number identifies one order. Those rules live in the heads of the people who keep the log, and they hold only as long as those people are careful. In a database, the same rules are part of the catalog, and the DBMS reads them on every change.</p>
+<p>The SQL standard defines a set of views of the catalog, called the <code>information_schema</code>, which every system that follows the standard provides. Its views are queried with the same SQL as the data. The following query asks the catalog of stage D5 which tables the distribution schema holds. Unlike the queries before it, it names the columns it wants after <code>SELECT</code>, keeps only the rows its <code>WHERE</code> allows, and sorts them with <code>ORDER BY</code>.</p>
+<div id="tbl-rm-catalog-tables" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-catalog-tables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.8: The Tables of the Distribution Schema, from the Catalog
+</figcaption>
+<div aria-describedby="tbl-rm-catalog-tables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> table_name, table_type</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.<span class="kw">tables</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">'distribution'</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> table_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+table_name
+</th>
+<th style="text-align:left;">
+table_type
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+customer
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+customer_order
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_line
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+product
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+shipment
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+shipment_line
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+stock_level
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+warehouse
+</td>
+<td style="text-align:left;">
+BASE TABLE
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-rm-catalog-tables" class="quarto-xref">Table&nbsp;<span>2.8</span></a> lists the eight tables of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>. Each is a <code>BASE TABLE</code>, a table that stores rows; the catalog also lists views, which <a href="09-Chapter9.html#sec-tx-views" class="quarto-xref"><span>Section 9.1</span></a> presents. The next query asks the catalog about the columns of one table. Its <code>WHERE</code> keeps the rows that meet both conditions joined by <code>AND</code>, and <code>AS</code> gives the column <code>character_maximum_length</code> the shorter name <code>length</code> in the result.</p>
+<div id="tbl-rm-catalog-columns" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-catalog-columns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.9: The Columns of the Customer Order Table, from the Catalog
+</figcaption>
+<div aria-describedby="tbl-rm-catalog-columns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> column_name, data_type,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>       character_maximum_length <span class="kw">AS</span> <span class="fu">length</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>       is_nullable</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.<span class="kw">columns</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">'distribution'</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> table_name <span class="op">=</span> <span class="st">'customer_order'</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> ordinal_position;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+column_name
+</th>
+<th style="text-align:left;">
+data_type
+</th>
+<th style="text-align:right;">
+length
+</th>
+<th style="text-align:left;">
+is_nullable
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+customer_order_pk
+</td>
+<td style="text-align:left;">
+integer
+</td>
+<td style="text-align:right;">
+NULL
+</td>
+<td style="text-align:left;">
+NO
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_number
+</td>
+<td style="text-align:left;">
+character varying
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+NO
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_date
+</td>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:right;">
+NULL
+</td>
+<td style="text-align:left;">
+NO
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+requested_ship_date
+</td>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:right;">
+NULL
+</td>
+<td style="text-align:left;">
+YES
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+customer_fk
+</td>
+<td style="text-align:left;">
+integer
+</td>
+<td style="text-align:right;">
+NULL
+</td>
+<td style="text-align:left;">
+NO
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Notice that <a href="#tbl-rm-catalog-columns" class="quarto-xref">Table&nbsp;<span>2.9</span></a> holds the column lines of the complete relational schema of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a>, in the catalog’s words. The type <code>character varying</code> with a length of 10 is the <code>VARCHAR(10)</code> of <code>order_number</code>, spelled as the standard spells it, and <code>is_nullable</code> is <code>YES</code> only for <code>requested_ship_date</code>. Other views of the <code>information_schema</code> record the keys, the foreign keys, and the <code>CHECK</code> constraints, and <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> queries them. Thus, a relational schema can be produced from the catalog instead of being written by hand. The listings in this book were produced that way, by a program that reads the catalog of each stage.</p>
+<p>Recall from <a href="#sec-rm-tables" class="quarto-xref"><span>Section 2.1</span></a> the difference between a schema and a state. The rows of the catalog are the database’s schema. Creating a table adds rows to the catalog; adding a customer does not. Thus, the catalog changes only when the database is redesigned.</p>
+<p>The DBMS itself reads the catalog more than anyone. Before it runs a query, it looks up every table and column the query names. A query that names a column the table does not have is refused before a single row is read. The following query asks for <code>order_no</code>, but the column is named <code>order_number</code>:</p>
+<div class="cell" data-stage="d5" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_no</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  column "order_no" does not exist
+LINE 1: SELECT order_no
+               ^</code></pre>
+</div>
+<p>The tools read it too. The schema tree of DataGrip and DBeaver, the schema diagram they draw, and psql’s <code>\d</code> command, all presented in the next section, show what the catalog holds; so does a program that asks the database for a table’s columns, as <a href="10-Chapter10.html#sec-prog-ksl" class="quarto-xref"><span>Section 10.4</span></a> shows. That is what makes a database you have never seen readable: you can always ask it what it holds.</p>
+<p>The catalog records structure, not meaning. It says that <code>unit_price</code> is a number with two decimal places that may not be NULL. It does not say whether the price is in dollars, whether it includes a discount, or how it relates to the product’s list price. That knowledge belongs in the design’s data dictionary, which <a href="05-Chapter5.html#sec-cm-classes" class="quarto-xref"><span>Section 5.3</span></a> presents. PostgreSQL can store a sentence of description with each table and column (<code>COMMENT ON COLUMN</code>), and DataGrip and DBeaver show it beside the column; several other systems can as well, but the SQL standard does not define it. With comments, the catalog holds a little of the meaning too. Before we write queries, you need a way to open a database and look around in its catalog, which the next section provides.</p>
+</section>
+<section id="sec-rm-tools" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="sec-rm-tools"><span class="header-section-number">2.6</span> Exploring a database: DataGrip, DBeaver, psql, and pgAdmin</h2>
+<p>This section presents the tools you will use to connect to a PostgreSQL database and explore it. <a href="13-AppPostgreSQLSetup.html" class="quarto-xref"><span>Appendix A</span></a> explains how to install each of them and how to load the book’s database into your server.</p>
+<p>DataGrip and DBeaver are the tools this book uses. Both connect to many kinds of database, and both show a database the same way: a tree of the database’s schemas, each schema’s tables, and each table’s columns, keys, and constraints, beside an editor in which you write and run SQL. To connect to the book’s database, you create a data source (DataGrip) or a database connection (DBeaver) for PostgreSQL, giving the host <code>localhost</code>, the port <code>5432</code>, the database name <code>dbconcepts</code>, and your user name. Once connected, expand the <code>distribution</code> schema and then its tables, and you will find the columns and keys of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>. The tree is drawn from the catalog of <a href="#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a>, which is why it is the same for every database you connect to.</p>
+<p><a href="#fig-rm-tool-tree" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> shows the tree as DataGrip draws it, here inside IntelliJ IDEA, whose database tools are DataGrip’s. The connection to the server is at the top, the <code>dbconcepts</code> database below it, and its schemas below that. The <code>distribution</code> schema is open to its eight tables, and <code>customer_order</code> is open to its five columns, in the order of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. The icons mark <code>customer_order_pk</code> as the primary key and <code>customer_fk</code> as a foreign key. The folders below the columns count the table’s constraints: two keys (the primary key and the alternate key on <code>order_number</code>), one foreign key, and one check, which keeps the requested ship date from preceding the order date. PostgreSQL builds an index to enforce each key, which is why the tree also lists two indexes; this book does not cover indexes further.</p>
+<div id="fig-rm-tool-tree" class="quarto-float quarto-figure quarto-figure-left anchored" alt="DataGrip's database tree: the dbconcepts database, its distribution schema open to eight tables, and customer_order open to its five columns, with folders for its keys, foreign keys, indexes, and checks, followed by the schemas information_schema, pg_catalog, production, public, quality, and sales.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rm-tool-tree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/screenshots/datagrip-tree.png" class="img-fluid figure-img" style="width:55.0%" alt="DataGrip's database tree: the dbconcepts database, its distribution schema open to eight tables, and customer_order open to its five columns, with folders for its keys, foreign keys, indexes, and checks, followed by the schemas information_schema, pg_catalog, production, public, quality, and sales.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rm-tool-tree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: The Database Tree of DataGrip, Open to the <code>customer_order</code> Table
+</figcaption>
+</figure>
+</div>
+<p>Notice that <code>information_schema</code> and <code>pg_catalog</code> appear in <a href="#fig-rm-tool-tree" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> beside <code>distribution</code>, as schemas like any other. They are the catalog of <a href="#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a>, and the tool reads them to draw the tree. The <code>production</code>, <code>quality</code>, and <code>sales</code> schemas hold the other departments’ tables, which later chapters add. If your tree shows only some schemas, <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-datagrip" class="quarto-xref"><span>Section A.2</span></a> explains how to show them all. DBeaver’s tree, and the tree of a later version of DataGrip, may look a little different, but the outline is the same: a database, its schemas, their tables, and each table’s columns and constraints.</p>
+<p>Both tools will also draw a <strong>schema diagram</strong>, a picture of the tables you select and the foreign keys that connect them. <a href="#fig-rm-schema-d5" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> draws the tables of stage D5 the way these tools do. Each box is a table, with its key columns first, marked <code>PK</code> and <code>FK</code>, and its other columns below a line. Each column shows its SQL data type; <code>UNIQUE</code> marks an alternate key, <code>(optional)</code> marks a column that may be NULL, and a key of several columns is listed at the bottom as a <code>UNIQUE (...)</code> line. Each arrow is one foreign key, running from the table that holds it to the table it refers to and labeled with the foreign key column.</p>
+<div id="fig-rm-schema-d5" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rm-schema-d5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/schema-d5.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rm-schema-d5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: The Schema of Stage D5, Drawn as a Database Tool Draws It
+</figcaption>
+</figure>
+</div>
+<p>A schema diagram shows at a glance what the relational schema says line by line. For example, the arrow from <code>customer_order</code> to <code>customer</code> in <a href="#fig-rm-schema-d5" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> is the line <code>customer_fk references customer_pk in customer</code> of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. For an unfamiliar database, you should ask a tool for its diagram before writing a query: reading it takes a few minutes and saves hours of guessing. Tools differ in how they draw a diagram, however, while a relational schema says the same things whichever tool produced it.</p>
+<p>PostgreSQL itself comes with two tools. <strong>psql</strong> is a command-line program that connects to a database and runs SQL typed at its prompt or read from a file. It is the quickest way to run a script, and it is available wherever PostgreSQL is installed. For example, this command loads stage D2 of the book’s database, from the <code>sql</code> folder of the companion code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-d2.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>On Windows, add <code>-U postgres</code> and give the superuser’s password when psql asks; <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-psql-pgadmin" class="quarto-xref"><span>Section A.4</span></a> gives the form for each system.</p>
+<p>psql also has commands of its own, which begin with a backslash. The command <code>\dt distribution.*</code> lists the tables of the <code>distribution</code> schema, and at stage D2 it prints:</p>
+<pre class="text"><code>                  List of tables
+    Schema    |      Name      | Type  |  Owner
+--------------+----------------+-------+----------
+ distribution | customer       | table | rossetti
+ distribution | customer_order | table | rossetti
+(2 rows)</code></pre>
+<p>The command <code>\d distribution.customer_order</code> describes one table: its columns, their types, and its constraints. The following output is what it prints at stage D2.</p>
+<pre class="text"><code>                                Table "distribution.customer_order"
+       Column        |         Type          | Collation | Nullable |           Default
+---------------------+-----------------------+-----------+----------+------------------------------
+ customer_order_pk   | integer               |           | not null | generated always as identity
+ order_number        | character varying(10) |           | not null |
+ order_date          | date                  |           | not null |
+ requested_ship_date | date                  |           |          |
+ customer_fk         | integer               |           | not null |
+Indexes:
+    "customer_order_pkey" PRIMARY KEY, btree (customer_order_pk)
+    "customer_order_order_number_key" UNIQUE CONSTRAINT, btree (order_number)
+Check constraints:
+    "customer_order_check" CHECK (requested_ship_date &gt;= order_date)
+Foreign-key constraints:
+    "customer_order_customer_fk_fkey" FOREIGN KEY (customer_fk) REFERENCES distribution.customer(customer_pk)</code></pre>
+<p>Notice that the output holds what the complete relational schema of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a> says, in PostgreSQL’s words. psql reads it from PostgreSQL’s own catalog, the tables of the <code>pg_catalog</code> schema, over which the standard’s <code>information_schema</code> views are defined. The <code>Nullable</code> column marks the columns that may not be NULL; only <code>requested_ship_date</code> is blank, since it is optional. The primary key and the alternate key appear under <code>Indexes</code>, and the foreign key appears under <code>Foreign-key constraints</code>, with the table and column it refers to. Its response to a deletion is not printed, because it is the default, no action. The <code>Owner</code> column of the first listing, and the constraint names, will differ on your machine: the owner is whoever loaded the database, and PostgreSQL names a constraint that its creator did not name.</p>
+<p><strong>pgAdmin</strong> is PostgreSQL’s graphical tool, often installed with the server. It shows the same tree of schemas, tables, and columns as DataGrip and DBeaver, and it can run SQL. You may meet it on a machine where nothing else is installed; this book does not use it further.</p>
+</section>
+<section id="sec-rm-other-models" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="sec-rm-other-models"><span class="header-section-number">2.7</span> Other ways to organize data</h2>
+<p>This section places the relational model among the other ways databases organize data, so that you recognize them when you meet them.</p>
+<p>The relational model is not the only way to organize a database, and it was not the first. Two questions separate the alternatives from it and from one another. First, where does the description of the data live: in a catalog, in each record, or only in the programs that use the data? Second, how is one record connected to another: by matching values, as a foreign key matches a primary key, or by a stored link that a program follows?</p>
+<p>The databases that came before the relational model connected records by stored links. A <strong>hierarchical database</strong> arranges records in trees, each record under one parent. IBM’s IMS, the best known, was built in the 1960s to keep track of the parts of the Apollo program <span class="citation" data-cites="kleppmann2017designing">(<a href="references.html#ref-kleppmann2017designing" role="doc-biblioref">Kleppmann 2017</a>)</span>, and a bill of materials is a tree, so the fit was natural. The fit breaks when a part goes into two assemblies, since a record has only one parent: the part is stored twice, or reached through a special link. A <strong>network database</strong>, standardized by the CODASYL committee around 1970, lets a record have many parents, and a program finds data by following links from record to record. In both, a question nobody had planned for meant a new program to walk the links. The relational model replaced them because it connects tables by values, so any question can be asked in a query; <a href="04-Chapter4.html#sec-agg-recursive" class="quarto-xref"><span>Section 4.6</span></a> shows how SQL walks a bill of materials. IMS still runs in some banks and manufacturers.</p>
+<p>An <strong>object database</strong> stores the objects of a program directly, each with an identity of its own, connected by references as the objects of a running program are. Its appeal is that the program’s classes and the database’s structure are the same thing, so nothing is translated between them. Object databases found uses in engineering design and telecommunications, but they never displaced relational ones. Instead, relational systems took on some of their features, and libraries now do the translation, as <a href="10-Chapter10.html#sec-prog-libraries" class="quarto-xref"><span>Section 10.6</span></a> shows. The class models of <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> describe objects in just this way, and <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> maps them to tables.</p>
+<p>The most common alternatives today go by the name <strong>NoSQL</strong>, read “not only SQL”: document, key-value, wide-column, and graph databases, built for data spread over many machines and for data whose structure changes often. The <strong>document database</strong> is the one you are most likely to meet. It stores each record as a <strong>document</strong>, usually written in JSON, a text format of named fields in which a field may hold a list or another document. <a href="#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a> is order SO-5001 of stage D5 written as one JSON document, built from the database by a query.</p>
+<!-- document: d5 sql/documents/order-document.sql -->
+<div id="lst-rm-order-document" class="json listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-order-document-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2.5: Order SO-5001 as a JSON Document
+</figcaption>
+<div aria-describedby="lst-rm-order-document-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"order_number"</span><span class="fu">:</span> <span class="st">"SO-5001"</span><span class="fu">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"order_date"</span><span class="fu">:</span> <span class="st">"2026-01-05"</span><span class="fu">,</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"customer"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"customer_number"</span><span class="fu">:</span> <span class="st">"C-1001"</span><span class="fu">,</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"Riverside Hardware"</span><span class="fu">,</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"city"</span><span class="fu">:</span> <span class="st">"Fayetteville"</span><span class="fu">,</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"state"</span><span class="fu">:</span> <span class="st">"AR"</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"lines"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"line_number"</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"product_number"</span><span class="fu">:</span> <span class="st">"HT-100"</span><span class="fu">,</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Two-wheel hand truck"</span><span class="fu">,</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"quantity"</span><span class="fu">:</span> <span class="dv">10</span><span class="fu">,</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"unit_price"</span><span class="fu">:</span> <span class="fl">89.00</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"line_number"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"product_number"</span><span class="fu">:</span> <span class="st">"GC-300"</span><span class="fu">,</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Steel garden cart"</span><span class="fu">,</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"quantity"</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"unit_price"</span><span class="fu">:</span> <span class="fl">119.00</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<!-- end document -->
+<p>Compare <a href="#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a> with <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. The relational database holds this order in four tables connected by keys: one row of <code>customer_order</code>, one of <code>customer</code>, two of <code>order_line</code>, and two of <code>product</code>. The document holds it in one place, with the order’s lines nested inside it and copies of the customer’s and the products’ facts written in. A program that needs the whole order reads one document, without a join.</p>
+<p>Notice two things about the document. First, every field carries its own name, so each document describes itself and no catalog is needed to read it. The cost is that nothing requires the next document to use the same names or the same structure; a misspelled field is simply a new field. Second, the description of the HT-100 is now stored in every order that includes one, which is the duplication of the order log of <a href="01-Chapter1.html#sec-files-to-databases" class="quarto-xref"><span>Section 1.1</span></a>. Changing a product’s description means finding and changing every document that copies it. Thus, a document database suits data that is written and read whole, such as an order or a test record, better than facts shared by many records. <a href="20-AppNoSQL.html" class="quarto-xref"><span>Appendix H</span></a> describes the four families of NoSQL databases, when each suits, and how PostgreSQL itself stores and queries JSON documents.</p>
+</section>
+<section id="sec-relationalmodel-summary" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="sec-relationalmodel-summary"><span class="header-section-number">2.8</span> Summary</h2>
+<p><strong>A relational database holds all of its data in tables.</strong> Each table has a fixed set of columns, each with a name of its own and each drawing its values from a domain. Every value is atomic: no query, rule, or sort needs a part of it that its domain does not supply. A value may be NULL when it is unknown or does not apply. A relation’s rows are never identical, and neither its rows nor its columns have an order. A SQL table needs a key to keep the first rule, and it keeps the order in which its columns were declared, which a statement should not depend on. Thus, a table’s meaning lives in its values and names, never in position or layout.</p>
+<p><strong>A table’s schema is its structure, and its state is its current rows.</strong> The schema changes when the database is redesigned; the state changes with every change to its rows. Keys and integrity rules are part of the schema, which is why they hold for every state.</p>
+<p><strong>Keys identify rows, and the business decides what the keys are.</strong> A candidate key is a smallest set of columns that no two rows may ever share. The data can show that a set of columns is not a key, but only the rules of the business can make one a key. The designer chooses one candidate key as the primary key, and the others become alternate keys; in the book’s database, almost every primary key is a surrogate key, and each natural identifier is an alternate key.</p>
+<p><strong>Foreign keys connect tables, and referential integrity keeps the connections sound.</strong> A foreign key’s values must match a row of the table it refers to, or be NULL. A change can break the rule by adding a reference to a missing row, or by removing or changing a row that is still referred to. The database refuses the first kind; for the second, the designer chooses whether it refuses, cascades, sets NULL, or sets a default.</p>
+<p><strong>A relational schema is the map to read before writing a query.</strong> It lists every table’s columns and keys, and a line for every foreign key that names the table it refers to. Following those lines from one table to another finds the tables that connect them, which is the reasoning behind the joins of <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a>. A complete relational schema adds what is needed to build the tables, and a schema diagram draws the same map as a picture.</p>
+<p><strong>A relational database is self-describing.</strong> Its catalog of metadata (the tables, columns, keys, and rules) is stored in the database and queried with SQL through the standard <code>information_schema</code>. The DBMS reads it to check every query, and every tool and program that explores a database reads it too. The catalog records structure; the meaning of the data belongs in the design’s data dictionary.</p>
+<p><strong>Other databases organize data in other ways.</strong> Hierarchical and network databases connected records by stored links that programs followed. Object databases store a program’s objects as they are. Document databases store each record whole, with its own field names, nesting what a relational database spreads over several tables and copying what it stores once.</p>
+<p>With a database connected and its schema in hand, you are ready to ask it questions. <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a> presents the SQL <code>SELECT</code> statement, beginning with a single table and building to queries that follow the paths of this chapter across many.</p>
+</section>
+<section id="sec-relationalmodel-exercises" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="sec-relationalmodel-exercises"><span class="header-section-number">2.9</span> Exercises</h2>
+<div id="exr-ch2-terms" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.1</strong></span> Match each term on the left with the phrase on the right that defines it.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a. domain</td>
+<td style="text-align: left;">1. a candidate key the designer has chosen to identify rows</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b. superkey</td>
+<td style="text-align: left;">2. the rows a table holds at one moment</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">c.&nbsp;candidate key</td>
+<td style="text-align: left;">3. the set of values a column may hold</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d.&nbsp;primary key</td>
+<td style="text-align: left;">4. a set of columns that no two rows may share</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">e. alternate key</td>
+<td style="text-align: left;">5. a smallest set of columns that no two rows may share</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">f.&nbsp;state</td>
+<td style="text-align: left;">6. a candidate key that was not chosen as the primary key</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exr-ch2-true-false" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.2</strong></span> Mark each statement true or false, and correct each false one.</p>
+<ol type="a">
+<li>The rows of a table are stored in the order in which they were added, and a query returns them in that order.</li>
+<li>A column of a primary key may be NULL if the value is not yet known.</li>
+<li>A foreign key column may be NULL.</li>
+<li>If no two rows of a table currently share a value of a column, that column is a candidate key.</li>
+<li>A table may have more than one candidate key.</li>
+</ol>
+</div>
+<div id="exr-ch2-relation-properties" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.3</strong></span> A clerk at HG Industries keeps the stock of its two warehouses in the spreadsheet of <a href="#tbl-rm-stock-sheet" class="quarto-xref">Table&nbsp;<span>2.10</span></a>. Its quantities come from the <code>stock_level</code> table of stage D4 (<a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>); its bin locations are invented. The clerk knows that the first Quantity column is the quantity on hand and the second is the reorder point.</p>
+<div id="tbl-rm-stock-sheet" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-stock-sheet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.10: A Clerk’s Stock Sheet (Hypothetical)
+</figcaption>
+<div aria-describedby="tbl-rm-stock-sheet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Product</th>
+<th style="text-align: left;">Quantity</th>
+<th style="text-align: left;">Quantity</th>
+<th style="text-align: left;">Bin 1</th>
+<th style="text-align: left;">Bin 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Fayetteville warehouse</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HT-100 Two-wheel hand truck</td>
+<td style="text-align: left;">120</td>
+<td style="text-align: left;">40</td>
+<td style="text-align: left;">A-12</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GC-300 Steel garden cart</td>
+<td style="text-align: left;">18</td>
+<td style="text-align: left;">25</td>
+<td style="text-align: left;">B-03</td>
+<td style="text-align: left;">B-04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tulsa warehouse</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HT-100 Two-wheel hand truck</td>
+<td style="text-align: left;">60</td>
+<td style="text-align: left;">30</td>
+<td style="text-align: left;">C-01</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GC-400 Poly garden cart</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">C-07</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GC-400 Poly garden cart</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">C-07</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<ol type="a">
+<li>Name each property of a relation (<a href="#tbl-rm-properties" class="quarto-xref">Table&nbsp;<span>2.2</span></a>) that the sheet breaks, and point to the cells, rows, or columns that break it. Count a repeating group as a break of the first property.</li>
+<li>For each break, give one question about the stock that the sheet would answer wrongly, or could not answer, because of it.</li>
+<li>Describe the changes that would turn the sheet into tables that keep all six properties. You need not choose keys.</li>
+</ol>
+</div>
+<div id="exr-ch2-warehouse-keys" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.4</strong></span> The <code>warehouse</code> table of stage D4 has the columns <code>warehouse_pk</code>, <code>warehouse_code</code>, <code>city</code>, and <code>state</code>, and holds two rows: W-FAY in Fayetteville, Arkansas, and W-TUL in Tulsa, Oklahoma. HG Industries assigns each warehouse a code that is never reused, and it could open a second warehouse in a city where it already has one. Identify every candidate key of the table, its primary key, and its alternate keys, and explain why <code>city</code> is not a candidate key even though the two rows have different cities.</p>
+</div>
+<div id="exr-ch2-order-line-keys" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.5</strong></span> Using <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>, answer these questions about the <code>order_line</code> table.</p>
+<ol type="a">
+<li>Why is <code>line_number</code> alone not a candidate key?</li>
+<li>Name every candidate key of the table.</li>
+<li>The table has two foreign keys. For each, name the table it refers to and state in words what the reference means for the business.</li>
+</ol>
+</div>
+<div id="exr-ch2-integrity" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.6</strong></span> The database is at stage D2 (<a href="#lst-rm-schema-d2" class="quarto-xref">Listing&nbsp;<span>2.1</span></a> and <a href="#tbl-rm-orders" class="quarto-xref">Table&nbsp;<span>2.5</span></a>). For each change below, state whether PostgreSQL accepts or rejects it, and which integrity rule or key decides.</p>
+<ol type="a">
+<li>Adding an order numbered SO-5013 for customer 8 (Northgate Hardware).</li>
+<li>Adding an order numbered SO-5001 for customer 2.</li>
+<li>Removing customer 8.</li>
+<li>Removing customer 3 (Cedar Creek Home Center).</li>
+<li>Changing the <code>customer_fk</code> of order SO-5002 to 12.</li>
+</ol>
+</div>
+<div id="exr-ch2-ri-actions" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.7</strong></span> At stage D4, the <code>stock_level</code> table refers to the <code>warehouse</code> table through <code>warehouse_fk</code> (<a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>), and each of the two warehouses holds four stock levels.</p>
+<ol type="a">
+<li>Build a table like <a href="#tbl-rm-ri-changes" class="quarto-xref">Table&nbsp;<span>2.6</span></a> for the <code>warehouse</code> and <code>stock_level</code> tables.</li>
+<li>HG Industries closes its Tulsa warehouse (W-TUL) and asks for it to be removed from the database. What does PostgreSQL do, and why?</li>
+<li>Suppose <code>warehouse_fk</code> had been declared to cascade deletions. What would removing W-TUL do at stage D4? Stage D5 adds the <code>shipment</code> table, whose <code>warehouse_fk</code> also refers to <code>warehouse</code> (<a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>). Why might the company regret the same choice on <code>shipment.warehouse_fk</code>?</li>
+<li>Suppose instead that <code>warehouse_fk</code> had been declared to set NULL. What would happen when W-TUL is removed, and why?</li>
+</ol>
+</div>
+<div id="exr-ch2-trace" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.8</strong></span> Using <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>, list the tables, and the key columns that connect them, needed to answer each request. Do not write any SQL.</p>
+<ol type="a">
+<li>Which warehouse shipped order SO-5004?</li>
+<li>How many units of the HT-100 hand truck have been ordered but not yet shipped?</li>
+<li>Which customers have received a shipment from the Tulsa warehouse?</li>
+</ol>
+</div>
+<div id="exr-ch2-explore" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.9</strong></span> Connect to the book’s database with DataGrip or DBeaver, load stage D5, and find the <code>stock_level</code> table in the <code>distribution</code> schema. List its columns with their data types, its primary key, its foreign keys and the tables they refer to, and its other constraints. Then write the complete relational schema of <code>stock_level</code> in the form of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a>, and compare it with the <code>stock_level</code> box of <a href="#fig-rm-schema-d5" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>. What does the relational schema say that the box does not?</p>
+</div>
+<div id="exr-ch2-northwind-orders" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.10</strong></span> Open the <code>orders</code>, <code>order_details</code>, <code>products</code>, and <code>shippers</code> tables of the Northwind database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-public" class="quarto-xref"><span>Section C.11</span></a>, loaded with the book’s loader (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a>), in DataGrip or DBeaver, and read their definitions.</p>
+<ol type="a">
+<li>Write the four tables in the relational schema notation of <a href="#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a>: columns, primary keys, alternate keys, and each foreign key with the table it refers to and whether it may be NULL.</li>
+<li>Name two ways Northwind’s conventions differ from this book’s (<a href="15-AppSampleDatabases.html#sec-appsampledbs-conventions" class="quarto-xref"><span>Section C.3</span></a>).</li>
+<li><code>orders.customer_id</code> may be NULL. What would an order with no customer mean, and what would you ask the business before allowing it?</li>
+</ol>
+</div>
+<div id="exr-ch2-catalog-columns" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.11</strong></span> The query of <a href="#tbl-rm-catalog-columns" class="quarto-xref">Table&nbsp;<span>2.9</span></a> lists the columns of <code>customer_order</code> at stage D5. Change it to list the columns of <code>order_line</code> instead, run it against stage D5, and compare the result with the <code>order_line</code> entry of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>.</p>
+<ol type="a">
+<li>Which columns of <code>order_line</code> may be NULL?</li>
+<li>Name one thing the result tells you that the relational schema of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> does not, and one thing the relational schema tells you that the result does not.</li>
+<li>The result gives no length for <code>unit_price</code>, which is declared <code>NUMERIC(10,2)</code>. Look through the columns of <code>information_schema.columns</code> in DataGrip or DBeaver, and name the two that record the 10 and the 2.</li>
+</ol>
+</div>
+<div id="exr-ch2-self-describing" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.12</strong></span> A process engineer keeps a log of gauge calibrations in a spreadsheet whose headings are Gauge, Date, Standard, Reading, and Technician. Each row records one calibration of one gauge against a reference standard.</p>
+<ol type="a">
+<li>Name three facts about this data that the catalog of a database holding the log would record and the spreadsheet does not.</li>
+<li>Name one fact about the readings that neither the spreadsheet nor the catalog records, and say where a database designer would record it.</li>
+<li>A colleague renames the heading Reading to Reading (mm) and adds a column of readings in inches beside it. Explain what a database’s catalog would make the colleague do differently, and why that matters to the people who read the log.</li>
+</ol>
+</div>
+<div id="exr-ch2-other-models" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 2.13</strong></span> Suppose that HG Industries stored every order of stage D5 as one JSON document in the form of <a href="#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a>, and nothing else.</p>
+<ol type="a">
+<li>Riverside Hardware (C-1001) has placed three orders. How many times is its city stored in the relational database of stage D5, and how many times in the documents?</li>
+<li>HG Industries renames the GC-300 from “Steel garden cart” to “Steel utility cart”. The GC-300 appears on eight orders. How many rows change in the relational database, and how many documents change? What goes wrong if one document is missed?</li>
+<li>The GC-400 poly garden cart is in the <code>product</code> table of stage D5 but has never been ordered. Where would its description and list price be stored if the orders were the only documents? Which problem of <a href="01-Chapter1.html#sec-files-to-databases" class="quarto-xref"><span>Section 1.1</span></a> is this?</li>
+<li>A hierarchical database stores HG’s bill of materials as trees, one for each product, with every part under the assembly it goes into. At stage P2, the wheel assembly WA-10 goes into all four products, and it has four components of its own. Describe two ways the wheel assembly could be stored, and what each costs when HG Industries changes the wheel assembly’s tire.</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-codd1970relational" class="csl-entry" role="listitem">
+Codd, E. F. 1970. <span>“A Relational Model of Data for Large Shared Data Banks.”</span> <em>Communications of the ACM</em> 13 (6): 377–87. <a href="https://doi.org/10.1145/362384.362685">https://doi.org/10.1145/362384.362685</a>.
+</div>
+<div id="ref-kleppmann2017designing" class="csl-entry" role="listitem">
+Kleppmann, Martin. 2017. <em>Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems</em>. O’Reilly Media.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./01-Chapter1.html" class="pagination-link" aria-label="Databases in Industrial Engineering">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03-Chapter3.html" class="pagination-link" aria-label="Querying Tables">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

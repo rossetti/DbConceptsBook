@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>9&nbsp; Views, Transactions, and Concurrency – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./10-Chapter10.html" rel="next">
+<link href="./08-Chapter8.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-Chapter5.html">Designing and Building a Database</a></li><li class="breadcrumb-item"><a href="./09-Chapter9.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-tx-views" id="toc-sec-tx-views" class="nav-link active" data-scroll-target="#sec-tx-views"><span class="header-section-number">9.1</span> Views</a></li>
+  <li><a href="#sec-tx-acid" id="toc-sec-tx-acid" class="nav-link" data-scroll-target="#sec-tx-acid"><span class="header-section-number">9.2</span> Transactions and the ACID properties</a></li>
+  <li><a href="#sec-tx-isolation" id="toc-sec-tx-isolation" class="nav-link" data-scroll-target="#sec-tx-isolation"><span class="header-section-number">9.3</span> Concurrency and isolation levels</a></li>
+  <li><a href="#sec-tx-security" id="toc-sec-tx-security" class="nav-link" data-scroll-target="#sec-tx-security"><span class="header-section-number">9.4</span> Security and privileges</a></li>
+  <li><a href="#sec-transactions-summary" id="toc-sec-transactions-summary" class="nav-link" data-scroll-target="#sec-transactions-summary"><span class="header-section-number">9.5</span> Summary</a></li>
+  <li><a href="#sec-transactions-exercises" id="toc-sec-transactions-exercises" class="nav-link" data-scroll-target="#sec-transactions-exercises"><span class="header-section-number">9.6</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-Chapter5.html">Designing and Building a Database</a></li><li class="breadcrumb-item"><a href="./09-Chapter9.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-transactions" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled" title="Learning objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After reading this chapter you should be able to:</p>
+<ul>
+<li>define a view, use it in queries, and say when a view can be updated</li>
+<li>group statements into a transaction with BEGIN, COMMIT, and ROLLBACK, and explain the ACID properties</li>
+<li>recognize the lost update and the read anomalies of concurrent transactions, and choose an isolation level that prevents them</li>
+<li>grant and revoke privileges on tables and views</li>
+</ul>
+</div>
+</div>
+<p>The chapters so far have treated a database as if one person used it at a time, and as if every statement stood alone. Neither is true in a working plant. Sales, shipping, and quality use the same tables at once, and a single piece of work, such as shipping an order, takes several statements that make sense only together. This chapter presents the database’s answers: views, which give each user the queries they need under a name; transactions, which make several statements succeed or fail as one; isolation, which keeps concurrent users from spoiling each other’s work; and privileges, which decide who may do what.</p>
+<p>The chapter is brief, and it shows each idea once, mostly on HG Industries’ distribution schema at stages D3 to D5, and for privileges on the production schema of stage P1. The ideas matter to an engineer less as theory than as explanations: of why a report run twice gives two answers, why a statement waits, and why a program must sometimes try a change again.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Following along">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Following along
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Several results in this chapter come from a <strong>schedule</strong>: a sequence of statements run by two sessions, A and B, in the order the table shows, as two clerks at two terminals would run them. Each schedule runs against a copy of the stage database that is discarded afterward. To keep the statements short, a schedule names tables without their schema, as a session whose search path lists <code>distribution</code> may (<a href="08-Chapter8.html#sec-ddl-postgres" class="quarto-xref"><span>Section 8.1</span></a>). To try one yourself, open two query consoles in DataGrip or DBeaver, leave both in auto-commit, as in the earlier chapters, and run the statements in order, typing <code>BEGIN</code>, <code>COMMIT</code>, and <code>ROLLBACK</code> where the schedule shows them (<a href="#sec-tx-acid" class="quarto-xref"><span>Section 9.2</span></a>).</p>
+</div>
+</div>
+<section id="sec-tx-views" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="sec-tx-views"><span class="header-section-number">9.1</span> Views</h2>
+<p>This section presents views: queries that the database keeps under a name.</p>
+<p>A <strong>view</strong> is a named query stored in the database, which can be used in other queries as if it were a table. It stores no rows. Each time a query uses the view, the database runs the view’s query and uses its result, so a view always reflects the tables as they are at that moment. Recall the flat order report of <a href="07-Chapter7.html#sec-nf-anomalies" class="quarto-xref"><span>Section 7.2</span></a>: normalization split it into four tables, and <a href="07-Chapter7.html#sec-nf-classmodels" class="quarto-xref"><span>Section 7.6</span></a> observed that the report itself belongs in a query. A view gives that query a name:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">VIEW</span> distribution.order_report <span class="kw">AS</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> o.order_number, c.customer_number,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>       c.name <span class="kw">AS</span> customer_name, l.line_number,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>       p.product_number, p.description, l.quantity</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The view is queried as a table is. A user who wants the lines of SO-5004 no longer writes the joins:</p>
+<div id="tbl-tx-view-so5004" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="view-order-report">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-view-so5004-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.1: The Lines of SO-5004, from the Order Report View
+</figcaption>
+<div aria-describedby="tbl-tx-view-so5004-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_number, customer_name, line_number,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>       product_number, description, quantity</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_report</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5004'</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> line_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:left;">
+customer_name
+</th>
+<th style="text-align:right;">
+line_number
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:right;">
+quantity
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Because the view stores no rows, the anomalies of <a href="07-Chapter7.html#sec-nf-anomalies" class="quarto-xref"><span>Section 7.2</span></a> cannot arise in it. A change to a product’s description is made once, in <code>product</code>, and every row of the report shows it at once:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.product</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">'Two-wheel steel hand truck'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-100'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-tx-view-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;view-order-report&quot;,&quot;upd-ht100-description&quot;]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-view-after-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.2: The Lines of SO-5004 After the Description Changes
+</figcaption>
+<div aria-describedby="tbl-tx-view-after-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_number, line_number, product_number,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>       description</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_report</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5004'</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> line_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:right;">
+line_number
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:left;">
+description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel steel hand truck
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel steel hand truck
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Both HT-100 lines of <a href="#tbl-tx-view-after" class="quarto-xref">Table&nbsp;<span>9.2</span></a> show the new description, from the one row that changed. A view serves three purposes. It <em>simplifies</em>: a join or a calculation written once is used by name. It <em>insulates</em>: if the tables behind it are later split or renamed, the view can be redefined so that the queries built on it keep working. And it <em>restricts</em>: a user can be allowed to query a view without being allowed to query the tables behind it, which <a href="#sec-tx-security" class="quarto-xref"><span>Section 9.4</span></a> takes up. A view that answers a standing question of the business is worth its name. For example, the warehouse manager’s question “what needs reordering?” becomes, at stage D4:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">VIEW</span> distribution.stock_to_reorder <span class="kw">AS</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> w.warehouse_code, p.product_number,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>       s.quantity_on_hand, s.reorder_point</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.stock_level <span class="kw">AS</span> s</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.warehouse <span class="kw">AS</span> w</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> w.warehouse_pk <span class="op">=</span> s.warehouse_fk</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> s.product_fk</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> s.quantity_on_hand <span class="op">&lt;</span> s.reorder_point;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-tx-reorder" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d4" data-changes="view-stock-to-reorder">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-reorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.3: Stock Levels Below Their Reorder Points, Stage D4
+</figcaption>
+<div aria-describedby="tbl-tx-reorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> distribution.stock_to_reorder</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> warehouse_code, product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+warehouse_code
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:right;">
+quantity_on_hand
+</th>
+<th style="text-align:right;">
+reorder_point
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+W-FAY
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+W-TUL
+</td>
+<td style="text-align:left;">
+GC-400
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Can a view be changed, as a table can? A view is <strong>updatable</strong> when each of its rows comes from one row of one table, so that the database knows which row an <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> on the view must change. In PostgreSQL, a view is updatable automatically when it selects from a single table and has none of <code>DISTINCT</code>, <code>GROUP BY</code>, <code>HAVING</code>, aggregates, window functions, <code>LIMIT</code> or <code>OFFSET</code>, a <code>WITH</code> clause, or set operations such as <code>UNION</code>. Even then, only the view’s columns that are plain columns of the table can be changed through it. The order report joins four tables, and is not updatable:</p>
+<div class="cell" data-stage="d3" data-changes="view-order-report" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> distribution.order_report</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5004'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  cannot delete from view "order_report"
+DETAIL:  Views that do not select from a single table or view are not automatically updatable.
+HINT:  To enable deleting from the view, provide an INSTEAD OF DELETE trigger or an unconditional ON DELETE DO INSTEAD rule.</code></pre>
+</div>
+<p>A single-table view is updatable, and it raises a question of its own. The view below shows the customers in Oklahoma, and a clerk who works only with that territory could add customers through it. Nothing yet stops the clerk from adding, through the view, a customer in Arkansas, a row the view itself would never show. The clause <code>WITH CHECK OPTION</code> makes the view refuse such a row:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">VIEW</span> distribution.oklahoma_customer <span class="kw">AS</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_number, name, city, state</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> state <span class="op">=</span> <span class="st">'OK'</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> <span class="kw">CHECK</span> <span class="kw">OPTION</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-stage="d3" data-changes="view-oklahoma" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.oklahoma_customer</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1009'</span>, <span class="st">'Rogers Farm Supply'</span>, <span class="st">'Rogers'</span>, <span class="st">'AR'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  new row violates check option for view "oklahoma_customer"
+DETAIL:  Failing row contains (9, C-1009, Rogers Farm Supply, Rogers, AR).</code></pre>
+</div>
+<p>A view stores no rows: its query runs, as part of the query that uses it, every time it is used, which is what keeps it current. A query of a view therefore costs about what the same query would cost written out with the view’s joins: PostgreSQL merges the view’s query into the query that uses it, so that a condition such as <code>order_number = 'SO-5004'</code> is applied inside the joins. PostgreSQL also offers a <strong>materialized view</strong>, which stores its result and is brought up to date only when told to (<code>REFRESH MATERIALIZED VIEW</code>); it trades currency for speed, as the summary tables of <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a> do. The next section turns from naming queries to grouping changes.</p>
+</section>
+<section id="sec-tx-acid" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="sec-tx-acid"><span class="header-section-number">9.2</span> Transactions and the ACID properties</h2>
+<p>This section presents transactions: groups of statements that succeed or fail as one.</p>
+<p>Shipping an order at HG Industries is several changes. The clerk records a shipment, a shipment line for each order line shipped, and a smaller quantity on hand for each product that left the warehouse. For order SO-5011 at stage D5, 30 HT-100 hand trucks and 12 GC-300 carts leaving Fayetteville, the changes are four statements; the stock levels of the two products in Fayetteville have keys 1 and 3 (<code>stock_level_pk</code>), and the order’s lines have keys 19 and 20 (<code>order_line_pk</code>):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.shipment</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    (shipment_number, shipped_on, carrier,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>     customer_order_fk, warehouse_fk)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'SH-9012'</span>, <span class="dt">DATE</span> <span class="st">'2026-03-10'</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Boston Mountain Freight'</span>, <span class="dv">11</span>, <span class="dv">1</span>);</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.shipment_line</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    (shipment_fk, order_line_fk, quantity)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> shipment_pk, <span class="dv">19</span>, <span class="dv">30</span> <span class="kw">FROM</span> distribution.shipment</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> shipment_number <span class="op">=</span> <span class="st">'SH-9012'</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> shipment_pk, <span class="dv">20</span>, <span class="dv">12</span> <span class="kw">FROM</span> distribution.shipment</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> shipment_number <span class="op">=</span> <span class="st">'SH-9012'</span>;</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.stock_level</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> quantity_on_hand <span class="op">=</span> quantity_on_hand <span class="op">-</span> <span class="dv">30</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">1</span>;</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.stock_level</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> quantity_on_hand <span class="op">=</span> quantity_on_hand <span class="op">-</span> <span class="dv">12</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">3</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The four statements belong together. A shipment recorded without its stock decrease overstates the stock; a stock decrease without its shipment loses carts from the books. Suppose that the clerk, not noticing that SO-5011 has already shipped, runs the four statements again, as shipment SH-9013. The warehouse had 18 GC-300 carts and now has 6, so the last statement drives the quantity below zero, and the check of <code>stock_level</code> refuses it. Run one at a time, as the tools run statements by default, the first three have already taken effect:</p>
+<div id="tbl-tx-no-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true" data-changes="ship-so5011">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-no-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.4: Shipping SO-5011 a Second Time, Statement by Statement
+</figcaption>
+<div aria-describedby="tbl-tx-no-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> INSERT INTO shipment (shipment_number, shipped_on, carrier, customer_order_fk, warehouse_fk) VALUES ('SH-9013', DATE '2026-03-11', 'Boston Mountain Freight', 11, 1); </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row inserted </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> INSERT INTO shipment_line (shipment_fk, order_line_fk, quantity) SELECT shipment_pk, 19, 30 FROM shipment WHERE shipment_number = 'SH-9013' UNION ALL SELECT shipment_pk, 20, 12 FROM shipment WHERE shipment_number = 'SH-9013'; </td>
+   <td style="text-align:left;width: 1.9in; "> 2 rows inserted </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 30 WHERE stock_level_pk = 1; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 12 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> ERROR:  new row for relation "stock_level" violates check constraint "stock_level_quantity_on_hand_check" </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT COUNT(*) FROM shipment WHERE customer_order_fk = 11; </td>
+   <td style="text-align:left;width: 1.9in; "> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT quantity_on_hand FROM stock_level WHERE stock_level_pk IN (1, 3) ORDER BY stock_level_pk; </td>
+   <td style="text-align:left;width: 1.9in; "> 60; 6 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The database of <a href="#tbl-tx-no-transaction" class="quarto-xref">Table&nbsp;<span>9.4</span></a> now contradicts itself. It records two shipments of SO-5011, and a second 30 hand trucks gone from Fayetteville (90 became 60), but the 12 carts of the second shipment never left the stock (6 remain). Someone must find and repair the damage by hand.</p>
+<p>A <strong>transaction</strong> is a sequence of statements that the database treats as one unit: either every change it makes takes effect, or none does. <code>BEGIN</code> (or the standard <code>START TRANSACTION</code>) opens a transaction; <code>COMMIT</code> ends it and makes its changes permanent; <code>ROLLBACK</code> ends it and discards them. In PostgreSQL, a statement that fails inside a transaction makes the whole transaction fail: the database refuses every later statement until the transaction ends, and a <code>COMMIT</code> then rolls it back. (The SQL standard, and several other systems, undo only the failed statement and let the transaction go on.) The same mistake, made inside a transaction, leaves no trace:</p>
+<div id="tbl-tx-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true" data-changes="ship-so5011">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.5: Shipping SO-5011 a Second Time, Inside a Transaction
+</figcaption>
+<div aria-describedby="tbl-tx-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> INSERT INTO shipment (shipment_number, shipped_on, carrier, customer_order_fk, warehouse_fk) VALUES ('SH-9013', DATE '2026-03-11', 'Boston Mountain Freight', 11, 1); </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row inserted </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> INSERT INTO shipment_line (shipment_fk, order_line_fk, quantity) SELECT shipment_pk, 19, 30 FROM shipment WHERE shipment_number = 'SH-9013' UNION ALL SELECT shipment_pk, 20, 12 FROM shipment WHERE shipment_number = 'SH-9013'; </td>
+   <td style="text-align:left;width: 1.9in; "> 2 rows inserted </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 30 WHERE stock_level_pk = 1; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 12 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> ERROR:  new row for relation "stock_level" violates check constraint "stock_level_quantity_on_hand_check" </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT COUNT(*) FROM shipment WHERE customer_order_fk = 11; </td>
+   <td style="text-align:left;width: 1.9in; "> ERROR:  current transaction is aborted, commands ignored until end of transaction block </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; "> rolled back: the transaction had failed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT COUNT(*) FROM shipment WHERE customer_order_fk = 11; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT quantity_on_hand FROM stock_level WHERE stock_level_pk IN (1, 3) ORDER BY stock_level_pk; </td>
+   <td style="text-align:left;width: 1.9in; "> 90; 6 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Read <a href="#tbl-tx-transaction" class="quarto-xref">Table&nbsp;<span>9.5</span></a> step by step. The first three changes succeed, as before, but inside the transaction. The fourth is refused, and from then on the transaction has failed: even the harmless count of step 6 is refused, and the <code>COMMIT</code> of step 7 rolls everything back. Afterward SO-5011 has one shipment, and the stock stands at 90 and 6, as the first shipment left it. The database is as it was before the clerk’s mistake, and the clerk has an error message to act on.</p>
+<p>An error typed in a console has the same effect on an open transaction. Until you type <code>ROLLBACK</code> (or <code>COMMIT</code>, which then rolls back), PostgreSQL refuses every statement with the message that the current transaction is aborted. The <code>ROLLBACK</code> undoes all of the transaction’s work, not only the failed statement, and with it any setting made by <code>SET</code> inside the transaction, such as a search path or a role (<a href="#sec-tx-security" class="quarto-xref"><span>Section 9.4</span></a>). When a statement may fail and the work before it should survive, mark the point before it with a <strong>savepoint</strong>. Suppose that, after the first shipment of SO-5011, a clerk ships 30 more hand trucks from Fayetteville for another order, and 12 carts with them if the stock allows:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span>;</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.stock_level</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> quantity_on_hand <span class="op">=</span> quantity_on_hand <span class="op">-</span> <span class="dv">30</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">1</span>;</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SAVEPOINT</span> before_carts;</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.stock_level</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> quantity_on_hand <span class="op">=</span> quantity_on_hand <span class="op">-</span> <span class="dv">12</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">3</span>;</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ROLLBACK</span> <span class="kw">TO</span> <span class="kw">SAVEPOINT</span> before_carts;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The second <code>UPDATE</code> is refused, since only 6 carts remain, and <code>ROLLBACK TO SAVEPOINT before_carts</code> undoes it alone. The transaction is usable again, with the hand trucks’ decrease still in it. The clerk can ship the 6 carts that remain and commit, or end with <code>ROLLBACK</code> and undo everything.</p>
+<p>The guarantees a transaction gives are summarized by four properties, known by their initials as <strong>ACID</strong>:</p>
+<ul>
+<li><strong>Atomicity</strong>: the transaction’s changes take effect all together or not at all, as <a href="#tbl-tx-transaction" class="quarto-xref">Table&nbsp;<span>9.5</span></a> showed.</li>
+<li><strong>Consistency</strong>: a transaction takes the database from a state that satisfies every rule to another that does: the constraints the database declares, and the business’s rules that the transaction’s statements carry out together. Each statement is checked against the declared constraints as it runs, and a transaction that cannot finish consistent is rolled back.</li>
+<li><strong>Isolation</strong>: transactions running at the same time do not see each other’s unfinished changes, and do not spoil each other’s work, to the degree the isolation level promises (<a href="#sec-tx-isolation" class="quarto-xref"><span>Section 9.3</span></a>).</li>
+<li><strong>Durability</strong>: once <code>COMMIT</code> returns, the changes survive a crash of the server or of the machine.</li>
+</ul>
+<p>The first three properties can be seen in a schedule. Durability is the one you trust: PostgreSQL writes every change first to a <strong>write-ahead log</strong>, a file of changes in the order they were made, and, under its default settings, does not report a commit until the log records it, so that after a crash it can replay the log and recover every committed transaction. Durability does not protect against a mistaken <code>DELETE</code> that was committed, a failed disk, or a lost machine. For those you need a <strong>backup</strong>, a copy of the database made on purpose and kept elsewhere. PostgreSQL’s <code>pg_dump</code> program writes a database to a single file, and <code>pg_restore</code> (or psql, for a plain SQL dump) rebuilds it, into a new database if need be; a backup that has never been restored should not be trusted.</p>
+<p>A transaction also changes when some constraints are checked. Recall from <a href="02-Chapter2.html#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a> that PostgreSQL’s <code>NO ACTION</code> and <code>RESTRICT</code> both refuse a deletion that would leave a foreign key pointing nowhere. The SQL standard has <code>RESTRICT</code> check at once and <code>NO ACTION</code> at the end of the statement. In PostgreSQL the difference that matters is another. A <code>NO ACTION</code> foreign key can be declared <code>DEFERRABLE INITIALLY DEFERRED</code>, and its check then waits until <code>COMMIT</code>, which lets a transaction pass through an inconsistent state on its way to a consistent one. A <code>RESTRICT</code> check is never deferred.</p>
+<p>Two practical points follow. First, DataGrip and DBeaver run each statement in its own transaction, committed at once (<em>auto-commit</em>). Both tools can switch a console to manual transactions, but this book keeps the consoles in auto-commit and types <code>BEGIN</code> where it wants a transaction. A <code>DELETE</code> typed in a console is therefore permanent the moment it runs; to experiment safely, type <code>BEGIN</code> first, and end with <code>ROLLBACK</code>. Second, the three inserts that recorded a new customer’s order in <a href="08-Chapter8.html#exm-ddl-new-order" class="quarto-xref">Example&nbsp;<span>8.2</span></a> belong in one transaction, between <code>BEGIN</code> and <code>COMMIT</code>, for the reason this section has shown. The next section considers transactions that run at the same time.</p>
+</section>
+<section id="sec-tx-isolation" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="sec-tx-isolation"><span class="header-section-number">9.3</span> Concurrency and isolation levels</h2>
+<p>This section considers transactions that run at the same time, and the isolation that keeps them from spoiling each other’s work.</p>
+<p>A database serves many sessions at once, and their transactions interleave: one clerk’s statements run between another’s. Most of the time they touch different rows and nothing goes wrong. Trouble comes when two transactions read and change the same rows, and the classic case is the <strong>lost update</strong>: two transactions read a value, each computes a new value from what it read, and the second to write overwrites the first, whose change is lost.</p>
+<p>At stage D5 the Fayetteville warehouse holds 18 GC-300 carts (stock level 3). Clerk A ships the 12 carts of SO-5011, and at the same moment clerk B ships 10 carts for another order. Each reads the quantity on hand, subtracts, and writes the result back:</p>
+<div id="tbl-tx-lost-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-lost-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.6: Two Clerks Ship GC-300 Carts at Once, Reading Before Writing
+</figcaption>
+<div aria-describedby="tbl-tx-lost-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 2 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> BEGIN; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT quantity_on_hand FROM stock_level WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 18 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 4 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> SELECT quantity_on_hand FROM stock_level WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 18 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = 6 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 6 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> UPDATE stock_level SET quantity_on_hand = 8 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> waits: session A holds a lock on the row </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; "> committed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 8 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> (step 6 completes) </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 9 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> committed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT quantity_on_hand FROM stock_level WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 8 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Both clerks read 18 (steps 3 and 4). Clerk A writes 6, which is 18 − 12. Clerk B’s write must wait (step 6), because A’s uncommitted change locks the row; when A commits, B’s write goes ahead and sets 8, which is 18 − 10. The books now say 8 carts remain, after 22 carts were shipped from 18. A’s update is lost, and nothing refused anything: each statement was legal on its own.</p>
+<p>Notice step 6. A transaction that changes a row holds a <strong>lock</strong> on it until the transaction ends, and another transaction that wants to change the same row waits. The lock did not prevent the lost update, because B’s mistake was made earlier, when it read 18 and decided on 8. The repair is to let the database do the arithmetic, in a single statement that reads and writes the row while holding its lock, and to state the condition under which the change is allowed:</p>
+<div id="tbl-tx-safe-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-safe-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.7: The Same Two Shipments, Letting the Database Subtract
+</figcaption>
+<div aria-describedby="tbl-tx-safe-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 2 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> BEGIN; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 12 WHERE stock_level_pk = 3 AND quantity_on_hand &gt;= 12; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 4 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 10 WHERE stock_level_pk = 3 AND quantity_on_hand &gt;= 10; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> waits: session A holds a lock on the row </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; "> committed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 6 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> (step 4 completes) </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 0 rows updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 7 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> ROLLBACK; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> rolled back </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT quantity_on_hand FROM stock_level WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 6 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>B’s update waits for A’s lock, as before (step 4), and when A commits it reads the row again, as A left it: 6 carts, fewer than 10, so its condition fails and it updates no row (step 6). Clerk B’s program learns that the stock is short, rolls back, and can offer a partial shipment or a backorder. The stock ends at 6, which is right. When a program must read a value and decide before it writes, as when it shows the quantity to a clerk, it can take the lock at the read with <code>SELECT ... FOR UPDATE</code>; a second transaction’s <code>SELECT ... FOR UPDATE</code> of the same row then waits until the first ends.</p>
+<p>The lost update is one of several ways concurrent transactions can interfere. The SQL standard names three more, which concern what a transaction <em>reads</em>:</p>
+<ul>
+<li>A <strong>dirty read</strong> reads a change that another transaction has made but not committed, and may yet roll back.</li>
+<li>A <strong>nonrepeatable read</strong> reads a row twice and gets two values, because another transaction changed and committed the row in between.</li>
+<li>A <strong>phantom read</strong> runs the same query twice and finds rows the second time that were not there the first, because another transaction inserted them.</li>
+</ul>
+<p>One more interference involves no row that both transactions change. In a <strong>write skew</strong>, two transactions read the same rows, and each then changes a different row on the strength of what it read, so that the two changes together break a rule that each alone keeps. <a href="#tbl-tx-write-skew-rr" class="quarto-xref">Table&nbsp;<span>9.11</span></a> shows one.</p>
+<p>The <strong>isolation level</strong> of a transaction says which of these it is protected from. The standard defines four levels, and <a href="#tbl-tx-isolation-levels" class="quarto-xref">Table&nbsp;<span>9.8</span></a> gives what each allows, with PostgreSQL’s behavior where it is stricter than the standard requires.</p>
+<div id="tbl-tx-isolation-levels" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-isolation-levels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.8: The Standard’s Isolation Levels and the Anomalies Each Allows
+</figcaption>
+<div aria-describedby="tbl-tx-isolation-levels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Isolation level</th>
+<th style="text-align: left;">Dirty read</th>
+<th style="text-align: left;">Nonrepeatable read</th>
+<th style="text-align: left;">Phantom read</th>
+<th style="text-align: left;">Write skew</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>READ UNCOMMITTED</code></td>
+<td style="text-align: left;">allowed (never in PostgreSQL)</td>
+<td style="text-align: left;">allowed</td>
+<td style="text-align: left;">allowed</td>
+<td style="text-align: left;">allowed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>READ COMMITTED</code></td>
+<td style="text-align: left;">prevented</td>
+<td style="text-align: left;">allowed</td>
+<td style="text-align: left;">allowed</td>
+<td style="text-align: left;">allowed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>REPEATABLE READ</code></td>
+<td style="text-align: left;">prevented</td>
+<td style="text-align: left;">prevented</td>
+<td style="text-align: left;">allowed (never in PostgreSQL)</td>
+<td style="text-align: left;">allowed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>SERIALIZABLE</code></td>
+<td style="text-align: left;">prevented</td>
+<td style="text-align: left;">prevented</td>
+<td style="text-align: left;">prevented</td>
+<td style="text-align: left;">prevented</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>PostgreSQL’s default, and that of most systems, is <code>READ COMMITTED</code>: each statement sees the data as committed when the statement began. It is a sensible default for short transactions, and it allows the nonrepeatable read. Suppose that the production planner runs a report inside one transaction, totaling the GC-300 carts in both warehouses, while a shipment commits:</p>
+<div id="tbl-tx-nonrepeatable" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-nonrepeatable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.9: A Report’s Total Changes Within One Transaction, Read Committed
+</figcaption>
+<div aria-describedby="tbl-tx-nonrepeatable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 3 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 12 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 46 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; "> committed </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The planner’s two totals disagree, 58 and then 46, within one transaction. A report whose parts are computed by several queries, a total on one page and a breakdown on the next, can then fail to add up. Under <code>REPEATABLE READ</code>, the transaction sees the database as it was when its first statement ran, and every query in it sees the same data. The price is that such a transaction cannot change a row that another transaction changed after its first statement ran; it fails instead, and must be tried again:</p>
+<div id="tbl-tx-serialization" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-serialization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.10: A Repeatable-Read Transaction Fails, and Is Tried Again
+</figcaption>
+<div aria-describedby="tbl-tx-serialization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN ISOLATION LEVEL REPEATABLE READ; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 3 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 12 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 4 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> ERROR:  could not serialize access due to concurrent update </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> ROLLBACK; </td>
+   <td style="text-align:left;width: 1.9in; "> rolled back </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN ISOLATION LEVEL REPEATABLE READ; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 4 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; "> committed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT quantity_on_hand FROM stock_level WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 2 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>In <a href="#tbl-tx-serialization" class="quarto-xref">Table&nbsp;<span>9.10</span></a>, A’s total is 58 both times (steps 2 and 4), although B’s shipment has committed in between. When A then ships SO-5012’s 4 carts from the same row, PostgreSQL refuses (step 5): A would be changing a row it has not seen in its current form. A tries again in a new transaction, which sees B’s change, and the stock ends at 18 − 12 − 4 = 2. A program that uses <code>REPEATABLE READ</code> or <code>SERIALIZABLE</code> must be written to retry a transaction that fails this way.</p>
+<p><code>REPEATABLE READ</code> refuses a change to a row that another transaction changed first. It does not stop two transactions that change <em>different</em> rows on the strength of what both read. Suppose that HG Industries keeps at least 30 GC-300 carts across its two warehouses: 18 in Fayetteville (stock level 3) and 40 in Tulsa (stock level 7). Two planners each check the total, 58, and each takes carts for a rush order. Planner A takes the 18 in Fayetteville, which leaves 40; planner B takes 25 in Tulsa, which leaves 33. Each change keeps the rule, and the two together do not:</p>
+<div id="tbl-tx-write-skew-rr" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-write-skew-rr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.11: Two Planners Take GC-300 Carts at Once, Repeatable Read
+</figcaption>
+<div aria-describedby="tbl-tx-write-skew-rr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN ISOLATION LEVEL REPEATABLE READ; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 2 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> BEGIN ISOLATION LEVEL REPEATABLE READ; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 4 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 18 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 6 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 25 WHERE stock_level_pk = 7; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; "> committed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 8 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> committed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 15 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Both planners read 58 (steps 3 and 4), both changes succeed, and both transactions commit. The total is now 15, half of the 30 the rule requires. Neither transaction changed a row that the other changed, so <code>REPEATABLE READ</code> found nothing to refuse. This is a write skew, and preventing it is what <code>SERIALIZABLE</code> adds. At <code>SERIALIZABLE</code>, PostgreSQL also keeps track of what each transaction has read, and refuses a transaction whose commit would give a result that no order of running the transactions one at a time could give. The same schedule at <code>SERIALIZABLE</code>:</p>
+<div id="tbl-tx-write-skew-ser" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-write-skew-ser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.12: The Same Two Planners, Serializable
+</figcaption>
+<div aria-describedby="tbl-tx-write-skew-ser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="book-result book-schedule">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Step </th>
+   <th style="text-align:center;"> Session </th>
+   <th style="text-align:left;"> Statement </th>
+   <th style="text-align:left;"> Result </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> BEGIN ISOLATION LEVEL SERIALIZABLE; </td>
+   <td style="text-align:left;width: 1.9in; "> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 2 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> BEGIN ISOLATION LEVEL SERIALIZABLE; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> transaction begun </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 4 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 18 WHERE stock_level_pk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 6 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> UPDATE stock_level SET quantity_on_hand = quantity_on_hand - 25 WHERE stock_level_pk = 7; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> 1 row updated </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; "> committed </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;background-color: rgba(238, 243, 248, 1) !important;"> 8 </td>
+   <td style="text-align:center;background-color: rgba(238, 243, 248, 1) !important;"> B </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;background-color: rgba(238, 243, 248, 1) !important;"> COMMIT; </td>
+   <td style="text-align:left;width: 1.9in; background-color: rgba(238, 243, 248, 1) !important;"> ERROR:  could not serialize access due to read/write dependencies among transactions </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:left;width: 2.6in; font-family: monospace;"> SELECT SUM(quantity_on_hand) FROM stock_level WHERE product_fk = 3; </td>
+   <td style="text-align:left;width: 1.9in; "> 40 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>In <a href="#tbl-tx-write-skew-ser" class="quarto-xref">Table&nbsp;<span>9.12</span></a>, planner A commits (step 7), and planner B’s <code>COMMIT</code> fails (step 8): run after A’s, B’s transaction would have read 40, not 58. The total stays at 40. Planner B’s program tries again, reads 40, and finds that taking 25 would break the rule. The price is the one <code>REPEATABLE READ</code> charges, a transaction that fails and must be retried, and PostgreSQL may refuse, to be safe, a transaction that would have done no harm. Thus, <code>SERIALIZABLE</code> is the level for a transaction that checks a rule spanning several rows before it changes one of them.</p>
+<p>Two more facts complete the picture. First, PostgreSQL keeps several versions of a changed row, so that a reader sees the version its snapshot calls for; as a result, an ordinary read never waits for a write, and a write never waits for an ordinary read. A read that locks, such as <code>SELECT ... FOR UPDATE</code>, can wait. Two transactions that change the same row wait for each other, as B did in <a href="#tbl-tx-lost-update" class="quarto-xref">Table&nbsp;<span>9.6</span></a>, and so do two that insert the same value of a <code>UNIQUE</code> column: the second waits until the first ends, then fails if the first committed and goes ahead if it rolled back. Second, two transactions can wait for each other at once: A has changed row 1 and wants row 3, while B has changed row 3 and wants row 1. Neither can proceed, a situation called a <strong>deadlock</strong>. PostgreSQL detects it after a second or so and cancels one transaction with an error, which the program must retry. Programs that change several rows avoid most deadlocks by changing them in the same order, for example by key.</p>
+<p>For an engineer who writes reports and programs against a shared database, three habits follow. Keep transactions short, since a transaction holds its locks until it ends. Let the database compute changes (<code>SET q = q - 12</code>) rather than writing back values computed elsewhere. And run a report that must add up within one transaction at <code>REPEATABLE READ</code>, and a transaction that checks a rule across several rows before it changes one at <code>SERIALIZABLE</code>. The next section turns from sessions that interfere by accident to users who are kept apart on purpose.</p>
+</section>
+<section id="sec-tx-security" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="sec-tx-security"><span class="header-section-number">9.4</span> Security and privileges</h2>
+<p>This section presents how a database decides who may read and change what.</p>
+<p>Every session connects to PostgreSQL as a <strong>role</strong>, a name that the database knows and grants privileges to. A role may be a person, a program, or a group: a role that can log in is a user, and a role granted to other roles is a group, whose privileges its members share. A <strong>privilege</strong> is permission to perform one kind of operation on one object: <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> on a table or view, and <code>USAGE</code> on a schema, which is needed to reach the tables in it at all. <code>GRANT</code> gives privileges, and <code>REVOKE</code> takes them back. A new role has none, apart from what is granted to everyone.</p>
+<p>Privileges follow the jobs. A sales clerk at HG Industries reads customers and products, and records orders and their lines; the clerk has no reason to delete an order or to change a product. The statements below create a group role for the sales department and grant it those privileges and no others:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">ROLE</span> hg_sales NOLOGIN;</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">USAGE</span> <span class="kw">ON</span> <span class="kw">SCHEMA</span> distribution <span class="kw">TO</span> hg_sales;</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">SELECT</span> <span class="kw">ON</span> distribution.customer,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                distribution.product <span class="kw">TO</span> hg_sales;</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">SELECT</span>, <span class="kw">INSERT</span> <span class="kw">ON</span> distribution.customer_order,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                        distribution.order_line <span class="kw">TO</span> hg_sales;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>NOLOGIN</code> makes <code>hg_sales</code> a group: nobody logs in as it. Each clerk is a login role of their own, <code>CREATE ROLE ... LOGIN PASSWORD ...</code>, made a member of the group with <code>GRANT hg_sales TO</code> the clerk, so that the privileges are managed in one place and each session still identifies the clerk who opened it. A session can take on a role it belongs to with <code>SET ROLE</code>. Acting as <code>hg_sales</code>, a query of the orders succeeds:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">ROLE</span> hg_sales;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-tx-as-sales" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;roles-sales&quot;,&quot;set-role-sales&quot;]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-as-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.13: Orders Counted by a Session Acting as hg_sales
+</figcaption>
+<div aria-describedby="tbl-tx-as-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> orders</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+orders
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>A deletion, which the role was not granted, is refused:</p>
+<div class="cell" data-stage="d5" data-changes="[&quot;roles-sales&quot;,&quot;set-role-sales&quot;]" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> distribution.customer_order</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5012'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  permission denied for table customer_order</code></pre>
+</div>
+<p>A privilege can be narrower than a table. The production department’s <code>part</code> table holds each part’s standard cost, which sales should not see. Privileges can be granted on some columns only, as in <code>GRANT SELECT (part_number, description) ON production.part TO hg_sales</code>; or a view can show the columns sales needs, and sales can be granted the view but not the table. A view is checked with the privileges of its owner, so a user who may read the view reads the table’s rows through it without any privilege on the table. The query below, cut to the first four parts, runs as <code>hg_sales</code>; the one after it, which asks the table for costs, is refused:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">VIEW</span> production.part_catalog <span class="kw">AS</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> part_number, description, unit_of_measure</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> production.part;</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">USAGE</span> <span class="kw">ON</span> <span class="kw">SCHEMA</span> production <span class="kw">TO</span> hg_sales;</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">SELECT</span> <span class="kw">ON</span> production.part_catalog <span class="kw">TO</span> hg_sales;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-tx-catalog" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p1" data-changes="[&quot;roles-sales&quot;,&quot;view-part-catalog&quot;,&quot;set-role-sales&quot;]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-catalog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.14: The First Four Parts of the Catalog, Read as hg_sales
+</figcaption>
+<div aria-describedby="tbl-tx-catalog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> part_number, description, unit_of_measure</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> production.part_catalog</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> part_number</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">4</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+part_number
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+unit_of_measure
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+AX-10
+</td>
+<td style="text-align:left;">
+Axle, 5/8 in
+</td>
+<td style="text-align:left;">
+EA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BR-10
+</td>
+<td style="text-align:left;">
+Ball bearing
+</td>
+<td style="text-align:left;">
+EA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BS-075
+</td>
+<td style="text-align:left;">
+Bar stock, 5/8 in
+</td>
+<td style="text-align:left;">
+FT
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CA-06
+</td>
+<td style="text-align:left;">
+Swivel caster, 6 in
+</td>
+<td style="text-align:left;">
+EA
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<div class="cell" data-stage="p1" data-changes="[&quot;roles-sales&quot;,&quot;view-part-catalog&quot;,&quot;set-role-sales&quot;]" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> part_number, standard_cost</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> production.part;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  permission denied for table part</code></pre>
+</div>
+<p>PostgreSQL can go further, and restrict the <em>rows</em> a role may see or change with row-level security, so that, say, each warehouse’s clerks see only their warehouse’s stock. This book does not use it.</p>
+<p>The same care applies to programs. A program that reads the database for a report should connect as a role that may only read; a program that records inspections, as <a href="10-Chapter10.html" class="quarto-xref"><span>Chapter 10</span></a> will write, as a role that may insert inspections and measurements and nothing more. No program should connect as the database’s owner or as a superuser, and no password belongs in a script or in code kept under version control: the book’s companion code reads its password from <code>db.properties</code>, a file that is never committed.</p>
+</section>
+<section id="sec-transactions-summary" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="sec-transactions-summary"><span class="header-section-number">9.5</span> Summary</h2>
+<p><strong>A view is a named query, and it is always current.</strong> It stores no rows; each use runs its query against the tables as they are. Views simplify queries, insulate them from changes to the tables, and restrict what a user sees. A simple view over one table, without grouping, <code>DISTINCT</code>, <code>LIMIT</code>, window functions, or set operations, can be updated, and <code>WITH CHECK OPTION</code> refuses a change the view could not show.</p>
+<p><strong>A transaction makes several statements succeed or fail as one.</strong> <code>BEGIN</code> opens it, <code>COMMIT</code> makes its changes permanent, and <code>ROLLBACK</code> discards them. In PostgreSQL a failed statement fails the whole transaction, and only <code>ROLLBACK</code>, or <code>ROLLBACK TO SAVEPOINT</code>, lets work go on. Its guarantees are atomicity, consistency, isolation, and durability, and durability is not a backup.</p>
+<p><strong>Concurrent transactions can spoil each other’s work, and isolation limits the damage.</strong> Two transactions that read a value, compute, and write it back lose an update; letting the database compute the change, under a condition, prevents it. The isolation level decides which read anomalies a transaction can meet: <code>READ COMMITTED</code>, the default, allows nonrepeatable reads, and <code>REPEATABLE READ</code> prevents them at the price of transactions that fail and must be retried. <code>SERIALIZABLE</code> also prevents write skew, two transactions that each change a different row on the strength of what both read.</p>
+<p><strong>Privileges decide who may do what.</strong> A role is a user or a group; <code>GRANT</code> and <code>REVOKE</code> give and take privileges on schemas, tables, views, and columns. Grant each role only what its job needs, and use a view to show some columns or rows of a table without granting the table.</p>
+</section>
+<section id="sec-transactions-exercises" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="sec-transactions-exercises"><span class="header-section-number">9.6</span> Exercises</h2>
+<div id="exr-ch9-terms" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 9.1</strong></span> Match each term on the left with the phrase on the right that defines it.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a. view</td>
+<td style="text-align: left;">1. a group of statements whose changes take effect together or not at all</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b. materialized view</td>
+<td style="text-align: left;">2. a named query that stores no rows</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">c.&nbsp;transaction</td>
+<td style="text-align: left;">3. a stored query result, brought up to date on request</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d.&nbsp;atomicity</td>
+<td style="text-align: left;">4. a file of changes that lets committed work survive a crash</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">e. write-ahead log</td>
+<td style="text-align: left;">5. all of a transaction’s changes, or none of them</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exr-ch9-open-orders" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 9.2</strong></span> The shipping department asks, every morning, which orders have not yet shipped. Use stage D5.</p>
+<ol type="a">
+<li>Write a view <code>distribution.open_order</code> that lists the order number, the customer’s name, the order date, and the requested ship date of every order that has no shipment.</li>
+<li>Write the query the department runs against the view, oldest order first, and state the rows you expect before running it.</li>
+<li>Is the view updatable in PostgreSQL? Explain from its definition.</li>
+</ol>
+</div>
+<div id="exr-ch9-transaction-steps" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 9.3</strong></span> A clerk moves five GC-400 carts from Tulsa to Fayetteville on the books, running the statements below in DataGrip at stage D5, in a console in auto-commit mode. Before the clerk commits, the laptop loses its network connection, and the session ends.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span>;</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.stock_level</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> quantity_on_hand <span class="op">=</span> quantity_on_hand <span class="op">-</span> <span class="dv">5</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">8</span>;</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.stock_level</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> quantity_on_hand <span class="op">=</span> quantity_on_hand <span class="op">+</span> <span class="dv">5</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">4</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Stock level 8 is the GC-400 in Tulsa, which holds none, and stock level 4 is the GC-400 in Fayetteville, which holds 30.</p>
+<ol type="a">
+<li>What happens to the first <code>UPDATE</code>, and what does that do to the transaction?</li>
+<li>What is the quantity on hand of the GC-400 in each warehouse afterward, and why?</li>
+<li>What would it be had the clerk run the two updates without the <code>BEGIN</code>? Which property of a transaction does the difference illustrate?</li>
+</ol>
+</div>
+<div id="exr-ch9-anomalies" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 9.4</strong></span> Name the problem each situation shows (a lost update, a dirty read, a nonrepeatable read, or a phantom read). For a, c, and d, give the lowest isolation level of <a href="#tbl-tx-isolation-levels" class="quarto-xref">Table&nbsp;<span>9.8</span></a> that prevents it in PostgreSQL. For b, give the change to the clerks’ programs that prevents it at any isolation level.</p>
+<ol type="a">
+<li>A planner totals the open orders twice in one transaction, and the second total includes an order that a clerk entered and committed in between.</li>
+<li>Two clerks each add 5 to the same stock level by reading it, adding 5 in their program, and writing the result; the level rises by 5.</li>
+<li>A report reads the price of the HT-200 twice in one transaction and gets $139.00 and then $143.17, because a price change committed in between.</li>
+<li>A report shows a price that a clerk had typed but then rolled back.</li>
+</ol>
+</div>
+<div id="exr-ch9-transfer" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 9.5</strong></span> At stage D5, Tulsa holds 60 HT-100 hand trucks (stock level 5) and Fayetteville 120 (stock level 1). Clerk A moves 20 from Tulsa to Fayetteville while clerk B ships 50 from Tulsa, both at <code>READ COMMITTED</code>. Clerk A’s program reads Tulsa’s quantity, subtracts 20, and writes the result; clerk B’s program does the same with 50.</p>
+<ol type="a">
+<li>Write out an interleaving of the two clerks’ statements, in the manner of <a href="#tbl-tx-lost-update" class="quarto-xref">Table&nbsp;<span>9.6</span></a>, under which Tulsa ends at 10, and one under which it ends at 40. What should it be?</li>
+<li>Rewrite each clerk’s change so that no interleaving gives a wrong result, and so that a clerk learns when Tulsa holds too few.</li>
+<li>Clerk A’s move is two updates, one per warehouse. Why must they be in one transaction, and in what order would you make them to reduce the chance of a deadlock with another clerk moving hand trucks the other way?</li>
+</ol>
+</div>
+<div id="exr-ch9-privileges" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 9.6</strong></span> HG Industries’ quality inspectors record inspections and their measurements. They must be able to read parts and their characteristics, and to add inspections and measurements, but not to change a characteristic’s specification limits or delete an inspection.</p>
+<ol type="a">
+<li>Write the statements that create a group role <code>hg_quality</code> with these privileges, and a login role for the inspector Linda Nguyen that belongs to it. Use the tables of stage Q.</li>
+<li>What happens when Linda Nguyen runs <code>UPDATE quality.characteristic SET upper_spec_limit = 2.0;</code>? Which part of your answer to a causes it?</li>
+<li>The quality manager wants inspectors to see each part’s number and description but not its standard cost. Give two ways to arrange it.</li>
+</ol>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./08-Chapter8.html" class="pagination-link" aria-label="Defining and Populating Tables">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./10-Chapter10.html" class="pagination-link" aria-label="Programming with Databases">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

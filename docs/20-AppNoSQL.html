@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>Appendix H — NoSQL and Other Data Stores – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./19-AppEmbeddedDatabases.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./20-AppNoSQL.html"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-appnosql-why" id="toc-sec-appnosql-why" class="nav-link active" data-scroll-target="#sec-appnosql-why"><span class="header-section-number">H.1</span> Why NoSQL databases exist</a></li>
+  <li><a href="#sec-appnosql-families" id="toc-sec-appnosql-families" class="nav-link" data-scroll-target="#sec-appnosql-families"><span class="header-section-number">H.2</span> The four families</a>
+  <ul>
+  <li><a href="#time-series-databases-and-plant-historians" id="toc-time-series-databases-and-plant-historians" class="nav-link" data-scroll-target="#time-series-databases-and-plant-historians"><span class="header-section-number">H.2.1</span> Time-series databases and plant historians</a></li>
+  </ul></li>
+  <li><a href="#sec-appnosql-tradeoffs" id="toc-sec-appnosql-tradeoffs" class="nav-link" data-scroll-target="#sec-appnosql-tradeoffs"><span class="header-section-number">H.3</span> The trade-offs</a>
+  <ul>
+  <li><a href="#schema-on-write-and-schema-on-read" id="toc-schema-on-write-and-schema-on-read" class="nav-link" data-scroll-target="#schema-on-write-and-schema-on-read"><span class="header-section-number">H.3.1</span> Schema on write and schema on read</a></li>
+  <li><a href="#nesting-is-denormalization" id="toc-nesting-is-denormalization" class="nav-link" data-scroll-target="#nesting-is-denormalization"><span class="header-section-number">H.3.2</span> Nesting is denormalization</a></li>
+  <li><a href="#consistency-across-copies" id="toc-consistency-across-copies" class="nav-link" data-scroll-target="#consistency-across-copies"><span class="header-section-number">H.3.3</span> Consistency across copies</a></li>
+  <li><a href="#questions-nobody-planned-for" id="toc-questions-nobody-planned-for" class="nav-link" data-scroll-target="#questions-nobody-planned-for"><span class="header-section-number">H.3.4</span> Questions nobody planned for</a></li>
+  </ul></li>
+  <li><a href="#sec-appnosql-jsonb" id="toc-sec-appnosql-jsonb" class="nav-link" data-scroll-target="#sec-appnosql-jsonb"><span class="header-section-number">H.4</span> Documents in PostgreSQL</a></li>
+  <li><a href="#sec-appnosql-choosing" id="toc-sec-appnosql-choosing" class="nav-link" data-scroll-target="#sec-appnosql-choosing"><span class="header-section-number">H.5</span> Choosing</a></li>
+  <li><a href="#sec-appnosql-exercises" id="toc-sec-appnosql-exercises" class="nav-link" data-scroll-target="#sec-appnosql-exercises"><span class="header-section-number">H.6</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./20-AppNoSQL.html"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-appnosql" class="quarto-section-identifier">Appendix H — NoSQL and Other Data Stores</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This book teaches the relational model because it holds most of the data an industrial engineer works with: orders, parts, routings, inspections, and the results of studies. It is not the only way to store data, however, and you will meet others, in a plant’s historian, in a supplier’s web service, or in a product team’s application. This appendix describes the databases grouped under the name NoSQL, the trade-offs they make against the relational model, and how PostgreSQL itself stores and queries JSON documents, so that you can try the ideas on the server you already have.</p>
+<p>Recall from <a href="02-Chapter2.html#sec-rm-other-models" class="quarto-xref"><span>Section 2.7</span></a> that two questions separate one way of organizing data from another: where the description of the data lives, and how one record is connected to another. Those two questions run through the whole appendix.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Following along">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Following along
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The queries of <a href="#sec-appnosql-jsonb" class="quarto-xref"><span>Section H.4</span></a> run against stage D5 of the book’s database. The script <code>sql/documents/order-documents.sql</code> of the companion code holds every statement of that section, so you can run them in DataGrip or DBeaver. Reload stage D5 afterward (<a href="15-AppSampleDatabases.html#sec-appsampledbs-loading" class="quarto-xref"><span>Section C.2</span></a>) to remove the table it creates.</p>
+</div>
+</div>
+<section id="sec-appnosql-why" class="level2" data-number="H.1">
+<h2 data-number="H.1" class="anchored" data-anchor-id="sec-appnosql-why"><span class="header-section-number">H.1</span> Why NoSQL databases exist</h2>
+<p>A relational database was designed to run on one server and to keep one copy of each fact, checked against the rules in its catalog on every change. That design suits most business and plant data, and it still does. In the 2000s, however, companies running large web services met three needs it served poorly. Their data no longer fit on one machine, so it had to be spread over many machines and copied for safety. The structure of their records changed every few weeks, as the applications that wrote them changed. And much of their data arrived already shaped as documents, from browsers, phones, and other services.</p>
+<p>The databases built for those needs came to be called <strong>NoSQL</strong>, usually read “not only SQL” <span class="citation" data-cites="sadalage2012nosql">(<a href="references.html#ref-sadalage2012nosql" role="doc-biblioref">Sadalage and Fowler 2012</a>)</span>. The name describes a family, not a rule: several NoSQL databases now accept a query language that looks much like SQL, and relational databases, PostgreSQL among them, have taken on features of NoSQL ones. What the family shares is a different answer to the two questions of <a href="02-Chapter2.html#sec-rm-other-models" class="quarto-xref"><span>Section 2.7</span></a>. A NoSQL database usually keeps the description of its data in the records or in the programs, not in a catalog, and it connects records by nesting one inside another, or not at all, more often than by keys.</p>
+</section>
+<section id="sec-appnosql-families" class="level2" data-number="H.2">
+<h2 data-number="H.2" class="anchored" data-anchor-id="sec-appnosql-families"><span class="header-section-number">H.2</span> The four families</h2>
+<p>NoSQL databases fall into four families, distinguished by what they store and how a program finds it. <a href="#tbl-appnosql-families" class="quarto-xref">Table&nbsp;<span>H.1</span></a> summarizes them, with a use for each in a company like HG Industries.</p>
+<div id="tbl-appnosql-families" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-families-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;H.1: The Four Families of NoSQL Databases
+</figcaption>
+<div aria-describedby="tbl-appnosql-families-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Family</th>
+<th style="text-align: left;">Stores</th>
+<th style="text-align: left;">A program finds a record by</th>
+<th style="text-align: left;">Examples</th>
+<th style="text-align: left;">A use at HG Industries</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Key-value</td>
+<td style="text-align: left;">A value of any form under a key</td>
+<td style="text-align: left;">Its key, and nothing else</td>
+<td style="text-align: left;">Redis, Amazon DynamoDB</td>
+<td style="text-align: left;">The current state of each machine, for a dashboard</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Document</td>
+<td style="text-align: left;">JSON documents, grouped in collections</td>
+<td style="text-align: left;">Its key, or the values of its fields</td>
+<td style="text-align: left;">MongoDB, Couchbase</td>
+<td style="text-align: left;">Test records whose fields differ from product to product</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Wide-column</td>
+<td style="text-align: left;">Rows of many columns, grouped and spread over machines by a key</td>
+<td style="text-align: left;">Its key, often a range of keys</td>
+<td style="text-align: left;">Apache Cassandra, Apache HBase</td>
+<td style="text-align: left;">Sensor readings, by machine and time</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Graph</td>
+<td style="text-align: left;">Nodes and the relationships between them</td>
+<td style="text-align: left;">Following relationships from a node</td>
+<td style="text-align: left;">Neo4j</td>
+<td style="text-align: left;">The network of suppliers behind each product</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A <strong>key-value store</strong> is the simplest: it stores a value under a key and returns the value when given the key. The value may be a number, a string, or a document, and the store does not look inside it. That simplicity makes it very fast, which is why it often sits in front of another database, holding the answers to frequent questions. For example, a dashboard on the plant floor that shows each machine’s current state reads one value per machine number, many times a second.</p>
+<p>A <strong>document database</strong> stores each record as a JSON document, as <a href="02-Chapter2.html#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a> showed, and groups documents of one kind into a <strong>collection</strong>, its counterpart of a table. Unlike a key-value store, it looks inside the documents: a query can ask for every order whose lines include a GC-300. Documents in one collection need not have the same fields. Thus, a document database suits records whose structure varies, such as test records in which a hand truck’s inspection measures different characteristics than a garden cart’s.</p>
+<p>A <strong>wide-column store</strong> holds rows that may have very many columns, grouped by a key that decides which machine stores them. It is built for writing enormous numbers of rows quickly and reading them back by key and range. Sensor readings fit that pattern: each reading is written once, never changed, and read back by machine and time.</p>
+<p>A <strong>graph database</strong> stores nodes, such as suppliers, parts, and products, and the relationships between them as data in their own right. Its queries follow relationships: which products depend, through any number of tiers, on one supplier’s plant. A relational database answers the same question with a recursive query (<a href="04-Chapter4.html#sec-agg-recursive" class="quarto-xref"><span>Section 4.6</span></a>); a graph database makes following a path its basic operation, which pays off when the paths are long and the questions are about the paths themselves.</p>
+<section id="time-series-databases-and-plant-historians" class="level3" data-number="H.2.1">
+<h3 data-number="H.2.1" class="anchored" data-anchor-id="time-series-databases-and-plant-historians"><span class="header-section-number">H.2.1</span> Time-series databases and plant historians</h3>
+<p>The non-relational data you are most likely to meet in a plant is neither of these four. A <strong>time-series database</strong> records the value of a measurement at each moment: a spindle’s speed, an oven’s temperature, a line’s count of finished units. In manufacturing, the usual one is a <strong>plant historian</strong>, such as the AVEVA PI System, which collects thousands of such measurements, called tags, from the plant’s controllers, many times a second, and keeps years of them. Other time-series databases include InfluxDB and TimescaleDB, the latter an extension of PostgreSQL.</p>
+<p>A historian answers questions about one tag over a span of time well, such as the average oven temperature during each shift. It does not hold orders, parts, or work orders, so the questions an industrial engineer asks usually combine the two: the temperatures during the runs of one lot that failed inspection. The usual design summarizes the readings (an average, a minimum, and a maximum for each tag over each hour or each run) and loads the summaries into a relational database, where they join the rest of the plant’s data. That is the extract, transform, and load of <a href="11-Chapter11.html#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a>, and the summaries are often the input data of the simulation models of <a href="12-Chapter12.html#sec-simdb-inputs" class="quarto-xref"><span>Section 12.1</span></a>.</p>
+</section>
+</section>
+<section id="sec-appnosql-tradeoffs" class="level2" data-number="H.3">
+<h2 data-number="H.3" class="anchored" data-anchor-id="sec-appnosql-tradeoffs"><span class="header-section-number">H.3</span> The trade-offs</h2>
+<p>Each family gives up something the relational model provides in return for something it does not. This section names the four trade-offs that matter most when you choose.</p>
+<section id="schema-on-write-and-schema-on-read" class="level3" data-number="H.3.1">
+<h3 data-number="H.3.1" class="anchored" data-anchor-id="schema-on-write-and-schema-on-read"><span class="header-section-number">H.3.1</span> Schema on write and schema on read</h3>
+<p>A relational database applies its schema when data is written. Every row is checked against the catalog of <a href="02-Chapter2.html#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a> before it is stored, and a row that does not fit is refused. This is called <strong>schema on write</strong>. A document database usually applies no schema when data is written: it stores whatever document it is given, and the program that reads a document decides what its fields mean. This is called <strong>schema on read</strong>.</p>
+<p>Schema on read lets the structure change without redesigning the database, and it lets one collection hold records of different shapes. Its cost is that every program that reads the data must cope with every shape that has ever been written, including the mistakes. <a href="#sec-appnosql-jsonb" class="quarto-xref"><span>Section H.4</span></a> shows a document with a misspelled field being accepted, and a query answering wrongly as a result. Many document databases now let a designer declare rules that documents must obey, which moves them part of the way back to schema on write.</p>
+</section>
+<section id="nesting-is-denormalization" class="level3" data-number="H.3.2">
+<h3 data-number="H.3.2" class="anchored" data-anchor-id="nesting-is-denormalization"><span class="header-section-number">H.3.2</span> Nesting is denormalization</h3>
+<p>A document that nests an order’s lines and copies its customer’s and products’ facts is a table that has not been normalized. Recall from <a href="07-Chapter7.html#sec-nf-anomalies" class="quarto-xref"><span>Section 7.2</span></a> that such a table suffers anomalies, and the order document of <a href="02-Chapter2.html#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a> suffers them all: a product’s description is stored in every order that includes it, a product that has never been ordered has nowhere to be recorded, and removing a customer’s only order removes the only record of the customer.</p>
+<p>A designer of documents therefore decides, for each connection, whether to nest or to refer. The class model of <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> gives a good rule. Nest a <strong>composition</strong>, whose parts belong to one whole and are created and removed with it (<a href="06-Chapter6.html#sec-map-composition" class="quarto-xref"><span>Section 6.3.6</span></a>): an order’s lines belong in the order’s document. Refer, by key, to anything shared: a customer and a product are shared by many orders, so each belongs in a document of its own, and the order holds its customer number and each line’s product number. A document database that follows this rule copies only what never changes after it is written, such as the price on an order line.</p>
+</section>
+<section id="consistency-across-copies" class="level3" data-number="H.3.3">
+<h3 data-number="H.3.3" class="anchored" data-anchor-id="consistency-across-copies"><span class="header-section-number">H.3.3</span> Consistency across copies</h3>
+<p>A NoSQL database spread over many machines keeps several copies of each record, so that losing a machine loses nothing. Keeping every copy identical at every moment would mean that each change waits for every machine, and that a change is refused whenever the machines cannot reach one another. Many NoSQL databases choose instead to accept a change at one copy and pass it to the others shortly afterward. This is called <strong>eventual consistency</strong>: for a short time, a read from another copy may return the value from before the change.</p>
+<p>Compare the transactions of <a href="09-Chapter9.html#sec-tx-acid" class="quarto-xref"><span>Section 9.2</span></a>, in which a change is complete and visible to all, or not made at all. For a dashboard, a value a second old does no harm; for the quantity on hand of a part that two planners are allocating, it does. Most NoSQL databases let a program ask for stronger consistency on the operations that need it, at the cost of speed.</p>
+</section>
+<section id="questions-nobody-planned-for" class="level3" data-number="H.3.4">
+<h3 data-number="H.3.4" class="anchored" data-anchor-id="questions-nobody-planned-for"><span class="header-section-number">H.3.4</span> Questions nobody planned for</h3>
+<p>A relational database answers any question its data can answer: a new question is a new query, joining whatever tables it needs. NoSQL databases are designed the other way round, around the questions known in advance. A key-value store finds a record only by its key, a wide-column store by its key and range, and a document database most easily by the fields of one collection; combining collections is often left to the program. Thus, the designer of a NoSQL database starts from the questions and shapes the records to answer them, while the designer of a relational database starts from the business, as <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> does, and lets the questions come later. For the data of an industrial engineer, whose next question is rarely the last one, that difference usually decides the matter.</p>
+</section>
+</section>
+<section id="sec-appnosql-jsonb" class="level2" data-number="H.4">
+<h2 data-number="H.4" class="anchored" data-anchor-id="sec-appnosql-jsonb"><span class="header-section-number">H.4</span> Documents in PostgreSQL</h2>
+<p>PostgreSQL stores JSON documents in a column of type <code>JSONB</code>, a binary form of JSON that it can search and index, and it provides operators to reach inside them. This lets one database hold tables and documents side by side. The type and its operators are PostgreSQL’s own; the SQL standard defines functions for JSON since 2016, and PostgreSQL implements some of them, but other systems store and query JSON differently.</p>
+<p>Let’s store the twelve orders of stage D5 as documents. The table has a key, the order number, and one column for the document; the database checks the key and that the document is well-formed JSON, and nothing more.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.order_document (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    order_number <span class="dt">VARCHAR</span>(<span class="dv">10</span>) <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    document     JSONB <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The next statement builds a document for each order from the relational tables, in the form of <a href="02-Chapter2.html#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a>. The function <code>jsonb_build_object</code> builds a document from pairs of a field name and a value, and <code>jsonb_agg</code> gathers the documents of an order’s lines into a list.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_document</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> o.order_number,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>       jsonb_build_object(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">'order_number'</span>, o.order_number,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">'order_date'</span>, o.order_date,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">'customer'</span>, jsonb_build_object(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">'customer_number'</span>, c.customer_number,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">'name'</span>, c.name,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>             <span class="st">'city'</span>, c.city,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>             <span class="st">'state'</span>, c.state),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">'lines'</span>, (</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>             <span class="kw">SELECT</span> jsonb_agg(jsonb_build_object(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'line_number'</span>, l.line_number,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'product_number'</span>, p.product_number,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'description'</span>, p.description,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'quantity'</span>, l.quantity,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'unit_price'</span>, l.unit_price)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">ORDER</span> <span class="kw">BY</span> l.line_number)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>             <span class="kw">FROM</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>             <span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>               <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>             <span class="kw">WHERE</span> l.customer_order_fk</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                   <span class="op">=</span> o.customer_order_pk))</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Two operators reach inside a document. The operator <code>-&gt;</code> returns the value of a field as JSON, so that another operator can be applied to it, and <code>-&gt;&gt;</code> returns it as text. The following query lists the orders placed in January, with each one’s customer and its number of lines.</p>
+<div id="tbl-appnosql-january" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-january-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;H.2: January’s Orders, Read from Their Documents
+</figcaption>
+<div aria-describedby="tbl-appnosql-january-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_number,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>       document <span class="op">-&gt;</span> <span class="st">'customer'</span> <span class="op">-&gt;&gt;</span> <span class="st">'name'</span> <span class="kw">AS</span> customer,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>       jsonb_array_length(document <span class="op">-&gt;</span> <span class="st">'lines'</span>) <span class="kw">AS</span> lines</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_document</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> document <span class="op">-&gt;&gt;</span> <span class="st">'order_date'</span> <span class="op">&lt;</span> <span class="st">'2026-02-01'</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> order_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:left;">
+customer
+</th>
+<th style="text-align:right;">
+lines
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5002
+</td>
+<td style="text-align:left;">
+Cedar Creek Home Center
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:left;">
+Summit Farm Supply
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5005
+</td>
+<td style="text-align:left;">
+Midtown Tool Supply
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5006
+</td>
+<td style="text-align:left;">
+Lakeside Distributors
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appnosql-january" class="quarto-xref">Table&nbsp;<span>H.2</span></a> lists six orders. Notice that the condition compares the order date as text, since <code>-&gt;&gt;</code> returns text; it works here only because dates written in the form <code>2026-01-05</code> sort as text in the same order as dates. The customer’s name comes from the copy in each document, without a join. PostgreSQL stores a <code>JSONB</code> document’s fields in an order of its own, which does no harm: a query finds a field by its name, as it finds a column.</p>
+<p>The operator <code>@&gt;</code> asks whether a document contains another. The following query finds the orders whose lines include a GC-300, by asking whether the document contains a list of lines with one line for that product.</p>
+<div id="tbl-appnosql-contains" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-contains-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;H.3: The Orders That Include a GC-300
+</figcaption>
+<div aria-describedby="tbl-appnosql-contains-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> order_number,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>       document <span class="op">-&gt;&gt;</span> <span class="st">'order_date'</span> <span class="kw">AS</span> order_date</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_document</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> document @<span class="op">&gt;</span> <span class="st">'{"lines":</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">          [{"product_number": "GC-300"}]}'</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> order_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:left;">
+order_date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:left;">
+2026-01-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:left;">
+2026-01-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+2026-01-15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5005
+</td>
+<td style="text-align:left;">
+2026-01-21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5007
+</td>
+<td style="text-align:left;">
+2026-02-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5009
+</td>
+<td style="text-align:left;">
+2026-02-18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5011
+</td>
+<td style="text-align:left;">
+2026-03-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5012
+</td>
+<td style="text-align:left;">
+2026-03-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appnosql-contains" class="quarto-xref">Table&nbsp;<span>H.3</span></a> lists the eight orders of stage D5 that include a GC-300. A document database answers the same question with a query of its own language, which looks different and does the same.</p>
+<div id="exm-appnosql-units" class="theorem example">
+<p><span class="theorem-title"><strong>Example H.1 (Units ordered, from the documents)</strong></span> <em>The system.</em> The twelve order documents of stage D5, loaded into <code>order_document</code> as above.</p>
+<p><em>The request.</em> The production planner asks how many units of each product have been ordered, and the order documents are all the program has.</p>
+<p>The units are inside each document’s list of lines, so the query must first turn each list into rows, one per line. The function <code>jsonb_array_elements</code> does that; written in the <code>FROM</code> clause after the table, it produces the lines of each document, which the query names <code>line</code>.</p>
+<div id="tbl-appnosql-units" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-units-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;H.4: Units Ordered by Product, from the Order Documents
+</figcaption>
+<div aria-describedby="tbl-appnosql-units-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> line <span class="op">-&gt;&gt;</span> <span class="st">'product_number'</span> <span class="kw">AS</span> product,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>((line <span class="op">-&gt;&gt;</span> <span class="st">'quantity'</span>):<span class="ch">:INTEGER</span>) <span class="kw">AS</span> units</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_document,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>     jsonb_array_elements(document <span class="op">-&gt;</span> <span class="st">'lines'</span>) <span class="kw">AS</span> line</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> line <span class="op">-&gt;&gt;</span> <span class="st">'product_number'</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> product;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product
+</th>
+<th style="text-align:right;">
+units
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+55
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+130
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Notice the cast. A quantity read with <code>-&gt;&gt;</code> is text, so the query must say that it is a whole number before it can be added. The catalog cannot say so, because the catalog knows only that <code>document</code> is a <code>JSONB</code> column. This is schema on read: the query supplies the type that a relational table would have declared once.</p>
+<p><em>The check.</em> The same totals come from the relational tables, grouped as in <a href="04-Chapter4.html#sec-agg-groupby" class="quarto-xref"><span>Section 4.2</span></a>:</p>
+<div id="tbl-appnosql-units-check" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-units-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;H.5: Units Ordered by Product, from the Relational Tables
+</figcaption>
+<div aria-describedby="tbl-appnosql-units-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> p.product_number <span class="kw">AS</span> product,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(l.quantity) <span class="kw">AS</span> units</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> p.product_number</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> product;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product
+</th>
+<th style="text-align:right;">
+units
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+55
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+130
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appnosql-units" class="quarto-xref">Table&nbsp;<span>H.4</span></a> and <a href="#tbl-appnosql-units-check" class="quarto-xref">Table&nbsp;<span>H.5</span></a> agree, product by product, as they must: the documents were built from the tables.</p>
+<p><em>Interpretation.</em> Customers have ordered 130 two-wheel hand trucks, 30 convertible hand trucks, and 55 steel garden carts, the demand the frame line must meet.</p>
+<p><em>Where it breaks.</em> Nothing checks the fields of a document when it is written. Suppose that a program records order SO-5013, for five GC-300 carts, and misspells <code>quantity</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_document</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'SO-5013'</span>, <span class="st">'{"order_number": "SO-5013",</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="st">  "order_date": "2026-03-12",</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="st">  "customer": {"customer_number": "C-1009"},</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="st">  "lines": [{"line_number": 1,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="st">             "product_number": "GC-300",</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="st">             "qty": 5, "unit_price": 119.00}]}'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The database accepts the document, since it is well-formed JSON. The same query, run after it, counts the new line and adds nothing for it:</p>
+<div id="tbl-appnosql-units-typo" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;,&quot;insert-so5013&quot;]" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-units-typo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;H.6: Units Ordered by Product, After the Misspelled Document
+</figcaption>
+<div aria-describedby="tbl-appnosql-units-typo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> line <span class="op">-&gt;&gt;</span> <span class="st">'product_number'</span> <span class="kw">AS</span> product,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>((line <span class="op">-&gt;&gt;</span> <span class="st">'quantity'</span>):<span class="ch">:INTEGER</span>) <span class="kw">AS</span> units,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> lines</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_document,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>     jsonb_array_elements(document <span class="op">-&gt;</span> <span class="st">'lines'</span>) <span class="kw">AS</span> line</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> line <span class="op">-&gt;&gt;</span> <span class="st">'product_number'</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> product;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product
+</th>
+<th style="text-align:right;">
+units
+</th>
+<th style="text-align:right;">
+lines
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appnosql-units-typo" class="quarto-xref">Table&nbsp;<span>H.6</span></a> shows nine lines for the GC-300 and still 55 units. The line’s <code>quantity</code> is missing, so <code>-&gt;&gt;</code> returns NULL, and <code>SUM</code> ignores a NULL (<a href="04-Chapter4.html#sec-agg-groupby" class="quarto-xref"><span>Section 4.2</span></a>). The five carts are silently lost. A relational table would have refused the row, since <code>quantity</code> is declared <code>NOT NULL</code> in <code>order_line</code> (<a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a>). The document also names customer C-1009, who does not exist, and nothing checks it; a foreign key would have refused that too.</p>
+</div>
+<p>The second weakness of documents is the copying of <a href="07-Chapter7.html#sec-nf-anomalies" class="quarto-xref"><span>Section 7.2</span></a>. Suppose that HG Industries renames the GC-300 “Steel utility cart”, and changes the <code>product</code> table:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.product</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">'Steel utility cart'</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'GC-300'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The following query sets the description in <code>product</code> beside the copies in the documents. The keywords <code>CROSS JOIN</code> before the function produce each document’s lines, as the comma did above, so that a <code>JOIN</code> to <code>product</code> can follow.</p>
+<div id="tbl-appnosql-rename" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;,&quot;rename-gc300&quot;]" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-rename-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;H.7: The GC-300’s Description in the Table and in the Documents
+</figcaption>
+<div aria-describedby="tbl-appnosql-rename-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> p.description <span class="kw">AS</span> in_product,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>       line <span class="op">-&gt;&gt;</span> <span class="st">'description'</span> <span class="kw">AS</span> in_documents,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> lines</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_document <span class="kw">AS</span> d</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">CROSS</span> <span class="kw">JOIN</span> jsonb_array_elements(d.document <span class="op">-&gt;</span> <span class="st">'lines'</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>     <span class="kw">AS</span> line</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_number <span class="op">=</span> line <span class="op">-&gt;&gt;</span> <span class="st">'product_number'</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> p.product_number <span class="op">=</span> <span class="st">'GC-300'</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> p.description, line <span class="op">-&gt;&gt;</span> <span class="st">'description'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+in_product
+</th>
+<th style="text-align:left;">
+in_documents
+</th>
+<th style="text-align:right;">
+lines
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Steel utility cart
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appnosql-rename" class="quarto-xref">Table&nbsp;<span>H.7</span></a> shows the product renamed and all eight copies still carrying the old name. Each copy must be found and changed by a program, and the database cannot tell the program where they are. Thus, a document should copy only what must not change once it is written. A line’s unit price is such a fact: it records the price the customer was charged, which a later change of list price must not alter. A product’s description is not.</p>
+<p>PostgreSQL’s documents are most useful beside tables, not instead of them. A table of test results, for example, can keep the columns every test has (the lot, the date, the inspector, the result) as ordinary columns with keys and constraints, and hold the measurements that differ from product to product in one <code>JSONB</code> column. The rules that matter are kept by the database, and the part of the record that varies is free to vary.</p>
+</section>
+<section id="sec-appnosql-choosing" class="level2" data-number="H.5">
+<h2 data-number="H.5" class="anchored" data-anchor-id="sec-appnosql-choosing"><span class="header-section-number">H.5</span> Choosing</h2>
+<p>Most of the data an industrial engineer designs a database for is shared by many people, obeys rules that matter, and will be asked questions no one has thought of yet. That is the data the relational model was made for, and it should be your starting point. The other kinds earn their place for particular data.</p>
+<ul>
+<li><strong>Records that are written and read whole, and vary in structure</strong>, such as test records, equipment configurations, or the replies of a supplier’s web service: a <code>JSONB</code> column in PostgreSQL, beside the columns that do not vary, or a document database if the volume calls for one.</li>
+<li><strong>Measurements at a high rate</strong>, such as sensor readings and machine states: a historian or another time-series database, with summaries loaded into a relational database for analysis.</li>
+<li><strong>A value read by key many times a second</strong>, such as a dashboard’s current state: a key-value store in front of the database that holds the facts.</li>
+<li><strong>Networks whose questions are about paths</strong>, such as a multi-tier supply network: a graph database, or a recursive query (<a href="04-Chapter4.html#sec-agg-recursive" class="quarto-xref"><span>Section 4.6</span></a>) while the network is small.</li>
+</ul>
+<p>A system that uses several kinds of database, each for the data it suits, is said to practice <strong>polyglot persistence</strong> <span class="citation" data-cites="sadalage2012nosql">(<a href="references.html#ref-sadalage2012nosql" role="doc-biblioref">Sadalage and Fowler 2012</a>)</span>. A plant’s information systems usually do: a historian on the floor, a relational database for orders and production, and a warehouse for analysis (<a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a>). The skills of this book carry over to all of them, because each still has to answer the two questions of <a href="02-Chapter2.html#sec-rm-other-models" class="quarto-xref"><span>Section 2.7</span></a>, and a designer who can answer them for a relational database can see how another database answers them.</p>
+</section>
+<section id="sec-appnosql-exercises" class="level2" data-number="H.6">
+<h2 data-number="H.6" class="anchored" data-anchor-id="sec-appnosql-exercises"><span class="header-section-number">H.6</span> Exercises</h2>
+<div id="exr-appnosql-family" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise H.1</strong></span> For each kind of data, name the family of <a href="#tbl-appnosql-families" class="quarto-xref">Table&nbsp;<span>H.1</span></a>, or a time-series database, that suits it best, or say that a relational database does, and give the reason in one sentence.</p>
+<ol type="a">
+<li>The torque reading of every fastening on the HT-100 assembly line, about twenty a minute, kept for two years.</li>
+<li>HG Industries’ customers, orders, and order lines.</li>
+<li>The suppliers of each purchased part, the suppliers of those suppliers, and so on, where the question asked most is which products depend on one supplier’s plant.</li>
+<li>The last known position of each of forty forklifts, shown on a map of the warehouse and refreshed every second.</li>
+<li>A record of each customer complaint, whose fields differ by product and by the kind of complaint.</li>
+</ol>
+</div>
+<div id="exr-appnosql-nest" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise H.2</strong></span> A document database holds HG Industries’ orders, one document per order in the form of <a href="02-Chapter2.html#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a>. For each of the following, say whether it should be nested in the order’s document, or kept in a document of its own and referred to by key. Justify each answer with the rule of <a href="#sec-appnosql-tradeoffs" class="quarto-xref"><span>Section H.3</span></a>, and name the association or composition of the distribution class model behind it.</p>
+<ol type="a">
+<li>The order’s lines.</li>
+<li>The customer’s name and city.</li>
+<li>The unit price on each line.</li>
+<li>The product’s description.</li>
+<li>The shipments that ship the order.</li>
+</ol>
+</div>
+<div id="exr-appnosql-customer-value" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise H.3</strong></span> Load stage D5, and run <code>sql/documents/order-documents.sql</code> from the companion code, which leaves the <code>order_document</code> table holding the twelve orders of stage D5 as documents.</p>
+<ol type="a">
+<li>Using the documents alone, list each customer’s number and name with the total value of its orders (the sum of quantity times unit price over its lines), largest first.</li>
+<li>Write the same query against the relational tables of stage D5, and confirm that the two agree.</li>
+<li>Which part of the query in (a) supplies what the catalog would have supplied for the query in (b)?</li>
+</ol>
+</div>
+<div id="exr-appnosql-schema-on-read" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise H.4</strong></span> The misspelled document of <a href="#exm-appnosql-units" class="quarto-xref">Example&nbsp;<span>H.1</span></a> was accepted without complaint.</p>
+<ol type="a">
+<li>List every way in which that document breaks a rule that the relational tables of stage D5 would have enforced.</li>
+<li>A developer argues that the program writing the documents should simply be tested more carefully. Give one reason a database’s own rules protect data better than a careful program does. (Recall <a href="01-Chapter1.html#sec-dbms" class="quarto-xref"><span>Section 1.3</span></a>.)</li>
+<li>Describe a query that would find every order line, across all documents, that has no <code>quantity</code> field. You need not write it.</li>
+</ol>
+</div>
+<div id="exr-appnosql-historian" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise H.5</strong></span> A historian records the spindle speed of each of the seven machines in the <code>production.machine</code> table of stage P3 once a second, every hour of the year (365 days).</p>
+<ol type="a">
+<li>How many readings does it hold after one year?</li>
+<li>The industrial engineers want, for each machine and each hour, the average, minimum, and maximum speed, to join with the work orders run in that hour. How many rows does a relational table of those summaries hold after one year?</li>
+<li>Write the relational schema of the summary table in the notation of <a href="02-Chapter2.html#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a>, with a foreign key to a table of machines.</li>
+<li>Name one question about the spindles that the summary table cannot answer and the historian can.</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-sadalage2012nosql" class="csl-entry" role="listitem">
+Sadalage, Pramod J., and Martin Fowler. 2012. <em><span>NoSQL</span> Distilled: A Brief Guide to the Emerging World of Polyglot Persistence</em>. Addison-Wesley.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./19-AppEmbeddedDatabases.html" class="pagination-link" aria-label="Embedded Databases: SQLite and DuckDB">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

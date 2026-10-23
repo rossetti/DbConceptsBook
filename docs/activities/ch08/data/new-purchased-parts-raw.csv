@@ -1,0 +1,12 @@
+part_number,description,unit_of_measure,standard_cost,lead_time_days,min_order_quantity
+TI-08,"Pneumatic tire, 8 in",EA,2.90,21,100
+RM-08,"Steel rim, 8 in",EA,2.20,21,100
+BR-08,"Ball bearing, small",EA,0.48,10,500
+TU-10,"Steel tubing, 3/4 in",FT,0.95,14,200
+CA-05,"Swivel caster, 5 in",ea ,3.60,21,50
+GR-02,Foam handle grip,EA,$1.15,7,250
+HW-02,"Hardware kit, poly cart",EA,2.05,7,100
+TI-10,"Pneumatic tire, 10 in",EA,3.55,21,100
+PL-12,"Poly sheet, 1/8 in",FT,4.75,,25
+RM-08,"Steel rim, 8 in",EA,2.20,21,100
+SP-01,Hitch pin,EA,0.35,7,1000

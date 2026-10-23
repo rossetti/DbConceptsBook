@@ -1,0 +1,2640 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>8&nbsp; Defining and Populating Tables – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./09-Chapter9.html" rel="next">
+<link href="./07-Chapter7.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-Chapter5.html">Designing and Building a Database</a></li><li class="breadcrumb-item"><a href="./08-Chapter8.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-ddl-postgres" id="toc-sec-ddl-postgres" class="nav-link active" data-scroll-target="#sec-ddl-postgres"><span class="header-section-number">8.1</span> From a design to tables</a></li>
+  <li><a href="#sec-ddl-types" id="toc-sec-ddl-types" class="nav-link" data-scroll-target="#sec-ddl-types"><span class="header-section-number">8.2</span> Data types</a></li>
+  <li><a href="#sec-ddl-create" id="toc-sec-ddl-create" class="nav-link" data-scroll-target="#sec-ddl-create"><span class="header-section-number">8.3</span> Creating tables and constraints</a></li>
+  <li><a href="#sec-ddl-dml" id="toc-sec-ddl-dml" class="nav-link" data-scroll-target="#sec-ddl-dml"><span class="header-section-number">8.4</span> Inserting, updating, and deleting rows</a></li>
+  <li><a href="#sec-ddl-loading" id="toc-sec-ddl-loading" class="nav-link" data-scroll-target="#sec-ddl-loading"><span class="header-section-number">8.5</span> Loading data from files</a></li>
+  <li><a href="#sec-ddl-alter" id="toc-sec-ddl-alter" class="nav-link" data-scroll-target="#sec-ddl-alter"><span class="header-section-number">8.6</span> Changing a table’s definition</a></li>
+  <li><a href="#sec-sqlddl-summary" id="toc-sec-sqlddl-summary" class="nav-link" data-scroll-target="#sec-sqlddl-summary"><span class="header-section-number">8.7</span> Summary</a></li>
+  <li><a href="#sec-sqlddl-exercises" id="toc-sec-sqlddl-exercises" class="nav-link" data-scroll-target="#sec-sqlddl-exercises"><span class="header-section-number">8.8</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-Chapter5.html">Designing and Building a Database</a></li><li class="breadcrumb-item"><a href="./08-Chapter8.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sqlddl" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled" title="Learning objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After reading this chapter you should be able to:</p>
+<ul>
+<li>implement a relational schema as tables in a PostgreSQL database, in a script that rebuilds them from nothing</li>
+<li>choose a PostgreSQL data type for each column, and avoid the types that lose or distort values</li>
+<li>write CREATE TABLE statements with primary key, foreign key, unique, not-null, and check constraints</li>
+<li>insert, update, and delete rows, and predict what each constraint does to a change</li>
+<li>load data from a CSV file through a staging table, and check it before it enters the database</li>
+<li>change a table’s definition with ALTER TABLE</li>
+</ul>
+</div>
+</div>
+<p>The chapters so far have queried tables that already existed, and then shown where those tables come from: a class model (<a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a>), mapped to a relational schema (<a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a>), checked by normalization (<a href="07-Chapter7.html" class="quarto-xref"><span>Chapter 7</span></a>). This chapter takes the last step. It turns a relational schema into tables that a database system holds, fills them with rows, and changes them as the business changes.</p>
+<p>The statements that do this are the other half of SQL. The part of SQL that defines tables and their rules is called the <strong>data definition language</strong> (DDL): <code>CREATE</code>, <code>ALTER</code>, and <code>DROP</code>. The part that changes rows is called the <strong>data manipulation language</strong> (DML): <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>, together with the <code>SELECT</code> of the earlier chapters. A database is built with the first and kept current with the second.</p>
+<p>The chapter builds the distribution schema of HG Industries, stages D1 to D3, from the relational schemas of <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a>. It does so by reading the scripts that build the book’s own database, one clause at a time, so that every statement in the chapter is one you can run and every table is one you have already queried.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Following along">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Following along
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The scripts are in the companion code: <code>code/sql/distribution/d1-customer.sql</code>, <code>d2-customer-order.sql</code>, and <code>d3-product-order-line.sql</code>, and <code>code/sql/load/through-d3.sql</code> runs them all from an empty database. A query shown with its result after a change runs against a copy of the stage that is discarded afterward, so the change never reaches the book’s database; the text says which change each result assumes.</p>
+</div>
+</div>
+<section id="sec-ddl-postgres" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="sec-ddl-postgres"><span class="header-section-number">8.1</span> From a design to tables</h2>
+<p>This section presents the whole process of building a database from its design, before the sections that illustrate each step.</p>
+<p>A relational schema says what tables a database holds and what rules they obey; it does not yet hold anything. Building the database from it takes five steps:</p>
+<ol type="1">
+<li><strong>Create a place for the tables.</strong> A PostgreSQL server holds databases, and a database holds schemas, each a named group of tables. HG Industries’ tables live in one database, <code>dbconcepts</code> in the book’s setup (<a href="13-AppPostgreSQLSetup.html" class="quarto-xref"><span>Appendix A</span></a>), with a schema per department.</li>
+<li><strong>Choose a data type for each column.</strong> The type implements the column’s domain, as far as a type can; a <code>CHECK</code> constraint narrows it further.</li>
+<li><strong>Create each table with its constraints.</strong> One <code>CREATE TABLE</code> statement per table of the relational schema declares its columns, its primary key, its alternate keys, its foreign keys with their delete rules, and its checks. A table is created after every table it refers to.</li>
+<li><strong>Put rows into the tables.</strong> Rows are inserted by statements or loaded from files, in the same order as the tables were created, so that a foreign key always refers to a row that exists.</li>
+<li><strong>Check the result.</strong> Queries count the rows and look for what the constraints cannot catch, as the hand check of each worked example has done.</li>
+</ol>
+<p>The steps are written down as a <strong>script</strong>, a file of SQL statements run in order, rather than typed once and forgotten. A script that builds a database from nothing is its most useful description: it can be read, kept under version control beside the code that uses the database, and run again to rebuild the database on another machine or after an experiment has spoiled it. The book’s database is kept this way. <code>code/sql/reset.sql</code> drops its four schemas, and each file of <code>code/sql/load/</code> rebuilds them through one stage. <a href="#tbl-ddl-steps" class="quarto-xref">Table&nbsp;<span>8.1</span></a> says where each step is illustrated.</p>
+<div id="tbl-ddl-steps" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.1: The Steps of Building a Database and Where They Are Illustrated
+</figcaption>
+<div aria-describedby="tbl-ddl-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">Illustrated in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1: a place for the tables</td>
+<td style="text-align: left;">this section</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2: data types</td>
+<td style="text-align: left;"><a href="#sec-ddl-types" class="quarto-xref"><span>Section 8.2</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3: tables and constraints</td>
+<td style="text-align: left;"><a href="#sec-ddl-create" class="quarto-xref"><span>Section 8.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4: rows</td>
+<td style="text-align: left;"><a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a> and <a href="#sec-ddl-loading" class="quarto-xref"><span>Section 8.5</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5: checking</td>
+<td style="text-align: left;">each section’s queries, and <a href="#sec-ddl-loading" class="quarto-xref"><span>Section 8.5</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The first step, for the distribution department, is one statement:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">SCHEMA</span> distribution;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A table in the schema is then named with the schema in front, <code>distribution.customer</code>, which is how the book has written table names in every query. PostgreSQL also keeps a <em>search path</em>, a list of schemas it looks in for a table named without one, so that <code>SET search_path TO distribution;</code> lets a session write <code>customer</code> alone. The book’s scripts always qualify the name, so that they work whatever the search path holds.</p>
+<p>DataGrip and DBeaver can create schemas and tables through dialogs, without a statement being typed. The dialog is a convenience, not a different mechanism: it writes a <code>CREATE</code> statement and sends it to the server. Both tools will show the statement, and will also <em>generate</em> the DDL of any existing table (DataGrip’s <em>SQL Scripts, Generate DDL to Query Console</em>; DBeaver’s <em>Generate SQL, DDL</em>), which is how you capture a database that someone built by hand as a script. The rest of this chapter writes the statements directly, since a statement can be read, kept, and run again, and a sequence of clicks cannot.</p>
+</section>
+<section id="sec-ddl-types" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="sec-ddl-types"><span class="header-section-number">8.2</span> Data types</h2>
+<p>This section illustrates step 2: choosing the data type of each column.</p>
+<p>Recall from <a href="06-Chapter6.html#sec-map-classes" class="quarto-xref"><span>Section 6.2</span></a> that a column’s type is chosen in two steps: first the domain is stated in words, and then an SQL type and constraints implement it (<a href="06-Chapter6.html#tbl-map-customer-domains" class="quarto-xref">Table&nbsp;<span>6.2</span></a>). A <strong>data type</strong> is the set of values a column can hold, as the database system knows it, together with the operations it allows on them. The type decides more than storage: it decides how values compare, sort, and add, and whether a value that does not belong is refused or silently changed. The book’s database uses few types, and the query below counts the columns of each across all four schemas:</p>
+<div id="tbl-ddl-types-used" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-types-used-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.2: The Data Types of the Book’s Database
+</figcaption>
+<div aria-describedby="tbl-ddl-types-used-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> data_type, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="kw">columns</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.<span class="kw">columns</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="kw">IN</span> (<span class="st">'distribution'</span>, <span class="st">'production'</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'quality'</span>, <span class="st">'sales'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> data_type</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">columns</span> <span class="kw">DESC</span>, data_type;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+data_type
+</th>
+<th style="text-align:right;">
+columns
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+integer
+</td>
+<td style="text-align:right;">
+73
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+character varying
+</td>
+<td style="text-align:right;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+boolean
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+timestamp without time zone
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Recall from <a href="02-Chapter2.html#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a> that the <code>information_schema</code> of <a href="#tbl-ddl-types-used" class="quarto-xref">Table&nbsp;<span>8.2</span></a> is the standard’s set of views of the catalog, the database’s description of its own tables and columns. Its type names are the standard’s long spellings: <code>character varying</code> is <code>VARCHAR</code>, and <code>character</code> is <code>CHAR</code>. The types fall into five kinds.</p>
+<p><strong>Whole numbers.</strong> <code>INTEGER</code> holds whole numbers up to about two billion, which covers every key and count in the book. <code>SMALLINT</code> and <code>BIGINT</code> hold smaller and larger ranges. The surrogate keys are <code>INTEGER</code> columns whose values the database generates, declared <code>GENERATED ALWAYS AS IDENTITY</code>, the standard form since PostgreSQL 10. Older scripts write <code>SERIAL</code> for the same purpose, a PostgreSQL shorthand that you will still meet.</p>
+<p><strong>Numbers with fractions.</strong> <code>NUMERIC(p, s)</code> holds exact decimal numbers with <code>p</code> digits in all, <code>s</code> of them after the decimal point: a price is <code>NUMERIC(10,2)</code>, a measured diameter <code>NUMERIC(10,4)</code>. The alternative, <code>REAL</code> or <code>DOUBLE PRECISION</code>, holds binary floating-point numbers, which are fast and compact but cannot represent most decimal fractions exactly. The difference is easy to show:</p>
+<div id="tbl-ddl-float" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-float-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.3: Adding 0.1 and 0.2 as Floating-Point and as Exact Numbers
+</figcaption>
+<div aria-describedby="tbl-ddl-float-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fl">0.1</span>:<span class="ch">:DOUBLE</span> <span class="dt">PRECISION</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="kw">AS</span> double_sum,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>       <span class="fl">0.1</span>:<span class="ch">:NUMERIC</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="kw">AS</span> numeric_sum,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>       <span class="fl">0.1</span>:<span class="ch">:DOUBLE</span> <span class="dt">PRECISION</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">=</span> <span class="fl">0.3</span> <span class="kw">AS</span> double_equal,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>       <span class="fl">0.1</span>:<span class="ch">:NUMERIC</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">=</span> <span class="fl">0.3</span> <span class="kw">AS</span> numeric_equal;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+double_sum
+</th>
+<th style="text-align:right;">
+numeric_sum
+</th>
+<th style="text-align:left;">
+double_equal
+</th>
+<th style="text-align:left;">
+numeric_equal
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.30000000000000004
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+false
+</td>
+<td style="text-align:left;">
+true
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The <code>::</code> of <a href="#tbl-ddl-float" class="quarto-xref">Table&nbsp;<span>8.3</span></a> is PostgreSQL’s shorthand for converting a value to a type, the standard’s <code>CAST(0.1 AS DOUBLE PRECISION)</code>. The floating-point sum is not 0.3, and a comparison with 0.3 is false.</p>
+<p>The error does not always show. PostgreSQL prints a <code>REAL</code> or <code>DOUBLE PRECISION</code> value as the shortest decimal that reads back to the same stored value, so a stored value that is not exact can print as if it were:</p>
+<div id="tbl-ddl-real-print" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-real-print-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.4: A REAL Value as Printed and as Stored
+</figcaption>
+<div aria-describedby="tbl-ddl-real-print-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fl">32.38</span>:<span class="ch">:REAL</span> <span class="kw">AS</span> real_value,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>       <span class="fl">32.38</span>:<span class="ch">:REAL</span>:<span class="ch">:DOUBLE</span> <span class="dt">PRECISION</span> <span class="kw">AS</span> stored_value;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+real_value
+</th>
+<th style="text-align:right;">
+stored_value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+32.38
+</td>
+<td style="text-align:right;">
+32.380001068115234
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The <code>REAL</code> of <a href="#tbl-ddl-real-print" class="quarto-xref">Table&nbsp;<span>8.4</span></a> prints as 32.38, but the value stored is 32.380001068115234, which converting it to <code>DOUBLE PRECISION</code> reveals. Thus, a column of floating-point prices can look right and still not add up to the cent. For money, and for any measurement recorded to a known number of decimal places, use <code>NUMERIC</code>; a sum of prices that is off by a fraction of a cent fails every reconciliation. Keep floating point for quantities that are computed rather than recorded, such as the output of a simulation. PostgreSQL also has a <code>MONEY</code> type; avoid it, since it is PostgreSQL’s own, and how it reads and prints values depends on the server’s locale settings.</p>
+<p><strong>Text.</strong> <code>VARCHAR(n)</code> holds text of up to <code>n</code> characters, and refuses a longer value. <code>CHAR(n)</code> holds exactly <code>n</code>, padding a shorter value with spaces, which suits a code that always has the same length, such as a two-letter state, and little else. <code>TEXT</code> holds text of any length; it is PostgreSQL’s (the standard has no <code>TEXT</code>), and suits notes and descriptions with no natural limit. A length limit in <code>VARCHAR(n)</code> is a small domain rule: an order number of 40 characters is a mistake, and the limit refuses it.</p>
+<p>A code that is written with digits is still text, and belongs in a text column. Part numbers, employee numbers, and postal codes are identifiers, not quantities: nobody adds them, and a leading zero is part of the code. Stored as a number, the zero is lost:</p>
+<div id="tbl-ddl-leading-zero" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-leading-zero-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.5: A Postal Code Stored as a Number and as Text
+</figcaption>
+<div aria-describedby="tbl-ddl-leading-zero-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'07201'</span>:<span class="ch">:INTEGER</span> <span class="kw">AS</span> as_integer,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="st">'07201'</span>:<span class="ch">:VARCHAR</span>(<span class="dv">5</span>) <span class="kw">AS</span> as_text;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+as_integer
+</th>
+<th style="text-align:left;">
+as_text
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+7201
+</td>
+<td style="text-align:left;">
+07201
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><strong>Dates and times.</strong> <code>DATE</code> holds a calendar date, <code>TIMESTAMP</code> a date and a time of day. The book writes date values in the ISO form <code>'2026-01-05'</code>, which PostgreSQL reads the same way whatever its settings, and the standard’s typed literal <code>DATE '2026-01-05'</code>, used since <a href="03-Chapter3.html#sec-q-where" class="quarto-xref"><span>Section 3.2</span></a>. A <code>TIMESTAMP</code> records a time without saying where; <code>inspected_at</code> is one, since HG Industries inspects in one plant. A business spread across time zones uses <code>TIMESTAMP WITH TIME ZONE</code>, which records an instant and displays it in the reader’s zone.</p>
+<p><strong>True or false.</strong> <code>BOOLEAN</code> holds <code>true</code>, <code>false</code>, or NULL, as the results of <a href="#tbl-ddl-float" class="quarto-xref">Table&nbsp;<span>8.3</span></a> show. The sales schema’s date dimension marks weekends with one.</p>
+<p>A domain narrower than its type is finished with a <code>CHECK</code> constraint, as <a href="06-Chapter6.html#sec-map-classes" class="quarto-xref"><span>Section 6.2</span></a> described: <code>list_price &gt; 0</code>, <code>level BETWEEN 1 AND 3</code>. A domain that is a short list of values, an <strong>enumeration</strong>, can be implemented in two ways <span class="citation" data-cites="blaha1998object">(<a href="references.html#ref-blaha1998object" role="doc-biblioref">Blaha and Premerlani 1998</a>)</span>. The list can be written into the table as a check, <code>CHECK (unit_of_measure IN ('EA', 'FT'))</code>; or the values can be rows of a table of their own, a <strong>lookup table</strong>, which the column refers to with a foreign key. The quality schema’s <code>defect_type</code> table is a lookup table: each defect code is a row, with its description. The check is simpler; the lookup table lets the list grow by inserting a row instead of changing a table’s definition, and gives each value a place for its description. You should choose the lookup table when the list will change or its values need more than a name. <a href="#tbl-ddl-type-guide" class="quarto-xref">Table&nbsp;<span>8.6</span></a> collects the choices.</p>
+<div id="tbl-ddl-type-guide" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-type-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.6: Choosing a Data Type
+</figcaption>
+<div aria-describedby="tbl-ddl-type-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">The attribute is</th>
+<th style="text-align: left;">Use</th>
+<th style="text-align: left;">Not</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a key or a count</td>
+<td style="text-align: left;"><code>INTEGER</code></td>
+<td style="text-align: left;"><code>NUMERIC</code>, text</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">money, or a measurement to fixed decimals</td>
+<td style="text-align: left;"><code>NUMERIC(p, s)</code></td>
+<td style="text-align: left;"><code>REAL</code>, <code>DOUBLE PRECISION</code>, <code>MONEY</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a computed quantity, such as a simulation’s output</td>
+<td style="text-align: left;"><code>DOUBLE PRECISION</code></td>
+<td style="text-align: left;">text</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">a code or identifier, even one made of digits</td>
+<td style="text-align: left;"><code>VARCHAR(n)</code>, or <code>CHAR(n)</code> if always <code>n</code> long</td>
+<td style="text-align: left;"><code>INTEGER</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">free text</td>
+<td style="text-align: left;"><code>VARCHAR(n)</code> or <code>TEXT</code></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">a date, or a date and time</td>
+<td style="text-align: left;"><code>DATE</code>, <code>TIMESTAMP</code></td>
+<td style="text-align: left;">text</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">yes or no</td>
+<td style="text-align: left;"><code>BOOLEAN</code></td>
+<td style="text-align: left;"><code>CHAR(1)</code>, <code>INTEGER</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">one of a short list</td>
+<td style="text-align: left;">a check, or a lookup table</td>
+<td style="text-align: left;">free text</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Every “not” of <a href="#tbl-ddl-type-guide" class="quarto-xref">Table&nbsp;<span>8.6</span></a> is a type that accepts the value and then misbehaves: a date stored as text sorts <code>'10/2/2026'</code> before <code>'9/2/2026'</code>, and a price stored as text cannot be summed. The next section writes the types into tables.</p>
+</section>
+<section id="sec-ddl-create" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="sec-ddl-create"><span class="header-section-number">8.3</span> Creating tables and constraints</h2>
+<p>This section illustrates step 3: writing a <code>CREATE TABLE</code> statement for each table of a relational schema, with its constraints.</p>
+<p>Recall the complete relational schema of the <code>customer</code> table from <a href="06-Chapter6.html#lst-map-customer" class="quarto-xref">Listing&nbsp;<span>6.1</span></a>: five columns with their types and NULL rules, a primary key, and an alternate key. The stage D1 script turns it into one statement:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.customer (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    customer_pk     <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    customer_number <span class="dt">VARCHAR</span>(<span class="dv">10</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    name            <span class="dt">VARCHAR</span>(<span class="dv">60</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    city            <span class="dt">VARCHAR</span>(<span class="dv">40</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    state           <span class="dt">CHAR</span>(<span class="dv">2</span>)     <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Each line inside the parentheses declares one column: its name, its type, and its <strong>column constraints</strong>, the rules that concern that column alone. Read them against <a href="06-Chapter6.html#lst-map-customer" class="quarto-xref">Listing&nbsp;<span>6.1</span></a>. <code>customer_pk</code> is <code>INTEGER</code>, filled by the database (<code>GENERATED ALWAYS AS IDENTITY</code>), and the primary key (<code>PRIMARY KEY</code>), which also makes it <code>NOT NULL</code> and unique. <code>customer_number</code> must be present (<code>NOT NULL</code>) and may not repeat (<code>UNIQUE</code>), the alternate key. The other three columns must be present. Nothing in the listing is left out, and nothing is added.</p>
+<p>A rule that concerns several columns is written after the columns, as a <strong>table constraint</strong>. The <code>customer_order</code> table of stage D2 has two, a foreign key and a check that compares two dates:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.customer_order (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    customer_order_pk   <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    order_number        <span class="dt">VARCHAR</span>(<span class="dv">10</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    order_date          <span class="dt">DATE</span>        <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    requested_ship_date <span class="dt">DATE</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    customer_fk         <span class="dt">INTEGER</span>     <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">REFERENCES</span> distribution.customer (customer_pk),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">CHECK</span> (requested_ship_date <span class="op">&gt;=</span> order_date)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>requested_ship_date</code> has no <code>NOT NULL</code>, so it may be missing, as the attribute <code>requestedShipDate [0..1]</code> allows. <code>customer_fk</code> is a foreign key: <code>REFERENCES distribution.customer (customer_pk)</code> says that every value must be the key of an existing customer. It is written here as a column constraint, which is allowed because it concerns one column; <code>FOREIGN KEY (customer_fk) REFERENCES distribution.customer (customer_pk)</code> after the columns says the same thing as a table constraint, and is the only form for a foreign key of several columns. The last line is a check that involves two columns, so it is written as a table constraint. The standard requires that form for a check of several columns; PostgreSQL also accepts such a check written on one of its columns, but the table constraint is the portable form, and it says what the rule concerns.</p>
+<p>Notice that a check passes when its condition is true <em>or unknown</em>. An order with no requested ship date makes <code>requested_ship_date &gt;= order_date</code> unknown (<a href="03-Chapter3.html#sec-q-null" class="quarto-xref"><span>Section 3.3</span></a>), and the order is accepted, as it should be. A check such as this one therefore passes a NULL and does not make a column required; <code>NOT NULL</code> is how a column is made required. (A check written to test for NULL, such as <code>CHECK (state IS NOT NULL)</code>, does refuse one, and <code>NOT NULL</code> says the same thing more plainly.)</p>
+<p>The database gives every constraint a name, and names it in every message that reports a violation. A constraint left unnamed, as in the book’s scripts, is named by PostgreSQL from its table and columns: the check of <code>customer_order</code> becomes <code>customer_order_check</code>, the alternate key <code>customer_order_order_number_key</code>. A constraint can be named explicitly by writing <code>CONSTRAINT order_ship_after_order CHECK (...)</code>, which you should do when the generated name would not tell a reader which rule was broken.</p>
+<div id="exm-ddl-order-line" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.1 (Creating the order line table)</strong></span> The sales department of HG Industries wants to record what each order is for: the products, the quantity of each, and the price charged, which may differ from the list price. <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> mapped the order line, composed in its order, to the complete relational schema of <a href="06-Chapter6.html#lst-map-order-line" class="quarto-xref">Listing&nbsp;<span>6.10</span></a>. The example assumes stage D2, with <code>customer_order</code> in place, and a <code>product</code> table already created by the first statement of the stage D3 script.</p>
+<p><em>The request.</em> Write the <code>CREATE TABLE</code> statement for <code>order_line</code> from <a href="06-Chapter6.html#lst-map-order-line" class="quarto-xref">Listing&nbsp;<span>6.10</span></a>, and confirm that the database holds every constraint the listing names.</p>
+<p><em>The design.</em> The columns come first, each line of the listing becoming one column declaration:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.order_line (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    order_line_pk     <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    customer_order_fk <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">REFERENCES</span> distribution.customer_order</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            (customer_order_pk)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    line_number       <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">CHECK</span> (line_number <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    product_fk        <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="kw">REFERENCES</span> distribution.product (product_pk),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    quantity          <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">CHECK</span> (quantity <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    unit_price        <span class="dt">NUMERIC</span>(<span class="dv">10</span>,<span class="dv">2</span>) <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">CHECK</span> (unit_price <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNIQUE</span> (customer_order_fk, line_number)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The two foreign keys differ in one clause. <code>customer_order_fk</code> adds <code>ON DELETE CASCADE</code>: deleting an order deletes its lines, as the composition of <a href="06-Chapter6.html#sec-map-composition" class="quarto-xref"><span>Section 6.3.6</span></a> requires. <code>product_fk</code> has no <code>ON DELETE</code> clause, so it takes the default, <code>NO ACTION</code>, and a product that has been ordered cannot be deleted. Each positive quantity, price, and line number of the listing is a <code>CHECK</code> on its column. The alternate key (<code>customer_order_fk</code>, <code>line_number</code>) spans two columns, so it is a table constraint, the last line.</p>
+<p><em>The result.</em> The standard view <code>information_schema.table_constraints</code> lists the constraints the database holds for the table:</p>
+<div id="tbl-ddl-order-line-constraints" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-order-line-constraints-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.7: The Constraints of the Order Line Table
+</figcaption>
+<div aria-describedby="tbl-ddl-order-line-constraints-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> constraint_name, constraint_type</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.table_constraints</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">'distribution'</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> table_name <span class="op">=</span> <span class="st">'order_line'</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> constraint_name <span class="kw">NOT</span> <span class="kw">LIKE</span> <span class="st">'%not_null'</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> constraint_type, constraint_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+constraint_name
+</th>
+<th style="text-align:left;">
+constraint_type
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+order_line_line_number_check
+</td>
+<td style="text-align:left;">
+CHECK
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_line_quantity_check
+</td>
+<td style="text-align:left;">
+CHECK
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_line_unit_price_check
+</td>
+<td style="text-align:left;">
+CHECK
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_line_customer_order_fk_fkey
+</td>
+<td style="text-align:left;">
+FOREIGN KEY
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_line_product_fk_fkey
+</td>
+<td style="text-align:left;">
+FOREIGN KEY
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_line_pkey
+</td>
+<td style="text-align:left;">
+PRIMARY KEY
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+order_line_customer_order_fk_line_number_key
+</td>
+<td style="text-align:left;">
+UNIQUE
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The last condition of the query leaves out the six <code>NOT NULL</code> rules, which PostgreSQL’s version of the view lists as checks whose names end in <code>not_null</code>.</p>
+<p><em>The check.</em> <a href="06-Chapter6.html#lst-map-order-line" class="quarto-xref">Listing&nbsp;<span>6.10</span></a> names one primary key, one alternate key, two foreign keys, and three checks: seven constraints, and <a href="#tbl-ddl-order-line-constraints" class="quarto-xref">Table&nbsp;<span>8.7</span></a> has seven rows, one of each kind named.</p>
+<p><em>Interpretation.</em> The table now enforces the business’s rules about order lines without any program’s help. A line cannot be recorded for an order or a product that does not exist, with a zero quantity or a zero price, or with a line number its order already uses; and an order cannot be removed while leaving its lines behind.</p>
+<p><em>Where it breaks.</em> The constraints check each line alone. Nothing requires an order to have at least one line, which the multiplicity <code>1..*</code> of the class model says it must; an order with no lines is accepted, and a query such as those of <a href="03-Chapter3.html#sec-q-outer-joins" class="quarto-xref"><span>Section 3.7</span></a> must find it. Nor does anything tie <code>unit_price</code> to the product’s <code>list_price</code>, deliberately, since the business sells below list.</p>
+</div>
+<p>The constraints are the database’s defense, and they are worth seeing at work. A statement that breaks one is refused, with a message that names the constraint. For example, a second customer with an existing customer number breaks the alternate key:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1001'</span>, <span class="st">'Riverside Supply'</span>, <span class="st">'Rogers'</span>, <span class="st">'AR'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  duplicate key value violates unique constraint "customer_customer_number_key"
+DETAIL:  Key (customer_number)=(C-1001) already exists.</code></pre>
+</div>
+<p>An order line for a product that does not exist breaks a foreign key, and one with a quantity of zero breaks a check:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>     quantity, unit_price)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">12</span>, <span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">5</span>, <span class="fl">89.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  insert or update on table "order_line" violates foreign key constraint "order_line_product_fk_fkey"
+DETAIL:  Key (product_fk)=(9) is not present in table "product".</code></pre>
+</div>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>     quantity, unit_price)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">12</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">89.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  new row for relation "order_line" violates check constraint "order_line_quantity_check"
+DETAIL:  Failing row contains (23, 12, 3, 1, 0, 89.00).</code></pre>
+</div>
+<p>Each message names the table, the constraint, and for a key the offending value, which is usually enough to find the bad row in a long script. An identity column declared <code>GENERATED ALWAYS</code> refuses a value supplied for it, so that the database alone numbers its rows; the message’s hint names the override that a script copying rows from another database, keys and all, would use:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    (customer_pk, customer_number, name, city, state)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">9</span>, <span class="st">'C-1009'</span>, <span class="st">'Rogers Farm Supply'</span>, <span class="st">'Rogers'</span>, <span class="st">'AR'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  cannot insert a non-DEFAULT value into column "customer_pk"
+DETAIL:  Column "customer_pk" is an identity column defined as GENERATED ALWAYS.
+HINT:  Use OVERRIDING SYSTEM VALUE to override.</code></pre>
+</div>
+<p>The order of the statements in a script follows from the foreign keys. A table can be created only after every table it refers to, so the stage scripts create <code>customer</code>, then <code>customer_order</code>, then <code>product</code> and <code>order_line</code>. Removing tables runs the other way: <code>DROP TABLE</code> removes a table and its rows, and it refuses to remove a table that another table refers to:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> distribution.customer;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  cannot drop table distribution.customer because other objects depend on it
+DETAIL:  constraint customer_order_customer_fk_fkey on table distribution.customer_order depends on table distribution.customer
+HINT:  Use DROP ... CASCADE to drop the dependent objects too.</code></pre>
+</div>
+<p>As the message’s hint says, <code>DROP TABLE distribution.customer CASCADE</code> would remove the foreign key constraints that depend on <code>customer</code> and then the table; the tables that referred to it would remain, without their foreign keys. <code>DROP SCHEMA distribution CASCADE</code>, which <code>code/sql/reset.sql</code> runs, removes the schema with every table in it. Once kept, neither can be undone, and you should keep them in scripts that rebuild what they remove. (A change can be tried without being kept, inside a transaction, as <a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a> shows.) The tables now exist, and the next section changes their rows.</p>
+</section>
+<section id="sec-ddl-dml" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="sec-ddl-dml"><span class="header-section-number">8.4</span> Inserting, updating, and deleting rows</h2>
+<p>This section illustrates step 4: putting rows into tables, and then changing and removing them as the business changes.</p>
+<p><code>INSERT</code> adds rows to a table. Its usual form names the table, lists the columns it supplies, and gives a row of values for each row to add, in the same order as the columns:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1009'</span>, <span class="st">'Rogers Farm Supply'</span>, <span class="st">'Rogers'</span>, <span class="st">'AR'</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>       (<span class="st">'C-1029'</span>, <span class="st">'Crowley</span><span class="ch">''</span><span class="st">s Ridge Hardware'</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Jonesboro'</span>, <span class="st">'AR'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The statement adds two customers. A column left out of the list, such as <code>customer_pk</code>, takes its default: the next identity value for a key, and NULL for a column with no default. You should always write the column list. Without it, the values are matched to the table’s columns in the order the table declared them, and a script written that way breaks, or worse loads values into the wrong columns, when a column is added. Notice the second name: a quote inside a text value is written twice, <code>'Crowley''s Ridge Hardware'</code>, which is how SQL tells the quote in the value from the quote that ends it.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Trying a change without keeping it">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Trying a change without keeping it
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>DataGrip and DBeaver keep each statement’s change the moment it runs (<em>auto-commit</em>). A change run that way alters your copy of the stage for good, and the examples and exercises that assume the stage as loaded no longer give the book’s results. To try a change without keeping it, run <code>BEGIN</code> before it and <code>ROLLBACK</code> after it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span>;</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1009'</span>, <span class="st">'Rogers Farm Supply'</span>, <span class="st">'Rogers'</span>, <span class="st">'AR'</span>);</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> distribution.customer;</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ROLLBACK</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The statements between the two form a <em>transaction</em>, and <code>ROLLBACK</code> discards everything it changed, as if it had never run. After a statement is refused, PostgreSQL refuses every later statement of the transaction until the <code>ROLLBACK</code>, so try each change that may be refused in a transaction of its own. <a href="09-Chapter9.html" class="quarto-xref"><span>Chapter 9</span></a> presents transactions. Try the insert above, and every change of this chapter’s examples and exercises, this way: <a href="#exm-ddl-new-order" class="quarto-xref">Example&nbsp;<span>8.2</span></a> and <a href="#exm-ddl-load-customers" class="quarto-xref">Example&nbsp;<span>8.3</span></a> assume stage D3 as loaded, and both add C-1009 themselves. A change kept by mistake is undone by reloading the stage with its script in <code>code/sql/load/</code>.</p>
+</div>
+</div>
+<p>A foreign key column needs the key of the row it refers to, and a generated key is not something you know in advance. The stage scripts can write the keys as numbers, since they insert into empty tables in a fixed order (<code>code/sql/README.md</code> explains). A statement that records a new order for an existing customer instead looks the key up by the customer’s number, with a scalar subquery (<a href="03-Chapter3.html#sec-q-subqueries" class="quarto-xref"><span>Section 3.8</span></a>) in place of the value. The example below records a whole order this way.</p>
+<div id="exm-ddl-new-order" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.2 (Recording a new customer’s first order)</strong></span> On April 2, 2026, Rogers Farm Supply of Rogers, Arkansas, placed its first order with HG Industries: eight GC-300 steel garden carts at $119.00, twelve HT-100 hand trucks at $89.00, and ten HT-200 convertible hand trucks at $139.00, to ship by April 9. The sales department gave it customer number C-1009 and the order the number SO-5018. The example assumes stage D3.</p>
+<p><em>The request.</em> Record the customer, the order, and its three lines, referring to the customer and the products by their business numbers.</p>
+<p><em>The design.</em> The customer comes first, since the order refers to it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1009'</span>, <span class="st">'Rogers Farm Supply'</span>, <span class="st">'Rogers'</span>, <span class="st">'AR'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The order’s <code>customer_fk</code> is found by a subquery on <code>customer_number</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer_order</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    (order_number, order_date, requested_ship_date,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>     customer_fk)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'SO-5018'</span>, <span class="dt">DATE</span> <span class="st">'2026-04-02'</span>, <span class="dt">DATE</span> <span class="st">'2026-04-09'</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">SELECT</span> customer_pk</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>         <span class="kw">FROM</span> distribution.customer</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>         <span class="kw">WHERE</span> customer_number <span class="op">=</span> <span class="st">'C-1009'</span>));</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Each line looks up its order by <code>order_number</code> and its product by <code>product_number</code> in the same way:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>     quantity, unit_price)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  ((<span class="kw">SELECT</span> customer_order_pk</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> distribution.customer_order</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5018'</span>), <span class="dv">1</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">SELECT</span> product_pk <span class="kw">FROM</span> distribution.product</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'GC-300'</span>), <span class="dv">8</span>, <span class="fl">119.00</span>),</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  ((<span class="kw">SELECT</span> customer_order_pk</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> distribution.customer_order</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5018'</span>), <span class="dv">2</span>,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">SELECT</span> product_pk <span class="kw">FROM</span> distribution.product</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-100'</span>), <span class="dv">12</span>, <span class="fl">89.00</span>),</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  ((<span class="kw">SELECT</span> customer_order_pk</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> distribution.customer_order</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5018'</span>), <span class="dv">3</span>,</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">SELECT</span> product_pk <span class="kw">FROM</span> distribution.product</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-200'</span>), <span class="dv">10</span>, <span class="fl">139.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>The result.</em> After the three statements, a query joins the new rows back together:</p>
+<div id="tbl-ddl-so5018" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;ins-rogers&quot;,&quot;ins-so5018&quot;,&quot;ins-so5018-lines&quot;]" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-so5018-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.8: Order SO-5018 After the Three Inserts
+</figcaption>
+<div aria-describedby="tbl-ddl-so5018-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.customer_pk, o.customer_order_pk,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>       l.line_number, p.product_number, l.quantity,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>       l.unit_price, l.quantity <span class="op">*</span> l.unit_price <span class="kw">AS</span> <span class="fu">value</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> o.customer_fk <span class="op">=</span> c.customer_pk</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> c.customer_number <span class="op">=</span> <span class="st">'C-1009'</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> l.line_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+customer_pk
+</th>
+<th style="text-align:right;">
+customer_order_pk
+</th>
+<th style="text-align:right;">
+line_number
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:right;">
+quantity
+</th>
+<th style="text-align:right;">
+unit_price
+</th>
+<th style="text-align:right;">
+value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+119.00
+</td>
+<td style="text-align:right;">
+952.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+89.00
+</td>
+<td style="text-align:right;">
+1068.00
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+139.00
+</td>
+<td style="text-align:right;">
+1390.00
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> A generated key comes from the column’s identity counter, not from a count of the rows. On a freshly loaded stage D3 the counters of <code>customer</code> and <code>customer_order</code> stand at 8 and 12, the last keys the load used, so the new customer’s key is 9 and the new order’s is 13, as <a href="#tbl-ddl-so5018" class="quarto-xref">Table&nbsp;<span>8.8</span></a> shows. An insert takes the next value even when it is refused or rolled back, and the value is never given back; in a copy of the stage where inserts have been tried, the keys are higher and the rows are otherwise the same. The three line values are 8 × 119.00 = 952.00, 12 × 89.00 = 1,068.00, and 10 × 139.00 = 1,390.00, and the order is worth $3,410.00.</p>
+<p><em>Interpretation.</em> Rogers Farm Supply is now a customer with one open order, and every query of the earlier chapters counts it: it appears in the order report, in the sales of each product, and among the orders due to ship on April 9.</p>
+<p><em>Where it breaks.</em> A subquery that finds no row returns NULL. A mistyped product number, <code>'HT-210'</code>, makes <code>product_fk</code> NULL, and the <code>NOT NULL</code> of the column refuses the line:</p>
+<div class="cell" data-stage="d3" data-changes="[&quot;ins-rogers&quot;,&quot;ins-so5018&quot;]" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>     quantity, unit_price)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  ((<span class="kw">SELECT</span> customer_order_pk</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> distribution.customer_order</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5018'</span>), <span class="dv">3</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">SELECT</span> product_pk <span class="kw">FROM</span> distribution.product</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-210'</span>), <span class="dv">10</span>, <span class="fl">139.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  null value in column "product_fk" of relation "order_line" violates not-null constraint
+DETAIL:  Failing row contains (23, 13, 3, null, 10, 139.00).</code></pre>
+</div>
+<p>The refusal protects the order. Had <code>product_fk</code> allowed NULL, the line would have been recorded for no product at all.</p>
+</div>
+<p><code>INSERT</code> can also take its rows from a query, <code>INSERT INTO t (columns) SELECT ...</code>, which adds every row the query returns. It is the form used to copy or transform rows already in the database, and <a href="#sec-ddl-loading" class="quarto-xref"><span>Section 8.5</span></a> uses it to move loaded rows into their table. It has one danger the <code>VALUES</code> form lacks: a query that finds no rows inserts nothing, and reports success.</p>
+<p><code>UPDATE</code> changes values in existing rows. It names the table, sets one or more columns to new values, and chooses the rows with a <code>WHERE</code> clause, as a query does. Suppose that HG Industries raises the list prices of its garden carts by 5 percent, rounded to the cent. Before changing anything, preview the change with a query that selects the same rows and computes the new values:</p>
+<div id="tbl-ddl-price-preview" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-price-preview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.9: The Garden Carts’ Prices, Before and After a 5 Percent Increase
+</figcaption>
+<div aria-describedby="tbl-ddl-price-preview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> product_number, list_price,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>(list_price <span class="op">*</span> <span class="fl">1.05</span>, <span class="dv">2</span>) <span class="kw">AS</span> new_price</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.product</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="kw">LIKE</span> <span class="st">'GC-%'</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:right;">
+list_price
+</th>
+<th style="text-align:right;">
+new_price
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+119.00
+</td>
+<td style="text-align:right;">
+124.95
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GC-400
+</td>
+<td style="text-align:right;">
+149.00
+</td>
+<td style="text-align:right;">
+156.45
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-ddl-price-preview" class="quarto-xref">Table&nbsp;<span>8.9</span></a> shows the two rows the update will touch and what they will become. The update itself reuses the preview’s <code>WHERE</code> clause and its expression:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.product</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> list_price <span class="op">=</span> <span class="fu">ROUND</span>(list_price <span class="op">*</span> <span class="fl">1.05</span>, <span class="dv">2</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="kw">LIKE</span> <span class="st">'GC-%'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-ddl-price-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="upd-cart-prices" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-price-after-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.10: The Product List After the Price Increase
+</figcaption>
+<div aria-describedby="tbl-ddl-price-after-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> product_number, description, list_price</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.product</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:right;">
+list_price
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+<td style="text-align:right;">
+124.95
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GC-400
+</td>
+<td style="text-align:left;">
+Poly garden cart
+</td>
+<td style="text-align:right;">
+156.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+89.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:left;">
+Convertible hand truck
+</td>
+<td style="text-align:right;">
+139.00
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The two carts in <a href="#tbl-ddl-price-after" class="quarto-xref">Table&nbsp;<span>8.10</span></a> have the prices the preview promised, $124.95 and $156.45, and the hand trucks are unchanged. The preview is a habit worth keeping. An <code>UPDATE</code> without a <code>WHERE</code> clause changes every row of the table, and the database will not ask whether you meant it; the preview shows the rows before they change. Notice also that the new prices apply to future orders only. The lines already recorded keep their <code>unit_price</code>, which is why <a href="07-Chapter7.html#sec-nf-classmodels" class="quarto-xref"><span>Section 7.6</span></a> kept the price of a line apart from the product’s.</p>
+<p>An update must leave every row within its constraints, or it is refused as an insert would be. Moving an order’s requested ship date before its order date breaks the check of <code>customer_order</code>:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.customer_order</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> requested_ship_date <span class="op">=</span> <span class="dt">DATE</span> <span class="st">'2026-01-01'</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5001'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  new row for relation "customer_order" violates check constraint "customer_order_check"
+DETAIL:  Failing row contains (1, SO-5001, 2026-01-05, 2026-01-01, 1).</code></pre>
+</div>
+<p><code>DELETE</code> removes rows, chosen by a <code>WHERE</code> clause. The foreign keys decide what happens to the rows that refer to them. Recall from <a href="06-Chapter6.html#sec-map-composition" class="quarto-xref"><span>Section 6.3.6</span></a> that an order line is composed in its order, so that deleting an order deletes its lines; <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> promised to show it, at stage D5, with order SO-5012, which has two lines and has not shipped. Before the deletion, the last two orders have these lines:</p>
+<div id="tbl-ddl-before-delete" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-before-delete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.11: The Last Two Orders and Their Lines, Before the Deletion
+</figcaption>
+<div aria-describedby="tbl-ddl-before-delete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> o.order_number,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(l.order_line_pk) <span class="kw">AS</span> lines</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> o.order_number <span class="op">&gt;=</span> <span class="st">'SO-5011'</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o.order_number</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.order_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:right;">
+lines
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5011
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5012
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The deletion names only the order:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> distribution.customer_order</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5012'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tbl-ddl-after-delete" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="del-so5012" data-stage="d5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-after-delete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.12: Order Lines Remaining After SO-5012 Is Deleted
+</figcaption>
+<div aria-describedby="tbl-ddl-after-delete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> order_lines,</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> customer_order_fk <span class="op">=</span> <span class="dv">12</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> lines_of_so5012</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.order_line;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+order_lines
+</th>
+<th style="text-align:right;">
+lines_of_so5012
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Stage D5 holds 22 order lines, and <a href="#tbl-ddl-after-delete" class="quarto-xref">Table&nbsp;<span>8.12</span></a> shows 20, none of them SO-5012’s: the database deleted the two lines itself, because of the <code>ON DELETE CASCADE</code> of <code>customer_order_fk</code>. (<code>FILTER</code> limits one aggregate to some rows; it is standard SQL, and PostgreSQL supports it.) A foreign key without the cascade refuses instead. Order SO-5001 has shipped, and its shipment refers to it:</p>
+<div class="cell" data-stage="d5" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> distribution.customer_order</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5001'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  update or delete on table "customer_order" violates foreign key constraint "shipment_customer_order_fk_fkey" on table "shipment"
+DETAIL:  Key (customer_order_pk)=(1) is still referenced from table "shipment".</code></pre>
+</div>
+<p>The refusal is the design working. The shipment is a record of goods that left the warehouse, and the database will not let the order it fulfilled disappear from under it. In the same way, a product that has been ordered cannot be deleted, since order lines refer to it:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> distribution.product</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-100'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  update or delete on table "product" violates foreign key constraint "order_line_product_fk_fkey" on table "order_line"
+DETAIL:  Key (product_pk)=(1) is still referenced from table "order_line".</code></pre>
+</div>
+<p>A <code>DELETE</code> without a <code>WHERE</code> clause removes every row and keeps the table. <code>TRUNCATE</code>, standard since SQL:2008, also empties a table, faster, without examining the rows one at a time, but it is not the same. A <code>DELETE</code> follows each foreign key’s delete rule, so at stage D3 deleting every order deletes every order line with it; <code>TRUNCATE</code> refuses a table that another table refers to, unless the tables that refer to it are truncated with it:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">TRUNCATE</span> distribution.customer_order;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  cannot truncate a table referenced in a foreign key constraint
+DETAIL:  Table "order_line" references "customer_order".
+HINT:  Truncate table "order_line" at the same time, or use TRUNCATE ... CASCADE.</code></pre>
+</div>
+<p>Neither statement removes the table; <code>DROP TABLE</code> does (<a href="#sec-ddl-create" class="quarto-xref"><span>Section 8.3</span></a>). The three are easy to confuse, and they differ in what remains: rows and table, table only, or nothing.</p>
+<p>Under auto-commit, each statement of this section changes the database as soon as it runs, and each is complete in itself; inside a <code>BEGIN</code> and <code>ROLLBACK</code>, as in the callout of <a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>, its change is not kept. <a href="09-Chapter9.html" class="quarto-xref"><span>Chapter 9</span></a> shows how several statements, such as the three inserts of <a href="#exm-ddl-new-order" class="quarto-xref">Example&nbsp;<span>8.2</span></a>, can be made to succeed or fail together. The next section adds rows in bulk, from files.</p>
+</section>
+<section id="sec-ddl-loading" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="sec-ddl-loading"><span class="header-section-number">8.5</span> Loading data from files</h2>
+<p>This section illustrates step 4 again, for rows that arrive as files, and step 5, checking them before they enter the database.</p>
+<p>Data often reaches a database as a file. A colleague exports a list from another system or a spreadsheet, and the rows must be loaded into tables that someone else designed. The usual form is a <strong>CSV file</strong> (comma-separated values): plain text, one row per line, the values separated by commas, and usually a first line of column names. A value that contains a comma or a quote is enclosed in double quotes. The file carries no types, no keys, and no rules; everything in it is text, and nothing in it has been checked.</p>
+<p>PostgreSQL offers two ways to load such a file, and the tools add a third:</p>
+<ul>
+<li><strong><code>COPY table FROM 'file'</code></strong> is an SQL statement that the <em>server</em> runs. It reads a file on the server’s own machine, so it needs a server-side path, and PostgreSQL allows it only to superusers and to roles granted <code>pg_read_server_files</code>.</li>
+<li><strong><code>\copy table FROM 'file'</code></strong> is a psql command (<a href="13-AppPostgreSQLSetup.html" class="quarto-xref"><span>Appendix A</span></a>) that reads a file on <em>your</em> machine and sends its rows to the server. It takes the same options as <code>COPY</code>, needs no special privilege, and is the form the book uses.</li>
+<li><strong>The import wizards of DataGrip and DBeaver</strong> read a file on your machine, show its first rows, and map its columns to a table’s columns. They are convenient for a single load, and they do what <code>\copy</code> does.</li>
+</ul>
+<p>Whichever you use, do not load a file straight into its final table. If one row breaks a constraint, the whole load is refused, and you learn only about the first bad row; and a value that is wrong but legal, such as a city misspelled, goes in unnoticed. Load the file instead into a <strong>staging table</strong>, a table with the file’s columns, all of type <code>TEXT</code> and without constraints, which accepts anything. Then examine the staged rows with queries, and move them into the real table with <code>INSERT ... SELECT</code>, cleaning them on the way.</p>
+<div id="exm-ddl-load-customers" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.3 (Loading new customers from a file)</strong></span> HG Industries is expanding into Oklahoma, Kansas, and Texas, and the sales department has signed 22 new customers. A sales assistant exported them from the contact list to <code>code/data/new-customers-raw.csv</code>, one customer per line with a header line: the customer number, name, city, and state. The first lines of the file are:</p>
+<pre class="text"><code>customer_number,name,city,state
+C-1009,Rogers Farm Supply,Rogers,AR
+C-1010,Boston Mountain Hardware,Harrison,AR
+C-1011,Riverbend Home and Garden,Conway,AR</code></pre>
+<p>The example assumes stage D3, which holds the eight customers of stage D1.</p>
+<p><em>The request.</em> Load the new customers into <code>distribution.customer</code>, after finding and repairing whatever is wrong with the file.</p>
+<p><em>The design.</em> The staging table has the file’s four columns, as text:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.customer_staging (</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    customer_number TEXT,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    name            TEXT,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    city            TEXT,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    state           TEXT</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The file is loaded with psql, started in the companion code’s folder. The options say that the file is CSV and that its first line is a header:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>\<span class="kw">copy</span> distribution.customer_staging <span class="kw">FROM</span> <span class="st">'data/new-customers-raw.csv'</span> <span class="kw">WITH</span> (FORMAT csv, <span class="kw">HEADER</span> <span class="kw">true</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A <code>\copy</code> command is one line, however long, and ends without a semicolon. psql answers <code>COPY 23</code>: the file holds 23 rows, although the sales department signed 22 customers. The staged rows are now examined with queries. The first looks for customer numbers that appear more than once:</p>
+<div id="tbl-ddl-staged-duplicates" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-staged-duplicates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.13: Customer Numbers That Appear More Than Once in the File
+</figcaption>
+<div aria-describedby="tbl-ddl-staged-duplicates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_number, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> copies,</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> name <span class="op">||</span> city <span class="op">||</span> state)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> different_versions</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_staging</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> customer_number</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="op">&gt;</span> <span class="dv">1</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:right;">
+copies
+</th>
+<th style="text-align:right;">
+different_versions
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C-1015
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>C-1015 appears twice, and both copies are the same, so one can be dropped. The second query looks for states that are not two capital letters, with the state shown between brackets so that a space is visible:</p>
+<div id="tbl-ddl-staged-states" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-staged-states-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.14: Staged Customers Whose State Is Not Two Capital Letters
+</figcaption>
+<div aria-describedby="tbl-ddl-staged-states-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_number, city,</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>       <span class="st">'['</span> <span class="op">||</span> state <span class="op">||</span> <span class="st">']'</span> <span class="kw">AS</span> state_as_loaded</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_staging</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> state <span class="op">&lt;&gt;</span> <span class="fu">UPPER</span>(state) <span class="kw">OR</span> <span class="fu">LENGTH</span>(state) <span class="op">&lt;&gt;</span> <span class="dv">2</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:left;">
+city
+</th>
+<th style="text-align:left;">
+state_as_loaded
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C-1017
+</td>
+<td style="text-align:left;">
+Norman
+</td>
+<td style="text-align:left;">
+[ok ]
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Norman’s state was typed as <code>ok</code> with a trailing space. The <code>CHAR(2)</code> column would not refuse it: PostgreSQL drops extra characters that are spaces, and would store <code>ok</code> in lower case, where a query grouping by state would count it apart from every <code>OK</code>. The third query looks for customers that the database already holds, which the alternate key would refuse:</p>
+<div id="tbl-ddl-staged-existing" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-staged-existing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.15: Staged Customers Already in the Database
+</figcaption>
+<div aria-describedby="tbl-ddl-staged-existing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> s.customer_number, s.name</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_staging <span class="kw">AS</span> s</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_number <span class="op">=</span> s.customer_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:left;">
+name
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-ddl-staged-existing" class="quarto-xref">Table&nbsp;<span>8.15</span></a> is empty, as it should be. The move into <code>customer</code> repairs the two problems found: <code>DISTINCT</code> keeps one copy of each identical row, and <code>UPPER(TRIM(state))</code> removes the space and capitalizes the state. The staging table is then dropped:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> customer_number, name, city,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">UPPER</span>(<span class="fu">TRIM</span>(state))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_staging;</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> distribution.customer_staging;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>The result.</em> The customers by state, after the load:</p>
+<div id="tbl-ddl-customers-loaded" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;,&quot;stage-insert&quot;]" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-customers-loaded-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.16: Customers by State After the Load
+</figcaption>
+<div aria-describedby="tbl-ddl-customers-loaded-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> state, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> customers</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> state</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> state;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+state
+</th>
+<th style="text-align:right;">
+customers
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+AR
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KS
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MO
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OK
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TX
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> The file has 24 lines: a header and 23 rows. One row is a duplicate, so 22 customers are new, and with the 8 of stage D1 the table should hold 30. The counts of <a href="#tbl-ddl-customers-loaded" class="quarto-xref">Table&nbsp;<span>8.16</span></a> add up to 30, and Norman is counted under <code>OK</code>, not in a group of its own.</p>
+<p><em>Interpretation.</em> HG Industries now has customers in five states, and eleven of its twelve customers outside Arkansas and Missouri are new; before the load, Cedar Creek Home Center of Tulsa was the only one. Every query of the earlier chapters sees the new customers as if they had been entered one at a time.</p>
+<p><em>Where it breaks.</em> <code>DISTINCT</code> removes only rows that are identical in every column. Had the two copies of C-1015 differed, say in the spelling of the city, <code>DISTINCT</code> would have kept both, and the alternate key would have refused the whole <code>INSERT</code>, naming C-1015. The <code>different_versions</code> column of <a href="#tbl-ddl-staged-duplicates" class="quarto-xref">Table&nbsp;<span>8.13</span></a> checks for this case before the move, and a duplicate with two versions needs a person to decide which is right.</p>
+</div>
+<p>The staging pattern of <a href="#exm-ddl-load-customers" class="quarto-xref">Example&nbsp;<span>8.3</span></a> is the heart of every load: land the data where nothing can refuse it, look at it with queries, and move it with a query that repairs what the looking found. <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a> builds on it, as extract, transform, and load. Two problems that files commonly carry did not occur in this one. A code written with digits loses its leading zeros if the file passed through a spreadsheet that took the code for a number (<a href="#tbl-ddl-leading-zero" class="quarto-xref">Table&nbsp;<span>8.5</span></a>), and nothing in the database can restore them. Dates arrive in more than one form: <code>2026-04-13</code> and <code>4/13/2026</code> are the same day, and a staging query must find which form each row uses before converting it, as <a href="#exr-ch8-load-orders" class="quarto-xref">Exercise&nbsp;<span>8.8</span></a> asks. The next section changes the tables themselves.</p>
+</section>
+<section id="sec-ddl-alter" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="sec-ddl-alter"><span class="header-section-number">8.6</span> Changing a table’s definition</h2>
+<p>This section changes the definition of tables that already hold rows.</p>
+<p>A design changes after the database is built: the business records something new, a rule is discovered, or two departments’ data must be connected. Dropping and recreating a table would lose its rows, so SQL changes a table in place with <code>ALTER TABLE</code>. <a href="#tbl-ddl-alter" class="quarto-xref">Table&nbsp;<span>8.17</span></a> lists the changes the book uses.</p>
+<div id="tbl-ddl-alter" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-alter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.17: The Changes ALTER TABLE Makes
+</figcaption>
+<div aria-describedby="tbl-ddl-alter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">To</th>
+<th style="text-align: left;">Write</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">add a column</td>
+<td style="text-align: left;"><code>ALTER TABLE t ADD COLUMN c type</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">remove a column</td>
+<td style="text-align: left;"><code>ALTER TABLE t DROP COLUMN c</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">require a value</td>
+<td style="text-align: left;"><code>ALTER TABLE t ALTER COLUMN c SET NOT NULL</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">allow NULL again</td>
+<td style="text-align: left;"><code>ALTER TABLE t ALTER COLUMN c DROP NOT NULL</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">change a column’s type</td>
+<td style="text-align: left;"><code>ALTER TABLE t ALTER COLUMN c TYPE type</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">add a constraint</td>
+<td style="text-align: left;"><code>ALTER TABLE t ADD CONSTRAINT name ...</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">remove a constraint</td>
+<td style="text-align: left;"><code>ALTER TABLE t DROP CONSTRAINT name</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rename a column</td>
+<td style="text-align: left;"><code>ALTER TABLE t RENAME COLUMN c TO d</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A change must hold for the rows already there, and the database checks them before it accepts the change. Requiring a requested ship date on every order is refused at stage D3, since two orders have none:</p>
+<div class="cell" data-stage="d3" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> distribution.customer_order</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ALTER</span> <span class="kw">COLUMN</span> requested_ship_date <span class="kw">SET</span> <span class="kw">NOT</span> <span class="kw">NULL</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  column "requested_ship_date" of relation "customer_order" contains null values</code></pre>
+</div>
+<p>A constraint added to a table applies to every later change. The customer load of <a href="#exm-ddl-load-customers" class="quarto-xref">Example&nbsp;<span>8.3</span></a> repaired a lower-case state in its <code>INSERT ... SELECT</code>; a check makes the database refuse one. Its name is chosen so that a message names the rule:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> distribution.customer</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ADD</span> <span class="kw">CONSTRAINT</span> customer_state_in_capitals</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">CHECK</span> (state <span class="op">=</span> <span class="fu">UPPER</span>(state));</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-stage="d3" data-changes="alter-state-check" data-refused="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1017'</span>, <span class="st">'Canadian River Home Center'</span>,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Norman'</span>, <span class="st">'ok'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text book-error"><code>ERROR:  new row for relation "customer" violates check constraint "customer_state_in_capitals"
+DETAIL:  Failing row contains (9, C-1017, Canadian River Home Center, Norman, ok).</code></pre>
+</div>
+<p>The most common change adds a column to connect data that were designed apart. Stage P1 adds the production department’s parts, and each product that distribution sells is a manufactured part: the HT-100 hand truck is part HT-100. The P1 script, <code>code/sql/production/p1-part.sql</code>, connects them in three steps, which is the pattern for adding a required column to a table that already has rows. First, the column is added, allowing NULL, since the existing products have no value for it yet:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> distribution.product</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ADD</span> <span class="kw">COLUMN</span> manufactured_part_fk <span class="dt">INTEGER</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">REFERENCES</span> production.manufactured_part (part_fk);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Second, an <code>UPDATE</code> fills it for every product, finding each product’s part by its number. The standard form sets the column to a correlated subquery (<a href="03-Chapter3.html#sec-q-subqueries" class="quarto-xref"><span>Section 3.8</span></a>):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> distribution.product</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> manufactured_part_fk <span class="op">=</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> part_pk</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>     <span class="kw">FROM</span> production.part</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>     <span class="kw">WHERE</span> part.part_number <span class="op">=</span> product.product_number);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The P1 script writes the same update in PostgreSQL’s own form, <code>UPDATE ... FROM production.part WHERE ...</code>, which joins the table being updated to another; both give the same result here. Third, once every product has its part, the column is required:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> distribution.product</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ALTER</span> <span class="kw">COLUMN</span> manufactured_part_fk <span class="kw">SET</span> <span class="kw">NOT</span> <span class="kw">NULL</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The stage P1 database holds the result, and a join through the new column finds each product’s part:</p>
+<div id="tbl-ddl-product-part" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-product-part-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.18: Each Product and Its Manufactured Part, Stage P1
+</figcaption>
+<div aria-describedby="tbl-ddl-product-part-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> p.product_number, p.manufactured_part_fk,</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>       pt.part_number, pt.standard_cost</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> production.part <span class="kw">AS</span> pt</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> pt.part_pk <span class="op">=</span> p.manufactured_part_fk</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> p.product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:right;">
+manufactured_part_fk
+</th>
+<th style="text-align:left;">
+part_number
+</th>
+<th style="text-align:right;">
+standard_cost
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+66.40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GC-400
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+GC-400
+</td>
+<td style="text-align:right;">
+79.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+52.40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+58.90
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Each product of <a href="#tbl-ddl-product-part" class="quarto-xref">Table&nbsp;<span>8.18</span></a> has found the part with its own number, so the update matched all four. Had one product had no part of the same number, its column would have stayed NULL, and the third step would have been refused, as the ship-date change was: the order of the three steps turns a silent gap into a refusal. The same pattern, create bare, fill, then constrain, is how a large load is often done: the tables are created without their keys, loaded, and the keys added with <code>ALTER TABLE ... ADD CONSTRAINT</code>, so that each constraint checks all the rows once.</p>
+<p>A change made with <code>ALTER TABLE</code> must also be made to the scripts that build the database, or the next rebuild will lose it. The book’s database does this by adding each change as a stage script that runs after the scripts before it, as <code>p1-part.sql</code> runs after the distribution stages. You should keep your own databases the same way: the scripts, not the running database, are the definition.</p>
+</section>
+<section id="sec-sqlddl-summary" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="sec-sqlddl-summary"><span class="header-section-number">8.7</span> Summary</h2>
+<p><strong>A database is built from its relational schema by a script.</strong> The script creates a schema, then each table after the tables it refers to, then the rows in the same order; kept and run again, it is the database’s most useful description.</p>
+<p><strong>A data type implements a domain, and the wrong type distorts values.</strong> Use <code>INTEGER</code> for keys and counts, <code>NUMERIC</code> for money and recorded measurements, text for every code even one written in digits, and <code>DATE</code> or <code>TIMESTAMP</code> for dates. Floating point cannot hold most decimal fractions exactly, and a number drops a code’s leading zero.</p>
+<p><strong>Constraints make the database enforce the business’s rules.</strong> <code>PRIMARY KEY</code>, <code>UNIQUE</code>, <code>NOT NULL</code>, <code>REFERENCES</code>, and <code>CHECK</code> implement a relational schema’s keys, NULL rules, foreign keys, and domains, and a statement that breaks one is refused with a message naming it. A rule about one column can be a column constraint; a rule about several is a table constraint, as the standard requires (PostgreSQL also accepts a check of several columns on one column).</p>
+<p><strong>INSERT, UPDATE, and DELETE change rows, and the constraints judge every change.</strong> Write the column list of every <code>INSERT</code>, look up a generated key by its business number with a subquery, and preview every <code>UPDATE</code> and <code>DELETE</code> with a query that selects the same rows. A foreign key decides what a deletion does to the rows that refer to it: <code>ON DELETE CASCADE</code> deletes them with it, and the default refuses the deletion.</p>
+<p><strong>A file is loaded into a staging table, examined, and then moved.</strong> Load it with psql’s <code>\copy</code> or a tool’s import wizard into a table of text columns with no constraints; find duplicates, malformed values, and existing keys with queries; and move the rows with an <code>INSERT ... SELECT</code> that repairs what the queries found. Count the rows at each step.</p>
+<p><strong>ALTER TABLE changes a table that holds rows, and the rows must satisfy the change.</strong> A new required column is added in three steps: add it allowing NULL, fill it with an <code>UPDATE</code>, and then require it. Every change to a running database belongs in the scripts that rebuild it.</p>
+</section>
+<section id="sec-sqlddl-exercises" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="sec-sqlddl-exercises"><span class="header-section-number">8.8</span> Exercises</h2>
+<div id="exr-ch8-terms" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.1</strong></span> Match each term on the left with the phrase on the right that defines it.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a. DDL</td>
+<td style="text-align: left;">1. a rule written after the columns, which may involve several of them</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b. DML</td>
+<td style="text-align: left;">2. statements that define tables and their rules</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">c.&nbsp;table constraint</td>
+<td style="text-align: left;">3. a column whose values the database generates</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d.&nbsp;identity column</td>
+<td style="text-align: left;">4. a table whose rows are the allowed values of a domain</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">e. lookup table</td>
+<td style="text-align: left;">5. statements that change the rows of tables</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exr-ch8-true-false" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.2</strong></span> Mark each statement true or false, and correct each false one.</p>
+<ol type="a">
+<li>A <code>CHECK (quantity &gt; 0)</code> constraint refuses a row whose quantity is NULL.</li>
+<li><code>DOUBLE PRECISION</code> is a good type for the unit price of an order line, since it holds more digits than <code>NUMERIC(10,2)</code>.</li>
+<li>An employee number such as <code>0412</code> should be stored in an <code>INTEGER</code> column, since it is made of digits.</li>
+<li>A foreign key of two columns must be written as a table constraint.</li>
+<li><code>DROP TABLE</code> removes a table’s rows but keeps its definition.</li>
+</ol>
+</div>
+<div id="exr-ch8-maintenance-types" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.3</strong></span> HG Industries wants to record the maintenance done on its machines, one row per job: the machine’s number (such as <code>M-04</code>), the date of the job, the time the machine was stopped and restarted, the technician’s employee number (such as <code>E-0204</code>), the labor hours to the nearest quarter hour, the cost of parts in dollars and cents, whether the job was planned or a breakdown, and a technician’s note of any length.</p>
+<ol type="a">
+<li>State the domain of each attribute in words, in the manner of <a href="06-Chapter6.html#tbl-map-customer-domains" class="quarto-xref">Table&nbsp;<span>6.2</span></a>.</li>
+<li>Choose a PostgreSQL type and constraints for each, and justify each choice that <a href="#tbl-ddl-type-guide" class="quarto-xref">Table&nbsp;<span>8.6</span></a> does not settle.</li>
+<li>Would you record “planned or breakdown” as a <code>BOOLEAN</code>, a check, or a lookup table? Give a reason for your choice.</li>
+</ol>
+</div>
+<div id="exr-ch8-d4-tables" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.4</strong></span> Stage D4 adds warehouses and the stock level of each product in each warehouse. Its relational schema is <a href="06-Chapter6.html#lst-map-association-class" class="quarto-xref">Listing&nbsp;<span>6.7</span></a>; in addition, a warehouse code is at most 10 characters, a city at most 40, a state two letters, and a quantity on hand and a reorder point are whole numbers that are never negative.</p>
+<ol type="a">
+<li>Write the <code>CREATE TABLE</code> statements for <code>warehouse</code> and <code>stock_level</code>, in the order a script must run them.</li>
+<li>Compare your statements with <code>code/sql/distribution/d4-warehouse-stock-level.sql</code> and explain any difference.</li>
+<li>How many constraints, other than <code>NOT NULL</code>, does <code>stock_level</code> have? Check your answer with a query in the manner of <a href="#tbl-ddl-order-line-constraints" class="quarto-xref">Table&nbsp;<span>8.7</span></a>, at stage D4.</li>
+</ol>
+</div>
+<div id="exr-ch8-refusals" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.5</strong></span> For each statement below, run at stage D3 in a transaction of its own that you roll back (<a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>), say whether the database accepts it, and if not, which constraint refuses it and why.</p>
+<ol type="a">
+<li><p>An order requested to ship before it was placed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer_order</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    (order_number, order_date, requested_ship_date,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>     customer_fk)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'SO-5013'</span>, <span class="dt">DATE</span> <span class="st">'2026-03-20'</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">DATE</span> <span class="st">'2026-03-18'</span>, <span class="dv">2</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>An order with no requested ship date:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer_order</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>    (order_number, order_date, customer_fk)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'SO-5013'</span>, <span class="dt">DATE</span> <span class="st">'2026-03-20'</span>, <span class="dv">2</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>A line for order 12 (SO-5012):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>     quantity, unit_price)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="fl">139.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>A product given away:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.product</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>    (product_number, description, list_price)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'GC-500'</span>, <span class="st">'Folding garden cart'</span>, <span class="dv">0</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>A customer with a three-letter state:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>    (customer_number, name, city, state)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'C-1009'</span>, <span class="st">'Rogers Farm Supply'</span>, <span class="st">'Rogers'</span>, <span class="st">'ARK'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ol>
+</div>
+<div id="exr-ch8-price-preview" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.6</strong></span> HG Industries raises the list prices of its two hand trucks, the HT-100 and the HT-200, by 3 percent, rounded to the cent. Use stage D3.</p>
+<ol type="a">
+<li>Compute the two new prices by hand.</li>
+<li>Write a query that previews the change, in the manner of <a href="#tbl-ddl-price-preview" class="quarto-xref">Table&nbsp;<span>8.9</span></a>, and compare its result with your answer to a.</li>
+<li>Write the <code>UPDATE</code> statement. If you run it, run it inside a transaction you roll back (<a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>).</li>
+<li>What would your <code>UPDATE</code> do if its <code>WHERE</code> clause were left out, and how would the preview have warned you?</li>
+</ol>
+</div>
+<div id="exr-ch8-deletes" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.7</strong></span> For each statement below, run at stage D5 in a transaction of its own that you roll back (<a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>), say whether the database accepts it and what it removes, or which constraint refuses it.</p>
+<ol type="a">
+<li><code>DELETE FROM distribution.customer_order WHERE order_number = 'SO-5011';</code></li>
+<li><code>DELETE FROM distribution.customer_order WHERE order_number = 'SO-5004';</code></li>
+<li><code>DELETE FROM distribution.product WHERE product_number = 'GC-400';</code></li>
+<li><code>DELETE FROM distribution.customer WHERE customer_number = 'C-1008';</code></li>
+</ol>
+</div>
+<div id="exr-ch8-load-orders" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.8</strong></span> The new customers of <a href="#exm-ddl-load-customers" class="quarto-xref">Example&nbsp;<span>8.3</span></a> placed 40 orders in April 2026, which the sales assistant exported to <code>code/data/april-orders-raw.csv</code>, with the columns <code>order_number</code>, <code>customer_number</code>, <code>order_date</code>, and <code>requested_ship_date</code>. Assume stage D3 with the customers of <a href="#exm-ddl-load-customers" class="quarto-xref">Example&nbsp;<span>8.3</span></a> loaded. If you run your statements, run them in one transaction that you roll back at the end (<a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>), loading the customers as <a href="#exm-ddl-load-customers" class="quarto-xref">Example&nbsp;<span>8.3</span></a> does and then the orders.</p>
+<ol type="a">
+<li>Write the statements that create a staging table for the file and load it with <code>\copy</code>.</li>
+<li>Write a query that finds the rows whose dates are not in the ISO form <code>YYYY-MM-DD</code>. How many are there, and what form do they use?</li>
+<li>Write the <code>INSERT ... SELECT</code> that moves the orders into <code>distribution.customer_order</code>, converting both dates and finding each order’s <code>customer_fk</code> from its customer number. An empty requested ship date in the file must become NULL.</li>
+<li>How many orders should the insert add, and how many of them should have no requested ship date? Check your answer with a query of stage G, which holds the same orders among those of all its customers: count the April 2026 orders of the new customers, C-1009 to C-1030.</li>
+</ol>
+</div>
+<div id="exr-ch8-territory" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.9</strong></span> The sales department divides its customers into two territories: East for customers in Arkansas and Missouri, West for Oklahoma, Kansas, and Texas. Every customer must have a territory, and no other territory exists.</p>
+<ol type="a">
+<li>Write the statements that add a required column <code>territory</code> to <code>distribution.customer</code>, fill it, and restrict it to the two values, in the order the database requires. If you run them at stage G, run them inside a transaction you roll back (<a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>).</li>
+<li>Write a query of stage G that previews the change by counting the customers each territory will hold.</li>
+<li>Explain why adding the column as <code>NOT NULL</code> in one step would be refused at stage G, but accepted in a database with no customers yet.</li>
+</ol>
+</div>
+<div id="exr-ch8-northwind-freight" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.10</strong></span> Northwind’s <code>orders.freight</code> has the type <code>REAL</code>, a floating-point number. Using the Northwind database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-public" class="quarto-xref"><span>Section C.11</span></a>, loaded with the book’s loader (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a>):</p>
+<ol type="a">
+<li>Compare the sum of <code>freight</code> as it is with the sum of each value rounded to cents (<code>freight::NUMERIC(10, 2)</code>), and count the values whose stored value is not a whole number of cents, by comparing each <code>REAL</code> value with its rounding (<code>freight &lt;&gt; freight::NUMERIC(10, 2)</code>).</li>
+<li>Explain the difference, with <a href="#sec-ddl-types" class="quarto-xref"><span>Section 8.2</span></a>, and explain why the values nevertheless look like whole numbers of cents when PostgreSQL prints them. Give the type you would use instead.</li>
+</ol>
+</div>
+<div id="exr-ch8-practical-zips" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.11</strong></span> The <code>meat_poultry_egg_establishments</code> table of the Practical SQL database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-public" class="quarto-xref"><span>Section C.11</span></a> was loaded from the U.S. Department of Agriculture’s directory. Some ZIP codes are shorter than five characters.</p>
+<ol type="a">
+<li>Count them by state, with an example of each, and explain how they lost their digits (<a href="#sec-ddl-loading" class="quarto-xref"><span>Section 8.5</span></a>).</li>
+<li>Write the <code>UPDATE</code> statements that repair them, and say what you would check before and after running them inside a transaction you roll back (<a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>).</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-blaha1998object" class="csl-entry" role="listitem">
+Blaha, Michael, and William Premerlani. 1998. <em>Object-Oriented Modeling and Design for Database Applications</em>. Prentice Hall.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./07-Chapter7.html" class="pagination-link" aria-label="Normalization">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./09-Chapter9.html" class="pagination-link" aria-label="Views, Transactions, and Concurrency">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

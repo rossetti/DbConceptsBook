@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>Appendix C — The Book’s Databases – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./16-AppERDandUML.html" rel="next">
+<link href="./14-AppKSLSetup.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./15-AppSampleDatabases.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-appsampledbs-overview" id="toc-sec-appsampledbs-overview" class="nav-link active" data-scroll-target="#sec-appsampledbs-overview"><span class="header-section-number">C.1</span> HG Industries</a></li>
+  <li><a href="#sec-appsampledbs-loading" id="toc-sec-appsampledbs-loading" class="nav-link" data-scroll-target="#sec-appsampledbs-loading"><span class="header-section-number">C.2</span> Loading the database</a></li>
+  <li><a href="#sec-appsampledbs-conventions" id="toc-sec-appsampledbs-conventions" class="nav-link" data-scroll-target="#sec-appsampledbs-conventions"><span class="header-section-number">C.3</span> Naming and keys</a></li>
+  <li><a href="#sec-appsampledbs-distribution" id="toc-sec-appsampledbs-distribution" class="nav-link" data-scroll-target="#sec-appsampledbs-distribution"><span class="header-section-number">C.4</span> The distribution schema</a></li>
+  <li><a href="#sec-appsampledbs-production" id="toc-sec-appsampledbs-production" class="nav-link" data-scroll-target="#sec-appsampledbs-production"><span class="header-section-number">C.5</span> The production schema</a></li>
+  <li><a href="#sec-appsampledbs-quality" id="toc-sec-appsampledbs-quality" class="nav-link" data-scroll-target="#sec-appsampledbs-quality"><span class="header-section-number">C.6</span> The quality schema</a></li>
+  <li><a href="#sec-appsampledbs-history" id="toc-sec-appsampledbs-history" class="nav-link" data-scroll-target="#sec-appsampledbs-history"><span class="header-section-number">C.7</span> The year of history</a></li>
+  <li><a href="#sec-appsampledbs-sales" id="toc-sec-appsampledbs-sales" class="nav-link" data-scroll-target="#sec-appsampledbs-sales"><span class="header-section-number">C.8</span> The sales star schema</a></li>
+  <li><a href="#sec-appsampledbs-counts" id="toc-sec-appsampledbs-counts" class="nav-link" data-scroll-target="#sec-appsampledbs-counts"><span class="header-section-number">C.9</span> Rows in each table</a></li>
+  <li><a href="#sec-appsampledbs-transit" id="toc-sec-appsampledbs-transit" class="nav-link" data-scroll-target="#sec-appsampledbs-transit"><span class="header-section-number">C.10</span> Millbrook Transit</a></li>
+  <li><a href="#sec-appsampledbs-public" id="toc-sec-appsampledbs-public" class="nav-link" data-scroll-target="#sec-appsampledbs-public"><span class="header-section-number">C.11</span> Public sample databases for further practice</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./15-AppSampleDatabases.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-appsampledbs" class="quarto-section-identifier">Appendix C — The Book’s Databases</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The examples and exercises in this book use one database, built for the book. It records the business of HG Industries, a small manufacturer of hand trucks and garden carts, as its distribution, production, and quality departments see it. The chapters introduce the database a few tables at a time, as each new idea needs them. This appendix shows it whole: what it contains, how to load it, how its tables and columns are named, and what each table holds.</p>
+<section id="sec-appsampledbs-overview" class="level2" data-number="C.1">
+<h2 data-number="C.1" class="anchored" data-anchor-id="sec-appsampledbs-overview"><span class="header-section-number">C.1</span> HG Industries</h2>
+<p>HG Industries makes four products: two hand trucks and two garden carts. It sells them to hardware stores, farm stores, and distributors from two warehouses, one at the plant in Fayetteville, Arkansas, and one in Tulsa, Oklahoma. The products are simple enough to picture and still have the structure of real manufactured goods. For example, both hand trucks and both carts roll on the same wheel assembly, which is itself built from purchased tires, rims, and bearings and from an axle the plant machines from bar stock.</p>
+<p>Each department keeps its own data, and each department’s data is a separate <strong>schema</strong>, a named group of tables within one database. <a href="#tbl-appsampledbs-schemas" class="quarto-xref">Table&nbsp;<span>C.1</span></a> lists them. The <code>sales</code> schema is not a department’s working data. It is built from the other schemas for analysis, and <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a> explains why a company keeps its data twice in this way.</p>
+<div id="tbl-appsampledbs-schemas" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-schemas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.1: Schemas of the Book’s Database
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-schemas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 71%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Schema</th>
+<th style="text-align: left;">What it records</th>
+<th style="text-align: center;">Tables</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>distribution</code></td>
+<td style="text-align: left;">Customers, their orders, the products ordered, stock in the warehouses, and shipments</td>
+<td style="text-align: center;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>production</code></td>
+<td style="text-align: left;">Parts, bills of materials, work centers and their machines, operators and their certifications, routings, and work orders</td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>quality</code></td>
+<td style="text-align: left;">Characteristics of parts with their specification limits, inspections, measurements, and defects found</td>
+<td style="text-align: center;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sales</code></td>
+<td style="text-align: left;">A star schema for analyzing sales, built from <code>distribution</code> and <code>production</code></td>
+<td style="text-align: center;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The schemas refer to one another where the business connects. A product that distribution sells is one of the parts production makes, and an inspection in quality examines one of production’s parts and is performed by one of production’s operators. Thus, a query can join tables across departments, as the company’s own reports must.</p>
+</section>
+<section id="sec-appsampledbs-loading" class="level2" data-number="C.2">
+<h2 data-number="C.2" class="anchored" data-anchor-id="sec-appsampledbs-loading"><span class="header-section-number">C.2</span> Loading the database</h2>
+<p>The database is built by SQL scripts that come with the book, in the <code>sql</code> folder of the companion code project (<a href="https://github.com/rossetti/DbConceptsBookCode" class="uri">https://github.com/rossetti/DbConceptsBookCode</a>) and as downloads from the book’s site. <a href="13-AppPostgreSQLSetup.html" class="quarto-xref"><span>Appendix A</span></a> explains how to install PostgreSQL and connect to it with DataGrip or DBeaver. You then create an empty database once; the book calls it <code>dbconcepts</code>.</p>
+<p>The scripts build the database in <strong>stages</strong>, each adding one idea’s tables and rows to the stages before it. <a href="#tbl-appsampledbs-stages" class="quarto-xref">Table&nbsp;<span>C.2</span></a> lists them in the order they load. The chapters say which stage their examples assume. For example, the single-table queries of <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a> need only stage D1, while the analytical queries of <a href="04-Chapter4.html" class="quarto-xref"><span>Chapter 4</span></a> need the year of history in stage G.</p>
+<div id="tbl-appsampledbs-stages" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-stages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.2: Stages of the Book’s Database
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-stages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 46%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Stage</th>
+<th style="text-align: left;">Adds</th>
+<th style="text-align: left;">The new idea</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">D1</td>
+<td style="text-align: left;"><code>customer</code></td>
+<td style="text-align: left;">One table: rows, columns, and a key</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D2</td>
+<td style="text-align: left;"><code>customer_order</code></td>
+<td style="text-align: left;">A one-to-many association and its foreign key</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">D3</td>
+<td style="text-align: left;"><code>product</code>, <code>order_line</code></td>
+<td style="text-align: left;">A many-to-many association resolved by a table with its own data</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D4</td>
+<td style="text-align: left;"><code>warehouse</code>, <code>stock_level</code></td>
+<td style="text-align: left;">A second association class</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">D5</td>
+<td style="text-align: left;"><code>shipment</code>, <code>shipment_line</code></td>
+<td style="text-align: left;">Optional participation</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">P1</td>
+<td style="text-align: left;"><code>part</code>, <code>manufactured_part</code>, <code>purchased_part</code></td>
+<td style="text-align: left;">Generalization; connecting distribution to production</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">P2</td>
+<td style="text-align: left;"><code>bom_line</code></td>
+<td style="text-align: left;">A recursive association, the bill of materials</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">P3</td>
+<td style="text-align: left;"><code>work_center</code>, <code>machine</code>, <code>operator</code>, <code>certification</code>, <code>operation</code>, <code>work_order</code></td>
+<td style="text-align: left;">Qualified associations and aggregation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Q</td>
+<td style="text-align: left;">the <code>quality</code> schema</td>
+<td style="text-align: left;">Measurements over time</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">G</td>
+<td style="text-align: left;">a year of history</td>
+<td style="text-align: left;">Enough data to analyze</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">S</td>
+<td style="text-align: left;">the <code>sales</code> schema</td>
+<td style="text-align: left;">A star schema</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Each load file, in the <code>sql/load</code> folder, is named for its stage (<code>through-d1.sql</code>, <code>through-d2.sql</code>, and so on to <code>through-s.sql</code>) and rebuilds the database as it stands at that stage. It first deletes the four schemas of <a href="#tbl-appsampledbs-schemas" class="quarto-xref">Table&nbsp;<span>C.1</span></a>, then runs every stage script up to its own. Thus, you can run a load file at any time to return the database to a known state, and one file is all you ever need to open. A load file touches no schema other than these four.</p>
+<p>In DataGrip or DBeaver, open the load file, choose the <code>dbconcepts</code> connection, and run the whole script. From a terminal, psql does the same:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-s.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The stage scripts themselves are in <code>sql/distribution</code>, <code>sql/production</code>, <code>sql/quality</code>, <code>sql/history</code>, and <code>sql/sales</code>, one file per stage. They are worth reading, since each is a short, complete example of defining and populating tables. Run them only through a load file, though. Each assumes the stages before it were loaded into a freshly reset database, because its rows refer to earlier rows by their key numbers.</p>
+</section>
+<section id="sec-appsampledbs-conventions" class="level2" data-number="C.3">
+<h2 data-number="C.3" class="anchored" data-anchor-id="sec-appsampledbs-conventions"><span class="header-section-number">C.3</span> Naming and keys</h2>
+<p>Every table follows the same rules, and knowing them makes any table readable at a glance. <a href="02-Chapter2.html" class="quarto-xref"><span>Chapter 2</span></a> and <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> explain the reasoning behind them.</p>
+<ul>
+<li><strong>Table names</strong> are singular nouns in lower case with underscores (<code>customer</code>, <code>order_line</code>), like the class each table implements. No table or column is named with a word reserved in the SQL standard. That is why an order is a <code>customer_order</code> (<code>ORDER</code> is reserved) and a date column is <code>full_date</code> rather than <code>date</code>.</li>
+<li><strong>Primary keys</strong> are named for their table with the suffix <code>_pk</code> (<code>customer.customer_pk</code>). They are surrogate keys: integers that PostgreSQL generates, which carry no business meaning.</li>
+<li><strong>Business identifiers</strong>, the numbers people use (<code>customer_number</code>, <code>part_number</code>, <code>order_number</code>), are separate columns declared <code>UNIQUE</code>. Where a row is identified by two columns together, such as an order line by its order and its line number, the pair is declared <code>UNIQUE</code>.</li>
+<li><strong>Foreign keys</strong> are named for the table they refer to with the suffix <code>_fk</code> (<code>customer_order.customer_fk</code>). Where a table refers to the same table more than once, each column is named for its role: a bill of materials line has an <code>assembly_fk</code> and a <code>component_fk</code>, both referring to <code>part</code>.</li>
+</ul>
+</section>
+<section id="sec-appsampledbs-distribution" class="level2" data-number="C.4">
+<h2 data-number="C.4" class="anchored" data-anchor-id="sec-appsampledbs-distribution"><span class="header-section-number">C.4</span> The distribution schema</h2>
+<p><a href="#fig-appsampledbs-distribution" class="quarto-xref">Figure&nbsp;<span>C.1</span></a> shows the class model of the distribution schema. A customer places orders, and each order is made of order lines, numbered within the order, that name a product and a quantity. Notice that the order line is drawn with a qualifier, <code>lineNumber</code>: an order and a line number together identify at most one line. The stock of each product in each warehouse is an association class, <code>StockLevel</code>, because a quantity on hand belongs to neither the warehouse nor the product alone. An order may have any number of shipments, including none, and each shipment line ships some quantity of one order line.</p>
+<div id="fig-appsampledbs-distribution" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-appsampledbs-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/distribution-class-model.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-appsampledbs-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;C.1: Distribution Schema Class Model
+</figcaption>
+</figure>
+</div>
+<p><a href="#tbl-appsampledbs-distribution" class="quarto-xref">Table&nbsp;<span>C.3</span></a> lists the tables that implement the model. The foreign key from <code>product</code> to <code>production.manufactured_part</code> is added in stage P1, when the production schema exists to refer to.</p>
+<!-- generated: tbl-appsampledbs-distribution by scripts/build-appendix-tables.py; do not edit -->
+<div id="tbl-appsampledbs-distribution" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.3: Tables of the Distribution Schema
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table</th>
+<th style="text-align: left;">Columns, in order, and their keys</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>customer</code></td>
+<td style="text-align: left;"><code>customer_pk</code> (primary key), <code>customer_number</code> (unique), <code>name</code>, <code>city</code>, <code>state</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>customer_order</code></td>
+<td style="text-align: left;"><code>customer_order_pk</code> (primary key), <code>order_number</code> (unique), <code>order_date</code>, <code>requested_ship_date</code> (optional), <code>customer_fk</code> (refers to <code>customer</code>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>product</code></td>
+<td style="text-align: left;"><code>product_pk</code> (primary key), <code>product_number</code> (unique), <code>description</code>, <code>list_price</code>, <code>manufactured_part_fk</code> (refers to <code>production.manufactured_part</code>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>order_line</code></td>
+<td style="text-align: left;"><code>order_line_pk</code> (primary key), <code>customer_order_fk</code> (refers to <code>customer_order</code>), <code>line_number</code>, <code>product_fk</code> (refers to <code>product</code>), <code>quantity</code>, <code>unit_price</code>; (<code>customer_order_fk</code>, <code>line_number</code>) is unique</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>warehouse</code></td>
+<td style="text-align: left;"><code>warehouse_pk</code> (primary key), <code>warehouse_code</code> (unique), <code>city</code>, <code>state</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>stock_level</code></td>
+<td style="text-align: left;"><code>stock_level_pk</code> (primary key), <code>warehouse_fk</code> (refers to <code>warehouse</code>), <code>product_fk</code> (refers to <code>product</code>), <code>quantity_on_hand</code>, <code>reorder_point</code>; (<code>warehouse_fk</code>, <code>product_fk</code>) is unique</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>shipment</code></td>
+<td style="text-align: left;"><code>shipment_pk</code> (primary key), <code>shipment_number</code> (unique), <code>shipped_on</code>, <code>carrier</code>, <code>customer_order_fk</code> (refers to <code>customer_order</code>), <code>warehouse_fk</code> (refers to <code>warehouse</code>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>shipment_line</code></td>
+<td style="text-align: left;"><code>shipment_line_pk</code> (primary key), <code>shipment_fk</code> (refers to <code>shipment</code>), <code>order_line_fk</code> (refers to <code>order_line</code>), <code>quantity</code>; (<code>shipment_fk</code>, <code>order_line_fk</code>) is unique</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<!-- end generated -->
+<p>The base data (stages D1 to D5) covers January through March 2026 and is small enough to print whole. It was written to contain the situations the chapters’ queries must handle:</p>
+<ul>
+<li>One customer, C-1008 Northgate Hardware, has never ordered, and one product, the GC-400 poly garden cart, has never been ordered.</li>
+<li>Two orders have no requested ship date, so the column holds NULL.</li>
+<li>Order SO-5004 lists the HT-100 on two lines at two prices, which is why an order line is a class of its own rather than a simple pairing of an order and a product (<a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a>).</li>
+<li>Order SO-5004 shipped in two shipments. Three order lines shipped only in part, leaving backorders, and orders SO-5011 and SO-5012 have not shipped at all.</li>
+<li>Two stock levels are below their reorder points, and the GC-400 in Tulsa has none on hand.</li>
+</ul>
+</section>
+<section id="sec-appsampledbs-production" class="level2" data-number="C.5">
+<h2 data-number="C.5" class="anchored" data-anchor-id="sec-appsampledbs-production"><span class="header-section-number">C.5</span> The production schema</h2>
+<p><a href="#fig-appsampledbs-production" class="quarto-xref">Figure&nbsp;<span>C.2</span></a> shows the class model of the production schema. Every part is either purchased or manufactured, never both, and there is no third kind; the generalization is <code>{disjoint, complete}</code>. A manufactured part is an assembly of components through the bill of materials, where the quantity of each component per assembly is the association class <code>BomLine</code>. Notice that a component may itself be an assembly, which makes the association recursive. Each manufactured part has a routing: operations numbered within the part, each performed at a work center. Work centers aggregate machines, operators hold certifications on machines, and work orders release a quantity of a manufactured part to the plant floor.</p>
+<div id="fig-appsampledbs-production" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-appsampledbs-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/production-class-model.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-appsampledbs-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;C.2: Production Schema Class Model
+</figcaption>
+</figure>
+</div>
+<p><a href="#tbl-appsampledbs-production" class="quarto-xref">Table&nbsp;<span>C.4</span></a> lists the tables. Notice that <code>manufactured_part</code> and <code>purchased_part</code> have no surrogate key of their own: each row’s primary key, <code>part_fk</code>, is also its reference to the <code>part</code> it is.</p>
+<!-- generated: tbl-appsampledbs-production by scripts/build-appendix-tables.py; do not edit -->
+<div id="tbl-appsampledbs-production" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.4: Tables of the Production Schema
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table</th>
+<th style="text-align: left;">Columns, in order, and their keys</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>part</code></td>
+<td style="text-align: left;"><code>part_pk</code> (primary key), <code>part_number</code> (unique), <code>description</code>, <code>unit_of_measure</code>, <code>standard_cost</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>manufactured_part</code></td>
+<td style="text-align: left;"><code>part_fk</code> (primary key, refers to <code>part</code>), <code>lot_size</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>purchased_part</code></td>
+<td style="text-align: left;"><code>part_fk</code> (primary key, refers to <code>part</code>), <code>lead_time_days</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>bom_line</code></td>
+<td style="text-align: left;"><code>bom_line_pk</code> (primary key), <code>assembly_fk</code> (refers to <code>manufactured_part</code>), <code>component_fk</code> (refers to <code>part</code>), <code>quantity_per</code>; (<code>assembly_fk</code>, <code>component_fk</code>) is unique</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>work_center</code></td>
+<td style="text-align: left;"><code>work_center_pk</code> (primary key), <code>work_center_code</code> (unique), <code>name</code>, <code>hourly_rate</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>machine</code></td>
+<td style="text-align: left;"><code>machine_pk</code> (primary key), <code>machine_number</code> (unique), <code>model</code>, <code>installed_on</code>, <code>work_center_fk</code> (refers to <code>work_center</code>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>operator</code></td>
+<td style="text-align: left;"><code>operator_pk</code> (primary key), <code>employee_number</code> (unique), <code>name</code>, <code>hire_date</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>certification</code></td>
+<td style="text-align: left;"><code>certification_pk</code> (primary key), <code>operator_fk</code> (refers to <code>operator</code>), <code>machine_fk</code> (refers to <code>machine</code>), <code>certified_on</code>, <code>level</code>; (<code>operator_fk</code>, <code>machine_fk</code>) is unique</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>operation</code></td>
+<td style="text-align: left;"><code>operation_pk</code> (primary key), <code>manufactured_part_fk</code> (refers to <code>manufactured_part</code>), <code>operation_number</code>, <code>description</code>, <code>setup_minutes</code>, <code>run_minutes_per_unit</code>, <code>work_center_fk</code> (refers to <code>work_center</code>); (<code>manufactured_part_fk</code>, <code>operation_number</code>) is unique</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>work_order</code></td>
+<td style="text-align: left;"><code>work_order_pk</code> (primary key), <code>work_order_number</code> (unique), <code>manufactured_part_fk</code> (refers to <code>manufactured_part</code>), <code>quantity</code>, <code>released_on</code>, <code>due_on</code>, <code>completed_on</code> (optional)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<!-- end generated -->
+<p>The eighteen parts form a bill of materials up to four levels deep. The HT-100 hand truck contains the WA-10 wheel assembly, which contains the AX-10 axle, which is machined from BS-075 bar stock. The wheel assembly is used in all four products. Tubing and bar stock are bought by the foot, so their quantities per assembly are not whole numbers. In addition, the data holds:</p>
+<ul>
+<li>a work center, Assembly, with no machines;</li>
+<li>a machine, the M-07 robotic welder, on which no one is certified yet;</li>
+<li>an operator, Tom Becker, hired in January 2026, with no certification;</li>
+<li>ten work orders, of which three are still open (no completion date) and two finished after their due dates.</li>
+</ul>
+</section>
+<section id="sec-appsampledbs-quality" class="level2" data-number="C.6">
+<h2 data-number="C.6" class="anchored" data-anchor-id="sec-appsampledbs-quality"><span class="header-section-number">C.6</span> The quality schema</h2>
+<p><a href="#fig-appsampledbs-quality" class="quarto-xref">Figure&nbsp;<span>C.3</span></a> shows the class model of the quality schema. Each characteristic, such as an axle’s diameter, belongs to a part and carries its nominal value and specification limits. An inspection examines a lot of one part, is performed by one of production’s operators, and records a measurement of each of the part’s characteristics and a count of each kind of defect it finds. Measurements and defect counts are both association classes.</p>
+<div id="fig-appsampledbs-quality" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-appsampledbs-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/quality-class-model.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-appsampledbs-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;C.3: Quality Schema Class Model
+</figcaption>
+</figure>
+</div>
+<!-- generated: tbl-appsampledbs-quality by scripts/build-appendix-tables.py; do not edit -->
+<div id="tbl-appsampledbs-quality" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.5: Tables of the Quality Schema
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table</th>
+<th style="text-align: left;">Columns, in order, and their keys</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>characteristic</code></td>
+<td style="text-align: left;"><code>characteristic_pk</code> (primary key), <code>part_fk</code> (refers to <code>production.part</code>), <code>name</code>, <code>nominal</code>, <code>lower_spec_limit</code> (optional), <code>upper_spec_limit</code> (optional), <code>unit</code>; (<code>part_fk</code>, <code>name</code>) is unique</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>defect_type</code></td>
+<td style="text-align: left;"><code>defect_type_pk</code> (primary key), <code>defect_code</code> (unique), <code>description</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>inspection</code></td>
+<td style="text-align: left;"><code>inspection_pk</code> (primary key), <code>part_fk</code> (refers to <code>production.part</code>), <code>operator_fk</code> (refers to <code>production.operator</code>), <code>inspected_at</code>, <code>lot_number</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>measurement</code></td>
+<td style="text-align: left;"><code>measurement_pk</code> (primary key), <code>inspection_fk</code> (refers to <code>inspection</code>), <code>characteristic_fk</code> (refers to <code>characteristic</code>), <code>measured_value</code>; (<code>inspection_fk</code>, <code>characteristic_fk</code>) is unique</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>defect_count</code></td>
+<td style="text-align: left;"><code>defect_count_pk</code> (primary key), <code>inspection_fk</code> (refers to <code>inspection</code>), <code>defect_type_fk</code> (refers to <code>defect_type</code>), <code>quantity</code>; (<code>inspection_fk</code>, <code>defect_type_fk</code>) is unique</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<!-- end generated -->
+<p>The base data holds twenty inspections of axles, hand truck frames, and cart frames in January and February 2026. Weld strength has a lower specification limit and no upper one, since a stronger weld is never a defect, so its upper limit is NULL. The data was built to show:</p>
+<ul>
+<li>an axle diameter that rises at every inspection and ends above its upper specification limit;</li>
+<li>five measurements outside their specification limits in all;</li>
+<li>one inspector, Linda Nguyen, whose coating thickness readings run consistently lower than Robert Hayes’s readings of the same parts;</li>
+<li>paint runs outnumbering every other defect combined, and one defect type, cracks, that has never been found.</li>
+</ul>
+</section>
+<section id="sec-appsampledbs-history" class="level2" data-number="C.7">
+<h2 data-number="C.7" class="anchored" data-anchor-id="sec-appsampledbs-history"><span class="header-section-number">C.7</span> The year of history</h2>
+<p>The base data is small by design, and some questions need more. Stage G adds a year of business to the distribution and quality schemas:</p>
+<ul>
+<li>22 more customers, for 30 in all, in Arkansas, Oklahoma, Missouri, Kansas, and Texas;</li>
+<li>602 orders from April 2026 through March 2027, with 1,043 order lines, 641 shipments, and 1,078 shipment lines;</li>
+<li>236 inspections from April through September 2026, with 419 measurements and 101 defect counts.</li>
+</ul>
+<p>The history follows patterns that the analytical chapters look for. Garden carts sell mainly in the spring: the GC-300 sells 1.75 times as many units from April to June as from October to December. Hand trucks rise toward the end of the year. The GC-400 is sold from its launch on 1 September 2026, and large customers and large order lines receive discounts. On the plant floor, the axle diameter creeps upward as the lathe’s cutting tool wears and drops back at each of five tool changes.</p>
+<p>The history was generated by a program, <code>GenerateHistory</code>, in the companion code project, which draws its random choices from seeded random number streams of the KSL. Thus, the program writes the same history on every run, and every reader’s queries return the same results. <a href="10-Chapter10.html" class="quarto-xref"><span>Chapter 10</span></a> discusses programs that work with databases in this way.</p>
+</section>
+<section id="sec-appsampledbs-sales" class="level2" data-number="C.8">
+<h2 data-number="C.8" class="anchored" data-anchor-id="sec-appsampledbs-sales"><span class="header-section-number">C.8</span> The sales star schema</h2>
+<p>Stage S builds the <code>sales</code> schema of <a href="#fig-appsampledbs-sales" class="quarto-xref">Figure&nbsp;<span>C.4</span></a>, a star schema for analyzing sales. The fact table, <code>order_line_fact</code>, has one row for every order line. Its measures (quantity, sales, discount from list price, and standard cost) can be added up along any of the three dimensions around it: the date of the order, the customer, and the product. The dimensions carry attributes the operational tables do not, such as each customer’s sales region and each product’s product line.</p>
+<div id="fig-appsampledbs-sales" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-appsampledbs-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/sales-star-schema.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-appsampledbs-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;C.4: Sales Star Schema
+</figcaption>
+</figure>
+</div>
+<p>Notice that the diagram shows the tables’ key columns, unlike the class models above. A star schema is a design for tables, not a model of the business, and <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a> develops it at that level.</p>
+<!-- generated: tbl-appsampledbs-sales by scripts/build-appendix-tables.py; do not edit -->
+<div id="tbl-appsampledbs-sales" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.6: Tables of the Sales Schema
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table</th>
+<th style="text-align: left;">Columns, in order, and their keys</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>date_dim</code></td>
+<td style="text-align: left;"><code>date_dim_pk</code> (primary key), <code>full_date</code> (unique), <code>calendar_year</code>, <code>calendar_quarter</code>, <code>calendar_month</code>, <code>month_name</code>, <code>day_of_month</code>, <code>day_of_week</code>, <code>day_name</code>, <code>is_weekend</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>customer_dim</code></td>
+<td style="text-align: left;"><code>customer_dim_pk</code> (primary key), <code>customer_number</code> (unique), <code>name</code>, <code>city</code>, <code>state</code>, <code>sales_region</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>product_dim</code></td>
+<td style="text-align: left;"><code>product_dim_pk</code> (primary key), <code>product_number</code> (unique), <code>description</code>, <code>product_line</code>, <code>list_price</code>, <code>standard_cost</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>order_line_fact</code></td>
+<td style="text-align: left;"><code>order_line_fact_pk</code> (primary key), <code>order_date_fk</code> (refers to <code>date_dim</code>), <code>customer_dim_fk</code> (refers to <code>customer_dim</code>), <code>product_dim_fk</code> (refers to <code>product_dim</code>), <code>order_number</code>, <code>line_number</code>, <code>quantity</code>, <code>sales_amount</code>, <code>discount_amount</code>, <code>cost_amount</code>; (<code>order_number</code>, <code>line_number</code>) is unique</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<!-- end generated -->
+<p>The stage S script is itself an extract, transform, and load process written in SQL. It reads the distribution and production schemas, derives the new attributes, and loads the fact table by looking up each dimension’s key from the business identifiers. <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a> walks through it.</p>
+</section>
+<section id="sec-appsampledbs-counts" class="level2" data-number="C.9">
+<h2 data-number="C.9" class="anchored" data-anchor-id="sec-appsampledbs-counts"><span class="header-section-number">C.9</span> Rows in each table</h2>
+<p><a href="#tbl-appsampledbs-counts" class="quarto-xref">Table&nbsp;<span>C.7</span></a> gives the number of rows in each table at the two sizes the book uses. Notice that the base data, through stage Q, keeps every table small enough to print, while the history adds its volume to five of the distribution tables and three of the quality tables. The production tables are the same at both sizes.</p>
+<!-- generated: tbl-appsampledbs-counts by scripts/build-appendix-tables.py; do not edit -->
+<div id="tbl-appsampledbs-counts" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.7: Rows in Each Table
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table</th>
+<th style="text-align: right;">Base data (through stage Q)</th>
+<th style="text-align: right;">With the history (through stage S)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>distribution.customer</code></td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>distribution.customer_order</code></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">614</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>distribution.product</code></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>distribution.order_line</code></td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">1065</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>distribution.warehouse</code></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>distribution.stock_level</code></td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>distribution.shipment</code></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">652</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>distribution.shipment_line</code></td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">1096</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>production.part</code></td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>production.manufactured_part</code></td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>production.purchased_part</code></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>production.bom_line</code></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>production.work_center</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>production.machine</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>production.operator</code></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>production.certification</code></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>production.operation</code></td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>production.work_order</code></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>quality.characteristic</code></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>quality.defect_type</code></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>quality.inspection</code></td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">256</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>quality.measurement</code></td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">453</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>quality.defect_count</code></td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">116</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sales.date_dim</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">730</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sales.customer_dim</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sales.product_dim</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sales.order_line_fact</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1065</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<!-- end generated -->
+</section>
+<section id="sec-appsampledbs-transit" class="level2" data-number="C.10">
+<h2 data-number="C.10" class="anchored" data-anchor-id="sec-appsampledbs-transit"><span class="header-section-number">C.10</span> Millbrook Transit</h2>
+<p>A second, smaller database gives the query exercises of chapters 3 and 4 a setting outside HG Industries. It records one week of service, Monday 2 March to Sunday 8 March 2026, of Millbrook Transit, a fictional town’s bus agency. Its design is adapted from the class model of the transit exercises of chapter 5, which come from a Transportation Research Board study of transit monitoring <span class="citation" data-cites="rossetti1999transit">(<a href="references.html#ref-rossetti1999transit" role="doc-biblioref">Rossetti 1999</a>)</span>, and mapped to tables as chapter 6 teaches. It differs from the exercises’ model in a few places. Every person has a rider category. An account has an opening date and no balance. A smart card names the person who carries it (<code>person_fk</code>, NULL for an anonymous card), an association the model does not have. A trip refers to the point traversals where it boarded and alighted, not to an origin and a destination point, and records no times of its own. A driver has an employee number and a hire date, not a license number. An assignment has no comments. A route traversal refers to an assignment, not to a vehicle and a route; the assignment names both. A schedule adds the times of its first and last departures (<code>first_departure</code>, <code>last_departure</code>), and a schedule line holds the minutes after the bus’s departure, not an arrival and a departure time. An access point’s block location may also be off street. Finally, the database has no tables for authorizations, points of interest, or link traversals.</p>
+<p>The agency runs three loop routes, each starting and ending at the Transit Center: the Plant Loop (route 1), the Campus Loop (route 2), and the Hospital Loop (route 3). Buses leave every 30 minutes on weekdays, from 6:00 to 19:30, and every hour on Saturday, from 8:00 to 17:00; there is no service on Sunday. The tables fall into four groups.</p>
+<ul>
+<li><strong>The network.</strong> <code>route</code>, <code>point</code>, and <code>segment</code>: each route is its ordered segments, each segment joining a start point to an end point. Points are specialized into <code>access_point</code>, where passengers board and alight, and <code>scheduled_point</code>, which appears on the timetables, mapped to a table for each class (<a href="06-Chapter6.html#sec-map-gen-per-class" class="quarto-xref"><span>Section 6.5.1</span></a>).</li>
+<li><strong>Schedules.</strong> <code>schedule</code>, with its days (<code>schedule_day</code>, <code>day_of_week</code>) and its lines (<code>schedule_line</code>), each giving the minutes from departure to a scheduled point.</li>
+<li><strong>Operations.</strong> <code>vehicle</code>, <code>driver</code>, and <code>assignment</code>, which puts a driver on a vehicle on a route for a shift; <code>route_traversal</code>, one run of a route under an assignment; and <code>point_traversal</code>, each point the bus reached on a run, with the passengers boarding and alighting there.</li>
+<li><strong>Riders.</strong> <code>person</code>, <code>mailing_address</code>, <code>account</code>, <code>smart_card</code>, <code>trip</code>, and <code>payment</code>. Smart cards are debit or credit cards, a generalization mapped to one table with <code>card_kind</code> (<a href="06-Chapter6.html#sec-map-gen-single" class="quarto-xref"><span>Section 6.5.3</span></a>). Each trip made with a card refers to the point traversals where it boarded and alighted. Riders who pay cash are counted in the boardings and alightings but recorded as no trip.</li>
+</ul>
+<p><a href="#lst-appsampledbs-transit" class="quarto-xref">Listing&nbsp;<span>C.1</span></a> gives the tables in the notation of <a href="02-Chapter2.html#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a>.</p>
+<!-- schema: transit transit.route transit.point transit.access_point transit.scheduled_point transit.segment transit.day_of_week transit.schedule transit.schedule_day transit.schedule_line transit.vehicle transit.driver transit.assignment transit.route_traversal transit.point_traversal transit.mailing_address transit.person transit.account transit.smart_card transit.trip transit.payment -->
+<div id="lst-appsampledbs-transit" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-appsampledbs-transit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;C.1: The Millbrook Transit Database
+</figcaption>
+<div aria-describedby="lst-appsampledbs-transit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>route (route_pk, route_number, name, color, distance_miles)
+    primary key: route_pk
+    alternate key: route_number
+
+point (point_pk, point_code, name, latitude, longitude)
+    primary key: point_pk
+    alternate key: point_code
+
+access_point (point_fk, block_location, waiting_capacity,
+              bench_count, shelter)
+    primary key: point_fk
+    point_fk references point_pk in point, must not be NULL
+
+scheduled_point (access_point_fk, timetable_posted)
+    primary key: access_point_fk
+    access_point_fk references point_fk in access_point,
+        must not be NULL
+
+segment (segment_pk, route_fk, sequence_number,
+         start_point_fk, end_point_fk, length_miles)
+    primary key: segment_pk
+    alternate key: (route_fk, sequence_number)
+    route_fk references route_pk in route, must not be NULL
+    start_point_fk references point_pk in point,
+        must not be NULL
+    end_point_fk references point_pk in point,
+        must not be NULL
+
+day_of_week (day_of_week_pk, day_name, iso_day)
+    primary key: day_of_week_pk
+    alternate key: day_name
+    alternate key: iso_day
+
+schedule (schedule_pk, route_fk, name, first_departure,
+          last_departure, headway_minutes, last_updated)
+    primary key: schedule_pk
+    alternate key: (route_fk, name)
+    route_fk references route_pk in route, must not be NULL
+
+schedule_day (schedule_day_pk, schedule_fk, day_of_week_fk)
+    primary key: schedule_day_pk
+    alternate key: (schedule_fk, day_of_week_fk)
+    schedule_fk references schedule_pk in schedule,
+        must not be NULL
+    day_of_week_fk references day_of_week_pk in day_of_week,
+        must not be NULL
+
+schedule_line (schedule_line_pk, schedule_fk, line_number,
+               scheduled_point_fk, minutes_after_departure)
+    primary key: schedule_line_pk
+    alternate key: (schedule_fk, line_number)
+    schedule_fk references schedule_pk in schedule,
+        must not be NULL
+    scheduled_point_fk references access_point_fk in
+        scheduled_point, must not be NULL
+
+vehicle (vehicle_pk, vehicle_number, model_year,
+         seating_capacity)
+    primary key: vehicle_pk
+    alternate key: vehicle_number
+
+driver (driver_pk, employee_number, name, hired_on)
+    primary key: driver_pk
+    alternate key: employee_number
+
+assignment (assignment_pk, route_fk, vehicle_fk, driver_fk,
+            starts_at, ends_at)
+    primary key: assignment_pk
+    route_fk references route_pk in route, must not be NULL
+    vehicle_fk references vehicle_pk in vehicle,
+        must not be NULL
+    driver_fk references driver_pk in driver,
+        must not be NULL
+
+route_traversal (route_traversal_pk, assignment_fk,
+                 started_at, ended_at)
+    primary key: route_traversal_pk
+    alternate key: (assignment_fk, started_at)
+    assignment_fk references assignment_pk in assignment,
+        must not be NULL
+
+point_traversal (point_traversal_pk, route_traversal_fk,
+                 sequence_number, point_fk, arrived_at,
+                 departed_at, boardings, alightings)
+    primary key: point_traversal_pk
+    alternate key: (route_traversal_fk, sequence_number)
+    route_traversal_fk references route_traversal_pk in
+        route_traversal, must not be NULL
+    point_fk references point_pk in point, must not be NULL
+
+mailing_address (mailing_address_pk, street, city, state,
+                 zip_code)
+    primary key: mailing_address_pk
+
+person (person_pk, name, rider_category, mailing_address_fk)
+    primary key: person_pk
+    mailing_address_fk references mailing_address_pk in
+        mailing_address, may be NULL
+
+account (account_pk, account_number, holder_fk, opened_on)
+    primary key: account_pk
+    alternate key: account_number
+    holder_fk references person_pk in person,
+        must not be NULL
+
+smart_card (smart_card_pk, card_number, issued_on,
+            card_kind, balance, account_fk, person_fk)
+    primary key: smart_card_pk
+    alternate key: card_number
+    account_fk references account_pk in account, may be NULL
+    person_fk references person_pk in person, may be NULL
+
+trip (trip_pk, smart_card_fk, boarding_fk, alighting_fk,
+      fare)
+    primary key: trip_pk
+    smart_card_fk references smart_card_pk in smart_card,
+        must not be NULL
+    boarding_fk references point_traversal_pk in
+        point_traversal, must not be NULL
+    alighting_fk references point_traversal_pk in
+        point_traversal, must not be NULL
+
+payment (payment_pk, account_fk, paid_on, amount,
+         payment_type)
+    primary key: payment_pk
+    account_fk references account_pk in account,
+        must not be NULL</code></pre>
+</div>
+</figure>
+</div>
+<!-- end schema -->
+<p>The week holds a few conditions that exercises turn on: bus 105 spends the week in the shop and is never assigned; two people have no smart card, one card is never used, and four cards are anonymous, sold for cash with no person; some people share a mailing address, and some have none; and Sunday has no schedule. The rows in each table, in the order of the four groups, are:</p>
+<div id="tbl-appsampledbs-transit-counts" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-transit-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.8: Rows in Each Table of Millbrook Transit
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-transit-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'route'</span> <span class="kw">AS</span> table_name, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> row_count</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.route</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'point'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.point</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'access_point'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.access_point</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'scheduled_point'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.scheduled_point</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'segment'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.<span class="kw">segment</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'day_of_week'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.day_of_week</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'schedule'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.schedule</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'schedule_day'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.schedule_day</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'schedule_line'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.schedule_line</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'vehicle'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.vehicle</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'driver'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.driver</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'assignment'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.assignment</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'route_traversal'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.route_traversal</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'point_traversal'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.point_traversal</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'mailing_address'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.mailing_address</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'person'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.person</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'account'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.<span class="kw">account</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'smart_card'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.smart_card</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'trip'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.trip</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'payment'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.payment;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result book-result-tall">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+table_name
+</th>
+<th style="text-align:right;">
+row_count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+route
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+point
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+access_point
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+scheduled_point
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment
+</td>
+<td style="text-align:right;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+day_of_week
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+schedule
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+schedule_day
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+schedule_line
+</td>
+<td style="text-align:right;">
+22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vehicle
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+driver
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+assignment
+</td>
+<td style="text-align:right;">
+33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+route_traversal
+</td>
+<td style="text-align:right;">
+450
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+point_traversal
+</td>
+<td style="text-align:right;">
+2700
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mailing_address
+</td>
+<td style="text-align:right;">
+24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+person
+</td>
+<td style="text-align:right;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+account
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+smart_card
+</td>
+<td style="text-align:right;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+trip
+</td>
+<td style="text-align:right;">
+339
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+payment
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>To load the database, create a database named <code>dbconcepts_transit</code> (or use any database of your own) and run two scripts from <code>code/sql/transit/</code> in order: <code>t-schema.sql</code>, which creates the <code>transit</code> schema and its tables, and <code>t-data.sql</code>, which loads the week. The second is generated by <code>scripts/build-transit-data.py</code> from a seeded random number generator, so it is the same on every machine. Running the first again deletes and recreates the schema.</p>
+</section>
+<section id="sec-appsampledbs-public" class="level2" data-number="C.11">
+<h2 data-number="C.11" class="anchored" data-anchor-id="sec-appsampledbs-public"><span class="header-section-number">C.11</span> Public sample databases for further practice</h2>
+<p>HG Industries’ data is small so that every result can be checked. For practice at a larger scale, several public sample databases can be loaded into the same PostgreSQL server, each into a database of its own. They are not distributed with the book: <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a> explains how to fetch each one from its source, where its license is stated.</p>
+<p><a href="#tbl-appsampledbs-public" class="quarto-xref">Table&nbsp;<span>C.9</span></a> lists the four the book’s exercises use. Each is openly licensed; the license travels with the data, not with this book, and you should read it before you reuse the data in work of your own.</p>
+<div id="tbl-appsampledbs-public" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-public-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.9: Public Sample Databases Used in the Exercises
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-public-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Database</th>
+<th style="text-align: left;">What it records</th>
+<th style="text-align: left;">Source and license</th>
+<th style="text-align: right;">Size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Chinook</td>
+<td style="text-align: left;">A digital music store: artists, albums, tracks, playlists, customers, employees, invoices, 2021 to 2025</td>
+<td style="text-align: left;">Luis Rocha, <code>lerocha/chinook-database</code>, release 1.4.5; MIT</td>
+<td style="text-align: right;">11 tables, 0.6 MB</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Northwind</td>
+<td style="text-align: left;">A food importer: customers, suppliers, products, orders and their lines, employees, shippers</td>
+<td style="text-align: left;">Microsoft’s sample, PostgreSQL port <code>pthom/northwind_psql</code>; Microsoft Public License</td>
+<td style="text-align: right;">14 tables, 0.3 MB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Practical SQL</td>
+<td style="text-align: left;">Four data sets from Anthony DeBarros’s <em>Practical SQL</em>: county population estimates, the USDA’s directory of meat, poultry, and egg establishments, monthly exports, daily temperatures</td>
+<td style="text-align: left;"><code>anthonydb/practical-sql-2</code>; MIT, which covers the data</td>
+<td style="text-align: right;">4 tables, 1.5 MB</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Employees</td>
+<td style="text-align: left;">A fabricated company’s 300,024 employees over 15 years: departments, titles, and 2.8 million salary records</td>
+<td style="text-align: left;">Wang, Zaniolo, Maxia, and Crews, <code>datacharmer/test_db</code>, PostgreSQL port; Creative Commons Attribution-Share Alike 3.0</td>
+<td style="text-align: right;">6 tables, 172 MB</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Each is useful for something the book’s own data is too small or too clean to show. Chinook and Northwind are ordinary business databases designed by other people, with their own naming conventions (<code>customer_id</code> rather than <code>customer_fk</code>, plural table names in Northwind), which is practice in reading a schema you did not write. The Practical SQL data are real public records, with the inconsistencies real records have. Employees is large enough that a careless query is slow, and it records history with dates rather than replacing rows.</p>
+<p>Load each with the book’s loader, <code>code/sql/public/load-public.sh</code>, as <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a> describes. It fetches the files from their original sources at the versions in the table, checks each against a recorded checksum, and loads them into a database of their own, <code>dbconcepts_chinook</code>, <code>dbconcepts_northwind</code>, <code>dbconcepts_practical</code>, and <code>dbconcepts_employees</code>. Exercises that use them name the database, and their answers assume these versions.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-rossetti1999transit" class="csl-entry" role="listitem">
+Rossetti, Manuel D. 1999. <em>Transit Integrated Monitoring System</em>. IDEA Program Final Report TRANSIT-19. Transportation Research Board, National Research Council.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./14-AppKSLSetup.html" class="pagination-link" aria-label="Kotlin and KSL Setup">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./16-AppERDandUML.html" class="pagination-link" aria-label="Translating Between Crow's Foot and UML">
+        <span class="nav-page-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

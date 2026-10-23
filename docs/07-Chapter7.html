@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>7&nbsp; Normalization – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./08-Chapter8.html" rel="next">
+<link href="./06-Chapter6.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-Chapter5.html">Designing and Building a Database</a></li><li class="breadcrumb-item"><a href="./07-Chapter7.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-nf-procedure" id="toc-sec-nf-procedure" class="nav-link active" data-scroll-target="#sec-nf-procedure"><span class="header-section-number">7.1</span> The normalization procedure</a></li>
+  <li><a href="#sec-nf-anomalies" id="toc-sec-nf-anomalies" class="nav-link" data-scroll-target="#sec-nf-anomalies"><span class="header-section-number">7.2</span> Anomalies in a poorly designed table</a></li>
+  <li><a href="#sec-nf-fds" id="toc-sec-nf-fds" class="nav-link" data-scroll-target="#sec-nf-fds"><span class="header-section-number">7.3</span> Functional dependencies</a></li>
+  <li><a href="#sec-nf-forms" id="toc-sec-nf-forms" class="nav-link" data-scroll-target="#sec-nf-forms"><span class="header-section-number">7.4</span> Normal forms</a></li>
+  <li><a href="#sec-nf-decomposition" id="toc-sec-nf-decomposition" class="nav-link" data-scroll-target="#sec-nf-decomposition"><span class="header-section-number">7.5</span> Decomposition</a>
+  <ul>
+  <li><a href="#sec-nf-lossless" id="toc-sec-nf-lossless" class="nav-link" data-scroll-target="#sec-nf-lossless"><span class="header-section-number">7.5.1</span> Lossless decomposition</a></li>
+  <li><a href="#sec-nf-preservation" id="toc-sec-nf-preservation" class="nav-link" data-scroll-target="#sec-nf-preservation"><span class="header-section-number">7.5.2</span> Preserving dependencies</a></li>
+  </ul></li>
+  <li><a href="#sec-nf-classmodels" id="toc-sec-nf-classmodels" class="nav-link" data-scroll-target="#sec-nf-classmodels"><span class="header-section-number">7.6</span> Normalization and class modeling</a></li>
+  <li><a href="#sec-nf-4nf" id="toc-sec-nf-4nf" class="nav-link" data-scroll-target="#sec-nf-4nf"><span class="header-section-number">7.7</span> Multivalued dependencies and fourth normal form</a></li>
+  <li><a href="#sec-normalization-summary" id="toc-sec-normalization-summary" class="nav-link" data-scroll-target="#sec-normalization-summary"><span class="header-section-number">7.8</span> Summary</a></li>
+  <li><a href="#sec-normalization-exercises" id="toc-sec-normalization-exercises" class="nav-link" data-scroll-target="#sec-normalization-exercises"><span class="header-section-number">7.9</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-Chapter5.html">Designing and Building a Database</a></li><li class="breadcrumb-item"><a href="./07-Chapter7.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-normalization" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled" title="Learning objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After reading this chapter you should be able to:</p>
+<ul>
+<li>list the steps of normalizing a table, and say what each step produces</li>
+<li>recognize update, insertion, and deletion anomalies in a poorly designed table, and find their symptoms with queries</li>
+<li>state the functional dependencies that the rules of a business impose on a table, and draw them</li>
+<li>test a table for first, second, third, and Boyce-Codd normal form</li>
+<li>decompose a table into normal form without losing information</li>
+<li>explain why a sound class model tends to produce normalized tables</li>
+<li>recognize a multivalued dependency and put a table into fourth normal form</li>
+</ul>
+</div>
+</div>
+<p>Not every table an engineer meets was designed. Many began as a spreadsheet: an order log kept by a sales clerk, an inspection sheet filled in on the floor, a report exported from another system. Such a table puts everything about an event on one row, which is convenient to read and troublesome to keep. The same fact is written many times, and a change to it must be made everywhere at once. When it is not, the table contradicts itself.</p>
+<p>This chapter presents <strong>normalization</strong>, a method for testing a table’s design and for repairing it by splitting the table into smaller ones. The test uses the table’s functional dependencies, the rules that say which columns decide the values of which others, and the repair produces tables in which each fact is recorded once. <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> arrived at well-designed tables from a class model; this chapter arrives at them from the other direction, from a table that already exists. The two routes meet: normalizing a flat report of HG Industries’ orders produces the tables that the mapping produced.</p>
+<p>The chapter begins, as <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> did, with the whole procedure, and then illustrates each step on one running example.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Following along">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Following along
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The running example is built from stage D3 of the book’s database, and the counts of repeated facts from stage G, the year of history.</p>
+</div>
+</div>
+<section id="sec-nf-procedure" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="sec-nf-procedure"><span class="header-section-number">7.1</span> The normalization procedure</h2>
+<p>This section presents the steps of normalizing a table, before the sections that illustrate each step.</p>
+<p>A table is normalized in five steps:</p>
+<ol type="1">
+<li><strong>Look at the data.</strong> Take a few rows of the table, or make up a few that obey the business’s rules, and find the facts that repeat.</li>
+<li><strong>State the functional dependencies.</strong> For each rule of the business that says one fact decides another, write the dependency, and draw them all in a dependency diagram.</li>
+<li><strong>Find the key.</strong> From the dependencies, find the smallest set of columns that decides every other column.</li>
+<li><strong>Name the normal form.</strong> Test the table against the normal forms, from the first up, and find the first one it fails.</li>
+<li><strong>Decompose.</strong> Split the table into tables that each pass, without losing any row and, where the normal form allows it, without losing any dependency, and repeat the test on each.</li>
+</ol>
+<p><a href="#tbl-nf-steps" class="quarto-xref">Table&nbsp;<span>7.1</span></a> says where each step is illustrated.</p>
+<div id="tbl-nf-steps" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.1: The Steps of Normalization and Where They Are Illustrated
+</figcaption>
+<div aria-describedby="tbl-nf-steps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">Illustrated in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1: look at the data</td>
+<td style="text-align: left;"><a href="#sec-nf-anomalies" class="quarto-xref"><span>Section 7.2</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2 and 3: dependencies and the key</td>
+<td style="text-align: left;"><a href="#sec-nf-fds" class="quarto-xref"><span>Section 7.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">4: the normal form</td>
+<td style="text-align: left;"><a href="#sec-nf-forms" class="quarto-xref"><span>Section 7.4</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5: decompose</td>
+<td style="text-align: left;"><a href="#sec-nf-decomposition" class="quarto-xref"><span>Section 7.5</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The first step deserves a word of its own. Normalization is often taught as symbols, a list of dependencies manipulated by rules, and it goes wrong when the dependencies are guessed. Looking at rows first, real ones or made-up ones that obey the business’s rules, grounds each dependency in something concrete and shows the repeated facts that the method exists to remove. It is the same habit as the hand evaluations of <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a>: see a few rows before trusting a rule about all of them.</p>
+</section>
+<section id="sec-nf-anomalies" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="sec-nf-anomalies"><span class="header-section-number">7.2</span> Anomalies in a poorly designed table</h2>
+<p>This section illustrates step 1: it looks at the rows of a flat table and at what goes wrong when the table is kept up to date.</p>
+<p>Suppose that the sales department of HG Industries kept its orders in one table, a flat order report with a row for each order line: the order’s number, its customer’s number and name, the line’s number, its product’s number and description, and the quantity ordered. The book’s database does not store such a table, but a query can produce it, by joining the four tables of stage D3. We write the join once, as a common table expression named <code>order_report</code> (<a href="03-Chapter3.html#sec-q-cte" class="quarto-xref"><span>Section 3.10</span></a>), and use it throughout the chapter as if it were a stored table. Its rows for the first six orders are:</p>
+<div id="tbl-nf-report" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.2: The Flat Order Report, First Six Orders
+</figcaption>
+<div aria-describedby="tbl-nf-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> order_report <span class="kw">AS</span> (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> o.order_number, c.customer_number,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>         c.name <span class="kw">AS</span> customer_name, l.line_number,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>         p.product_number, p.description, l.quantity</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> order_report</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">&lt;=</span> <span class="st">'SO-5006'</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> order_number, line_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:left;">
+customer_name
+</th>
+<th style="text-align:right;">
+line_number
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:right;">
+quantity
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:left;">
+C-1001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:left;">
+C-1001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5002
+</td>
+<td style="text-align:left;">
+C-1003
+</td>
+<td style="text-align:left;">
+Cedar Creek Home Center
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:left;">
+Convertible hand truck
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:left;">
+C-1002
+</td>
+<td style="text-align:left;">
+Summit Farm Supply
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:left;">
+C-1002
+</td>
+<td style="text-align:left;">
+Summit Farm Supply
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:left;">
+Convertible hand truck
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:left;">
+C-1002
+</td>
+<td style="text-align:left;">
+Summit Farm Supply
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+C-1001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+C-1001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+C-1001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5005
+</td>
+<td style="text-align:left;">
+C-1004
+</td>
+<td style="text-align:left;">
+Midtown Tool Supply
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:left;">
+Steel garden cart
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5006
+</td>
+<td style="text-align:left;">
+C-1006
+</td>
+<td style="text-align:left;">
+Lakeside Distributors
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:left;">
+Two-wheel hand truck
+</td>
+<td style="text-align:right;">
+25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5006
+</td>
+<td style="text-align:left;">
+C-1006
+</td>
+<td style="text-align:left;">
+Lakeside Distributors
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:left;">
+Convertible hand truck
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Read <a href="#tbl-nf-report" class="quarto-xref">Table&nbsp;<span>7.2</span></a> for the facts that repeat. Riverside Hardware’s name appears on five of these twelve rows, once for each line of each of its orders; the HT-100’s description appears on five; and customer C-1001 is paired with its name every time. None of the repetitions records anything new. Each is a copy of a fact already recorded, and every copy is a place where the table can contradict itself. The contradictions come in three kinds, called <strong>anomalies</strong>.</p>
+<p>An <strong>update anomaly</strong> occurs when a fact stored many times is changed in some copies but not all. If Riverside Hardware changed its name, the report would need the change on every row of every order the customer ever placed:</p>
+<div id="tbl-nf-copies" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-copies-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.3: Rows That Hold Each Customer’s Name
+</figcaption>
+<div aria-describedby="tbl-nf-copies-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> order_report <span class="kw">AS</span> (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> o.order_number, c.customer_number,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         c.name <span class="kw">AS</span> customer_name, l.line_number</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_number, customer_name,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> rows_holding_the_name</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> order_report</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> customer_number, customer_name</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> customer_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:left;">
+customer_name
+</th>
+<th style="text-align:right;">
+rows_holding_the_name
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+C-1001
+</td>
+<td style="text-align:left;">
+Riverside Hardware
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C-1002
+</td>
+<td style="text-align:left;">
+Summit Farm Supply
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C-1003
+</td>
+<td style="text-align:left;">
+Cedar Creek Home Center
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C-1004
+</td>
+<td style="text-align:left;">
+Midtown Tool Supply
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C-1005
+</td>
+<td style="text-align:left;">
+Prairie Garden Center
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C-1006
+</td>
+<td style="text-align:left;">
+Lakeside Distributors
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+C-1007
+</td>
+<td style="text-align:left;">
+Tri-County Farm and Home
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-nf-copies" class="quarto-xref">Table&nbsp;<span>7.3</span></a> says that renaming Riverside Hardware would take six changes, and missing one would leave two names for one customer number. A <strong>deletion anomaly</strong> occurs when removing a row removes a fact that should have stayed. Midtown Tool Supply (C-1004) has one row: its only order, SO-5005, has one line. Deleting that line, say because the line was entered in error, would remove every trace of Midtown Tool Supply from the report, including that it is a customer at all. An <strong>insertion anomaly</strong> occurs when a fact cannot be recorded until an unrelated fact exists. Northgate Hardware (C-1008) is a customer with no orders, so it has no row in the report and cannot be given one without an order line to attach it to; the GC-400 poly cart, never ordered, has no row either.</p>
+<p>The anomalies grow with the data. Over the year of history in stage G, the same report holds each fact about customers and products many times over:</p>
+<div id="tbl-nf-redundancy" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="g">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-redundancy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.4: How Many Times the Flat Report Stores Each Kind of Fact
+</figcaption>
+<div aria-describedby="tbl-nf-redundancy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> order_report <span class="kw">AS</span> (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> o.order_number, c.customer_number,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         p.product_number</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="kw">rows</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> customer_number) <span class="kw">AS</span> customers,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> product_number) <span class="kw">AS</span> products,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> order_number) <span class="kw">AS</span> orders</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> order_report;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+rows
+</th>
+<th style="text-align:right;">
+customers
+</th>
+<th style="text-align:right;">
+products
+</th>
+<th style="text-align:right;">
+orders
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1065
+</td>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+614
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-nf-redundancy" class="quarto-xref">Table&nbsp;<span>7.4</span></a> shows 1,065 rows that record the names of 29 customers and the descriptions of 4 products. Each customer’s name is stored, on average, about 37 times, and each product’s description over 250 times. The tables of the book’s database store each once. The next section finds the rules that decide which facts repeat.</p>
+</section>
+<section id="sec-nf-fds" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="sec-nf-fds"><span class="header-section-number">7.3</span> Functional dependencies</h2>
+<p>This section illustrates steps 2 and 3: it states the rules that decide the values of columns, draws them, and finds the key.</p>
+<p>A <strong>functional dependency</strong> holds between two sets of columns of a table when the values of the first set decide the values of the second: any two rows that agree on the first set also agree on the second. It is written with an arrow, <code>order_number → customer_number</code>, and read “order number determines customer number”. The set on the left is called the <strong>determinant</strong>. In words, the dependency says: <em>whenever we see order SO-5001, we see customer C-1001</em>, on every row of the order, now and in every future state of the table.</p>
+<p>Functional dependencies come from the rules of the business, as candidate keys do (<a href="02-Chapter2.html#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a>). For the order report, the rules are:</p>
+<ul>
+<li>An order is placed by one customer: <code>order_number → customer_number</code>.</li>
+<li>A customer has one name: <code>customer_number → customer_name</code>.</li>
+<li>A line of an order is for one product, in one quantity: <code>order_number, line_number → product_number, quantity</code>.</li>
+<li>A product has one description: <code>product_number → description</code>.</li>
+</ul>
+<p>Notice the third rule’s determinant, two columns together. Neither the order nor the line number alone decides the product, since an order has several lines and every order has a line 1. The product does not identify a line either, since lines 1 and 3 of SO-5004 are both for the HT-100; the pair decides it.</p>
+<p>A <strong>functional dependency diagram</strong> draws a table’s dependencies. Each column is an oval, and an arrow runs from each determinant to each column it determines. A determinant of several columns is a larger outline drawn around their ovals, and its arrows leave the outline, since only the columns together decide the value. The columns of the key are shaded and underlined. <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> draws the four dependencies of the order report.</p>
+<div id="fig-nf-fd-report" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-nf-fd-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/fd-order-report.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nf-fd-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.1: The Functional Dependencies of the Flat Order Report
+</figcaption>
+</figure>
+</div>
+<p>Read <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> one arrow at a time. The outline around <code>order_number</code> and <code>line_number</code> sends arrows to <code>product_number</code> and <code>quantity</code>: the pair decides them. A separate arrow leaves the <code>order_number</code> oval alone, inside the outline, for <code>customer_number</code>, which sends its own arrow on to <code>customer_name</code>. The last arrow runs from <code>product_number</code> to <code>description</code>. Thus each rule of the list above is drawn as the arrows from its determinant, one to each column it determines: the key’s outline sends two arrows for the third rule, and the figure draws four dependencies with five arrows.</p>
+<p>A dependency is a rule, so the rows can refute it but never prove it, as with a candidate key. A query finds refutations: a dependency <code>X → Y</code> is broken whenever some value of <code>X</code> appears with two different values of <code>Y</code>. Grouping by <code>X</code> and counting the different values of <code>Y</code> (<a href="04-Chapter4.html#sec-agg-groupby" class="quarto-xref"><span>Section 4.2</span></a>) checks it over the whole year of history:</p>
+<div id="tbl-nf-fd-check" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="g">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-fd-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.5: Customer Numbers with More Than One Name in the Report
+</figcaption>
+<div aria-describedby="tbl-nf-fd-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> order_report <span class="kw">AS</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> c.customer_number, c.name <span class="kw">AS</span> customer_name</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_number,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> customer_name) <span class="kw">AS</span> names</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> order_report</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> customer_number</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> customer_name) <span class="op">&gt;</span> <span class="dv">1</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+customer_number
+</th>
+<th style="text-align:right;">
+names
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-nf-fd-check" class="quarto-xref">Table&nbsp;<span>7.5</span></a> is empty: no customer number appears with two names, so the data does not refute <code>customer_number → customer_name</code>. In a real flat table kept by hand, the same query is the quickest way to find the update anomalies that have already happened.</p>
+<p>The dependencies also give step 3, the key. A set of columns is a key of the table when it determines every other column, directly or through a chain of dependencies, and no smaller set does. Follow the chains of <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> from <code>order_number</code> and <code>line_number</code>. Together they determine <code>product_number</code> and <code>quantity</code>; <code>order_number</code> determines <code>customer_number</code>, which determines <code>customer_name</code>; and <code>product_number</code> determines <code>description</code>. Every column is reached, so the pair (<code>order_number</code>, <code>line_number</code>) is a key, and neither column alone is, since neither reaches <code>product_number</code>. Its two ovals are shaded and underlined in <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a>.</p>
+<p>Two kinds of dependency on a key matter for what follows. A dependency is <strong>partial</strong> when a column depends on only part of a composite key: <code>customer_number</code> depends on <code>order_number</code> alone, not on the whole key. A dependency is <strong>transitive</strong> when a column depends on the key only through another column that is not a key: <code>customer_name</code> depends on the key through <code>customer_number</code>. Both are visible in <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a>. A partial dependency is an arrow that leaves one oval inside the key’s outline rather than the outline itself; a transitive one is a chain of arrows, the second leaving an unshaded oval.</p>
+</section>
+<section id="sec-nf-forms" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="sec-nf-forms"><span class="header-section-number">7.4</span> Normal forms</h2>
+<p>This section illustrates step 4: it defines the normal forms, from the first through Boyce-Codd, and tests the order report against each.</p>
+<p>A <strong>normal form</strong> is a condition on a table’s dependencies that rules out one kind of repeated fact. The forms are nested: a table in a higher normal form is in every lower one. The first three are often summarized by one sentence, due to William Kent <span class="citation" data-cites="kent1983simple">(<a href="references.html#ref-kent1983simple" role="doc-biblioref">Kent 1983</a>)</span>: every column that is not part of a key depends on <em>the key, the whole key, and nothing but the key</em>.</p>
+<p>A table is in <strong>first normal form</strong> (1NF) when every value is atomic, a single value from its column’s domain (<a href="02-Chapter2.html#sec-rm-tables" class="quarto-xref"><span>Section 2.1</span></a>), and there are no repeating groups. Recall from <a href="02-Chapter2.html#sec-rm-properties" class="quarto-xref"><span>Section 2.1.1</span></a> that the relational model already requires all three: atomic values are the first property of a relation, values from the domain are the second, and the ban on repeating groups is the companion of the first. Thus, 1NF is those rules stated as a test of a table. The order report is in 1NF, since each row holds one line. A version of the report with one row per order and the order’s products listed in a single cell is not:</p>
+<div id="tbl-nf-not-1nf" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-not-1nf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.6: Orders with Their Products in One Cell, Not in 1NF
+</figcaption>
+<div aria-describedby="tbl-nf-not-1nf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> o.order_number,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       STRING_AGG(p.product_number, <span class="st">', '</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                  <span class="kw">ORDER</span> <span class="kw">BY</span> l.line_number) <span class="kw">AS</span> products</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> o.order_number <span class="op">&lt;=</span> <span class="st">'SO-5004'</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o.order_number</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.order_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:left;">
+products
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:left;">
+HT-100, GC-300
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5002
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:left;">
+HT-100, HT-200, GC-300
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5004
+</td>
+<td style="text-align:left;">
+HT-100, GC-300, HT-100
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><code>STRING_AGG</code>, PostgreSQL’s aggregate for the purpose (the SQL standard’s is <code>LISTAGG</code>), joins a group’s values into one string. The <code>products</code> column of <a href="#tbl-nf-not-1nf" class="quarto-xref">Table&nbsp;<span>7.6</span></a> holds a list, not a value: no query can ask for the orders of the HT-200 without searching inside strings, and no foreign key can refer from one element of the list to the <code>product</code> table. Such a column belongs in a report, where it is read, and never in a stored table.</p>
+<p>A table is in <strong>second normal form</strong> (2NF) when it is in 1NF and no column that is not part of a key depends on only part of a key; that is, it has no partial dependency. The order report fails. <code>customer_number</code> and <code>customer_name</code> depend on <code>order_number</code> alone, part of the key (<code>order_number</code>, <code>line_number</code>), and the failure is the cause of the repetition: an order’s customer is repeated on every line of the order because it depends on the order, not on the line. A table whose keys are all single columns cannot have a partial dependency, so it is in 2NF as soon as it is in 1NF.</p>
+<p>A table is in <strong>third normal form</strong> (3NF) when it is in 2NF and no column that is not part of a key depends on another such column; that is, it has no transitive dependency on a key. The report fails here too, twice: <code>customer_name</code> depends on <code>customer_number</code>, and <code>description</code> on <code>product_number</code>, neither of which is a key. Each repeats a fact about a customer or a product on every row that mentions it. Thus, the order report is in 1NF, and it fails 2NF and 3NF; step 5 of the procedure must repair both.</p>
+<p>The definitions of 2NF and 3NF speak of columns that are not part of a key, and that leaves a gap: a column that <em>is</em> part of a key may still depend on a column that is not. A table is in <strong>Boyce-Codd normal form</strong> (BCNF) when every determinant of a dependency is a candidate key. (Strictly, a determinant may also be a set of columns that contains a candidate key, called a <strong>superkey</strong>; the book states the rule with candidate keys because a determinant is taken to be as small as it can be.) BCNF is stricter than 3NF, and the difference shows up only in tables with overlapping composite keys. For example, suppose that HG Industries recorded which machine each operator runs in each work center, under two rules: an operator runs one machine in each work center, and each machine belongs to one work center. A few hypothetical rows illustrate:</p>
+<div id="tbl-nf-assignment" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-assignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.7: Operators’ Machines in Each Work Center (Hypothetical)
+</figcaption>
+<div aria-describedby="tbl-nf-assignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"><code>operator</code></th>
+<th style="text-align: left;"><code>work_center</code></th>
+<th style="text-align: left;"><code>machine</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Maria Lopez</td>
+<td style="text-align: left;">SAW</td>
+<td style="text-align: left;">M-01</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maria Lopez</td>
+<td style="text-align: left;">WLD</td>
+<td style="text-align: left;">M-04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Linda Nguyen</td>
+<td style="text-align: left;">WLD</td>
+<td style="text-align: left;">M-04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Linda Nguyen</td>
+<td style="text-align: left;">PNT</td>
+<td style="text-align: left;">M-06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aisha Patel</td>
+<td style="text-align: left;">WLD</td>
+<td style="text-align: left;">M-05</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><a href="#fig-nf-fd-assignment" class="quarto-xref">Figure&nbsp;<span>7.2</span></a> draws the two rules as dependencies.</p>
+<div id="fig-nf-fd-assignment" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-nf-fd-assignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/fd-operator-assignment.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nf-fd-assignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.2: The Functional Dependencies of the Operator Assignments
+</figcaption>
+</figure>
+</div>
+<p>In <a href="#fig-nf-fd-assignment" class="quarto-xref">Figure&nbsp;<span>7.2</span></a>, the arrow leaving the outline around <code>operator</code> and <code>work_center</code> is the first rule, <code>operator, work_center → machine</code>, and the arrow from <code>machine</code> back into the outline, onto <code>work_center</code>, is the second, <code>machine → work_center</code>. An arrow that points into the key from a column outside it, a column that is not itself a candidate key, is the mark of a table that is not in BCNF. The table has two candidate keys, (<code>operator</code>, <code>work_center</code>) and (<code>operator</code>, <code>machine</code>), since a machine decides its work center. Every column is part of a key, so no column “not part of a key” exists, and the table is in 3NF. But the determinant <code>machine</code> is not a candidate key, so the table is not in BCNF. The consequence is a repeated fact: that M-04 is in Welding is recorded on two rows of <a href="#tbl-nf-assignment" class="quarto-xref">Table&nbsp;<span>7.7</span></a>, and moving M-04 to another work center would need both changed. <a href="#exr-ch7-bcnf" class="quarto-xref">Exercise&nbsp;<span>7.6</span></a> asks for the repair.</p>
+<p><a href="#tbl-nf-forms" class="quarto-xref">Table&nbsp;<span>7.8</span></a> collects the tests.</p>
+<div id="tbl-nf-forms" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-forms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.8: The Normal Forms and the Order Report
+</figcaption>
+<div aria-describedby="tbl-nf-forms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Normal form</th>
+<th style="text-align: left;">The table must have</th>
+<th style="text-align: left;">The order report</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1NF</td>
+<td style="text-align: left;">atomic values, no repeating groups</td>
+<td style="text-align: left;">passes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2NF</td>
+<td style="text-align: left;">1NF, and no column outside a key depending on part of a key</td>
+<td style="text-align: left;">fails: the customer depends on the order alone</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3NF</td>
+<td style="text-align: left;">2NF, and no column outside a key depending on another such column</td>
+<td style="text-align: left;">fails: names and descriptions depend on numbers that are not keys</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BCNF</td>
+<td style="text-align: left;">every determinant a candidate key</td>
+<td style="text-align: left;">fails, as it fails 3NF</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In practice, a table in 3NF is nearly always in BCNF, and designers aim for BCNF and settle for 3NF only when BCNF would cost a dependency, as <a href="#sec-nf-decomposition" class="quarto-xref"><span>Section 7.5</span></a> shows. Higher normal forms exist, and <a href="#sec-nf-4nf" class="quarto-xref"><span>Section 7.7</span></a> presents the fourth. The next section repairs the order report.</p>
+</section>
+<section id="sec-nf-decomposition" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="sec-nf-decomposition"><span class="header-section-number">7.5</span> Decomposition</h2>
+<p>This section illustrates step 5: it splits a table that fails a normal form into tables that pass, and checks that nothing is lost in the split.</p>
+<p>A table that fails a normal form is repaired by <strong>decomposition</strong>: replacing it with two or more smaller tables whose columns, together, are the original columns. Each split follows one rule. Take a dependency <code>X → Y</code> that breaks the normal form; move <code>X</code> and <code>Y</code> into a new table, whose key is <code>X</code>; and remove <code>Y</code> from the original table, keeping <code>X</code> there to refer to the new table. Then test both tables again, and split again until every table passes.</p>
+<p>Let’s decompose the order report. It fails 2NF through the partial dependency <code>order_number → customer_number</code>, and <code>customer_name</code> depends on <code>customer_number</code>, so it travels with it. The first split moves the three columns about the order into a table of their own:</p>
+<ul>
+<li><code>customer_order (order_number, customer_number, customer_name)</code>, key <code>order_number</code>;</li>
+<li><code>order_line (order_number, line_number, product_number, description, quantity)</code>, key (<code>order_number</code>, <code>line_number</code>).</li>
+</ul>
+<p>Both are in 2NF, since <code>customer_order</code> has a single-column key and every column left in <code>order_line</code> depends on the whole of its key. Neither is in 3NF. In <code>customer_order</code>, <code>customer_name</code> depends on <code>customer_number</code>, which is not a key; in <code>order_line</code>, <code>description</code> depends on <code>product_number</code>. The second and third splits remove the two transitive dependencies in the same way, moving <code>customer_number</code> and <code>customer_name</code> into a <code>customer</code> table and <code>product_number</code> and <code>description</code> into a <code>product</code> table. <a href="#lst-nf-decomposed" class="quarto-xref">Listing&nbsp;<span>7.1</span></a> writes the four resulting tables in the relational schema notation of <a href="02-Chapter2.html#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a>.</p>
+<div id="lst-nf-decomposed" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-nf-decomposed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;7.1: The Order Report Decomposed, with Its Natural Keys (Hypothetical)
+</figcaption>
+<div aria-describedby="lst-nf-decomposed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>customer (customer_number, customer_name)
+    primary key: customer_number
+
+customer_order (order_number, customer_number)
+    primary key: order_number
+    customer_number references customer_number in customer,
+        must not be NULL
+
+order_line (order_number, line_number, product_number,
+            quantity)
+    primary key: (order_number, line_number)
+    order_number references order_number in customer_order,
+        must not be NULL
+    product_number references product_number in product,
+        must not be NULL
+
+product (product_number, description)
+    primary key: product_number</code></pre>
+</div>
+</figure>
+</div>
+<p>Notice that each split left a foreign key behind: the determinant that moved into the new table stays in the old one, and refers to the new table’s key. <a href="#fig-nf-fd-decomposed" class="quarto-xref">Figure&nbsp;<span>7.3</span></a> draws the dependencies of the four tables, each table in a dashed outline.</p>
+<div id="fig-nf-fd-decomposed" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-nf-fd-decomposed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/fd-order-report-decomposed.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nf-fd-decomposed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.3: The Order Report Decomposed into Four Tables
+</figcaption>
+</figure>
+</div>
+<p>Compare <a href="#fig-nf-fd-decomposed" class="quarto-xref">Figure&nbsp;<span>7.3</span></a> with <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a>. Every arrow of the original diagram now lies inside one outline, and in every outline the arrows leave the key and nothing else. Thus each table is in BCNF: its only determinant is its key. The two transitive chains of <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> have been cut at the middle column, which is now a foreign key in one table and the key of another.</p>
+<p>The four tables are the four tables of stage D3 that <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> mapped from the class model (<a href="06-Chapter6.html#lst-map-d3" class="quarto-xref">Listing&nbsp;<span>6.12</span></a>). The database adds what normalization does not decide: a surrogate primary key for each table, with the natural key kept as an alternate key (<a href="06-Chapter6.html#sec-map-keys" class="quarto-xref"><span>Section 6.6</span></a>), and the columns the report did not carry, such as <code>order_date</code> and <code>unit_price</code>. The dependencies are the same. Normalizing the report and mapping the class model are two routes to one design.</p>
+<section id="sec-nf-lossless" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="sec-nf-lossless"><span class="header-section-number">7.5.1</span> Lossless decomposition</h3>
+<p>A decomposition must not lose information. A decomposition is <strong>lossless</strong> when joining its tables gives back the original table’s rows, no fewer and no more. For a split on a functional dependency, the rule that guarantees it is simple: each split must join on columns that are a key of one of the two tables. Every split of the order report does, since the columns left behind (<code>order_number</code>, <code>customer_number</code>, <code>product_number</code>) are the keys of the new tables.</p>
+<p>The order report itself is the evidence. <a href="#tbl-nf-report" class="quarto-xref">Table&nbsp;<span>7.2</span></a> was produced by joining the four tables of stage D3 on their keys, so the join gives back every row the report holds. Over the year of history, the join gives one row for each order line, no more:</p>
+<div id="tbl-nf-lossless" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="g">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-lossless-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.9: Order Lines and Rows of the Joined Report, Stage G
+</figcaption>
+<div aria-describedby="tbl-nf-lossless-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> order_report <span class="kw">AS</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> o.order_number, l.line_number</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> distribution.order_line)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> order_lines,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> order_report) <span class="kw">AS</span> report_rows;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+order_lines
+</th>
+<th style="text-align:right;">
+report_rows
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1065
+</td>
+<td style="text-align:right;">
+1065
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-nf-lossless" class="quarto-xref">Table&nbsp;<span>7.9</span></a> shows 1,065 of each. A split that joins on a column that is <em>not</em> a key of either table is different. Suppose that we split the lines of the first three orders into a table of each line’s product, (<code>order_number</code>, <code>line_number</code>, <code>product_number</code>), and a table of the quantities ordered of each product, (<code>product_number</code>, <code>quantity</code>). The common column, <code>product_number</code>, is a key of neither. Let’s join the two tables by hand for one product, the HT-100. It appears on two lines, and with two quantities:</p>
+<div id="tbl-nf-lossy-ledger" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-lossy-ledger-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.10: Joining the Two Parts on the HT-100 by Hand
+</figcaption>
+<div aria-describedby="tbl-nf-lossy-ledger-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Line’s product</th>
+<th style="text-align: left;">Quantity row</th>
+<th style="text-align: left;">Pair kept by the join</th>
+<th style="text-align: left;">A real line?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SO-5001, line 1, HT-100</td>
+<td style="text-align: left;">HT-100, 10</td>
+<td style="text-align: left;">SO-5001, line 1, 10</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SO-5001, line 1, HT-100</td>
+<td style="text-align: left;">HT-100, 12</td>
+<td style="text-align: left;">SO-5001, line 1, 12</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SO-5003, line 1, HT-100</td>
+<td style="text-align: left;">HT-100, 10</td>
+<td style="text-align: left;">SO-5003, line 1, 10</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SO-5003, line 1, HT-100</td>
+<td style="text-align: left;">HT-100, 12</td>
+<td style="text-align: left;">SO-5003, line 1, 12</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Every pairing of <a href="#tbl-nf-lossy-ledger" class="quarto-xref">Table&nbsp;<span>7.10</span></a> agrees on <code>product_number</code>, so the join keeps all four, and two of them are lines that were never ordered: the join says that SO-5001 ordered 12 hand trucks on line 1, and it ordered 10. The same happens for each product. The query below builds the two parts with common table expressions and joins them:</p>
+<div id="tbl-nf-lossy" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-lossy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.11: The Two Parts Joined on product_number, First Three Orders
+</figcaption>
+<div aria-describedby="tbl-nf-lossy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> line <span class="kw">AS</span> (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> o.order_number, l.line_number,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>         p.product_number, l.quantity</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.customer_order <span class="kw">AS</span> o</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> l</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> l.customer_order_fk <span class="op">=</span> o.customer_order_pk</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> distribution.product <span class="kw">AS</span> p</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> o.order_number <span class="op">&lt;=</span> <span class="st">'SO-5003'</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>line_product <span class="kw">AS</span> (</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> order_number, line_number, product_number</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> line</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>product_quantity <span class="kw">AS</span> (</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="kw">DISTINCT</span> product_number, quantity</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> line</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> lp.order_number, lp.line_number,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>       lp.product_number, pq.quantity</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> line_product <span class="kw">AS</span> lp</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> product_quantity <span class="kw">AS</span> pq</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> pq.product_number <span class="op">=</span> lp.product_number</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> lp.order_number, lp.line_number, pq.quantity;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+order_number
+</th>
+<th style="text-align:right;">
+line_number
+</th>
+<th style="text-align:left;">
+product_number
+</th>
+<th style="text-align:right;">
+quantity
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5001
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5002
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5002
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+HT-100
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+HT-200
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SO-5003
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+GC-300
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> The first three orders have six lines, and each of the three products appears on two of them with two quantities, so the join gives 2 × 2 = 4 rows per product, 12 in all. <a href="#tbl-nf-lossy" class="quarto-xref">Table&nbsp;<span>7.11</span></a> has 12 rows, of which six are real lines and six are not. Its first two rows are the two SO-5001 rows of <a href="#tbl-nf-lossy-ledger" class="quarto-xref">Table&nbsp;<span>7.10</span></a>. A lossy decomposition does not lose rows; it gains wrong ones, and the database cannot tell them apart from the right ones.</p>
+</section>
+<section id="sec-nf-preservation" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="sec-nf-preservation"><span class="header-section-number">7.5.2</span> Preserving dependencies</h3>
+<p>A decomposition should also keep every dependency inside one table, where the table’s key enforces it. A decomposition is <strong>dependency preserving</strong> when each dependency of the original table lies wholly within one of the new tables. The decomposition of the order report is: each of its four dependencies is the key of one table of <a href="#lst-nf-decomposed" class="quarto-xref">Listing&nbsp;<span>7.1</span></a> and the columns it determines, so the <code>PRIMARY KEY</code> and <code>UNIQUE</code> constraints of <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> will enforce all four.</p>
+<p>BCNF cannot always be reached without losing a dependency. The operator assignments of <a href="#tbl-nf-assignment" class="quarto-xref">Table&nbsp;<span>7.7</span></a> are the standard case: any split that puts <code>machine</code> and <code>work_center</code> in a table keyed by <code>machine</code> leaves no table that holds <code>operator</code>, <code>work_center</code>, and <code>machine</code> together, so the rule “an operator runs one machine in each work center” has no key to enforce it (<a href="#exr-ch7-bcnf" class="quarto-xref">Exercise&nbsp;<span>7.6</span></a>). You then choose between BCNF, with a rule that must be checked some other way, and 3NF, with a repeated fact. Most designers take BCNF when it preserves the dependencies and settle for 3NF when it does not. The example that follows normalizes a second report, this time from the quality department.</p>
+<div id="exm-nf-inspection" class="theorem example">
+<p><span class="theorem-title"><strong>Example 7.1 (Normalizing an inspection sheet)</strong></span> HG Industries’ quality engineers inspect each lot of a part as it leaves production, and measure the part’s characteristics: the weld strength and coating thickness of a hand truck frame, the diameter and length of an axle. One engineer keeps the results in a spreadsheet, one row per measurement, with the lot, the characteristic, the part and its description, the inspector’s employee number and name, and the value measured. The example assumes stage Q.</p>
+<p><em>The request.</em> Normalize the inspection sheet: state its dependencies, find its key and normal form, decompose it into tables in BCNF, and compare the result with the quality schema of the book’s database.</p>
+<p><em>The design.</em> A query produces the sheet from the tables of stage Q. Its rows for the first four lots of the frame are:</p>
+<div id="tbl-nf-inspection" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="q">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-inspection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.12: The Inspection Sheet, First Four Lots of FR-110
+</figcaption>
+<div aria-describedby="tbl-nf-inspection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> i.lot_number, c.name <span class="kw">AS</span> characteristic,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>       p.part_number, p.description,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>       o.employee_number, o.name <span class="kw">AS</span> operator_name,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>       m.measured_value</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> quality.measurement <span class="kw">AS</span> m</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> quality.inspection <span class="kw">AS</span> i</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> i.inspection_pk <span class="op">=</span> m.inspection_fk</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> quality.characteristic <span class="kw">AS</span> c</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.characteristic_pk <span class="op">=</span> m.characteristic_fk</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> production.part <span class="kw">AS</span> p <span class="kw">ON</span> p.part_pk <span class="op">=</span> i.part_fk</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> production.<span class="kw">operator</span> <span class="kw">AS</span> o</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> o.operator_pk <span class="op">=</span> i.operator_fk</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> i.lot_number <span class="op">&lt;=</span> <span class="st">'L7004-04'</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> i.lot_number, c.name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+lot_number
+</th>
+<th style="text-align:left;">
+characteristic
+</th>
+<th style="text-align:left;">
+part_number
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+employee_number
+</th>
+<th style="text-align:left;">
+operator_name
+</th>
+<th style="text-align:right;">
+measured_value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+L7004-01
+</td>
+<td style="text-align:left;">
+Coating thickness
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-204
+</td>
+<td style="text-align:left;">
+Robert Hayes
+</td>
+<td style="text-align:right;">
+3.1000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L7004-01
+</td>
+<td style="text-align:left;">
+Weld strength
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-204
+</td>
+<td style="text-align:left;">
+Robert Hayes
+</td>
+<td style="text-align:right;">
+1840.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L7004-02
+</td>
+<td style="text-align:left;">
+Coating thickness
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-203
+</td>
+<td style="text-align:left;">
+Linda Nguyen
+</td>
+<td style="text-align:right;">
+2.4000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L7004-02
+</td>
+<td style="text-align:left;">
+Weld strength
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-203
+</td>
+<td style="text-align:left;">
+Linda Nguyen
+</td>
+<td style="text-align:right;">
+1795.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L7004-03
+</td>
+<td style="text-align:left;">
+Coating thickness
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-204
+</td>
+<td style="text-align:left;">
+Robert Hayes
+</td>
+<td style="text-align:right;">
+3.3000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L7004-03
+</td>
+<td style="text-align:left;">
+Weld strength
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-204
+</td>
+<td style="text-align:left;">
+Robert Hayes
+</td>
+<td style="text-align:right;">
+1460.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L7004-04
+</td>
+<td style="text-align:left;">
+Coating thickness
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-203
+</td>
+<td style="text-align:left;">
+Linda Nguyen
+</td>
+<td style="text-align:right;">
+2.3000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L7004-04
+</td>
+<td style="text-align:left;">
+Weld strength
+</td>
+<td style="text-align:left;">
+FR-110
+</td>
+<td style="text-align:left;">
+Hand truck frame
+</td>
+<td style="text-align:left;">
+E-203
+</td>
+<td style="text-align:left;">
+Linda Nguyen
+</td>
+<td style="text-align:right;">
+1822.0000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The part and its description repeat on every row of <a href="#tbl-nf-inspection" class="quarto-xref">Table&nbsp;<span>7.12</span></a>, and each inspector’s number and name on both rows of each lot the inspector checked. The rules of the quality department give four dependencies:</p>
+<ul>
+<li>A lot is of one part and, in this plant, is inspected once, by one inspector: <code>lot_number → part_number, employee_number</code>.</li>
+<li>A part has one description: <code>part_number → description</code>.</li>
+<li>An employee has one name: <code>employee_number → operator_name</code>.</li>
+<li>A lot’s inspection measures each characteristic once: <code>lot_number, characteristic → measured_value</code>.</li>
+</ul>
+<p><a href="#fig-nf-fd-inspection" class="quarto-xref">Figure&nbsp;<span>7.4</span></a> draws them.</p>
+<div id="fig-nf-fd-inspection" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-nf-fd-inspection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/fd-inspection-report.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nf-fd-inspection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.4: The Functional Dependencies of the Inspection Sheet
+</figcaption>
+</figure>
+</div>
+<p>In <a href="#fig-nf-fd-inspection" class="quarto-xref">Figure&nbsp;<span>7.4</span></a>, only the outline around <code>lot_number</code> and <code>characteristic</code> reaches <code>measured_value</code>, and the chains from <code>lot_number</code> reach every other column, so (<code>lot_number</code>, <code>characteristic</code>) is the key. The sheet is in 1NF. It fails 2NF, since the arrows to <code>part_number</code> and <code>employee_number</code> leave the <code>lot_number</code> oval alone; and it would fail 3NF through the two chains.</p>
+<p>The first split moves the columns that depend on the lot into an <code>inspection</code> table keyed by <code>lot_number</code>, leaving <code>measurement (lot_number, characteristic, measured_value)</code>. The new <code>inspection</code> table holds two transitive dependencies, and two more splits move them into <code>part</code> and <code>operator</code> tables. <a href="#fig-nf-fd-inspection-decomposed" class="quarto-xref">Figure&nbsp;<span>7.5</span></a> shows the four tables.</p>
+<div id="fig-nf-fd-inspection-decomposed" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-nf-fd-inspection-decomposed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/fd-inspection-report-decomposed.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nf-fd-inspection-decomposed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.5: The Inspection Sheet Decomposed into Four Tables
+</figcaption>
+</figure>
+</div>
+<p>Each outline of <a href="#fig-nf-fd-inspection-decomposed" class="quarto-xref">Figure&nbsp;<span>7.5</span></a> has arrows only from its key, so each table is in BCNF, and each dependency of <a href="#fig-nf-fd-inspection" class="quarto-xref">Figure&nbsp;<span>7.4</span></a> lies inside one outline, so the decomposition preserves them. <a href="#lst-nf-quality" class="quarto-xref">Listing&nbsp;<span>7.2</span></a> shows the corresponding tables of the book’s database.</p>
+<!-- schema: q production.part production.operator quality.inspection quality.measurement -->
+<div id="lst-nf-quality" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-nf-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;7.2: The Tables of Stage Q That Hold the Inspection Sheet
+</figcaption>
+<div aria-describedby="lst-nf-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<pre class="text"><code>part (part_pk, part_number, description, unit_of_measure,
+      standard_cost)
+    primary key: part_pk
+    alternate key: part_number
+
+operator (operator_pk, employee_number, name, hire_date)
+    primary key: operator_pk
+    alternate key: employee_number
+
+inspection (inspection_pk, part_fk, operator_fk,
+            inspected_at, lot_number)
+    primary key: inspection_pk
+    part_fk references part_pk in part, must not be NULL
+    operator_fk references operator_pk in operator,
+        must not be NULL
+
+measurement (measurement_pk, inspection_fk,
+             characteristic_fk, measured_value)
+    primary key: measurement_pk
+    alternate key: (inspection_fk, characteristic_fk)
+    inspection_fk references inspection_pk in inspection,
+        must not be NULL
+    characteristic_fk references characteristic_pk in
+        characteristic, must not be NULL</code></pre>
+</div>
+</figure>
+</div>
+<!-- end schema -->
+<p><em>The result.</em> The four tables of <a href="#lst-nf-quality" class="quarto-xref">Listing&nbsp;<span>7.2</span></a> match the four outlines of <a href="#fig-nf-fd-inspection-decomposed" class="quarto-xref">Figure&nbsp;<span>7.5</span></a>, with surrogate keys added, with columns the sheet did not carry (such as <code>inspected_at</code>), and with <code>measurement</code> referring to a <code>characteristic</code> table, which records the specifications of each part’s characteristics (<a href="#exr-ch7-inspection-limits" class="quarto-xref">Exercise&nbsp;<span>7.8</span></a>).</p>
+<p><em>The check.</em> The decomposition is lossless if the sheet has one row per measurement, since every join is on a key. Each of the first four lots has two measurements, and <a href="#tbl-nf-inspection" class="quarto-xref">Table&nbsp;<span>7.12</span></a> has eight rows. Over the whole of stage Q:</p>
+<div id="tbl-nf-inspection-check" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="q">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-inspection-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.13: Measurements and Rows of the Inspection Sheet, Stage Q
+</figcaption>
+<div aria-describedby="tbl-nf-inspection-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> sheet <span class="kw">AS</span> (</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> i.lot_number, c.name <span class="kw">AS</span> characteristic</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> quality.measurement <span class="kw">AS</span> m</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> quality.inspection <span class="kw">AS</span> i</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> i.inspection_pk <span class="op">=</span> m.inspection_fk</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> quality.characteristic <span class="kw">AS</span> c</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> c.characteristic_pk <span class="op">=</span> m.characteristic_fk</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> production.part <span class="kw">AS</span> p <span class="kw">ON</span> p.part_pk <span class="op">=</span> i.part_fk</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> production.<span class="kw">operator</span> <span class="kw">AS</span> o</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> o.operator_pk <span class="op">=</span> i.operator_fk</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> quality.measurement)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>         <span class="kw">AS</span> measurements,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> sheet) <span class="kw">AS</span> sheet_rows;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+measurements
+</th>
+<th style="text-align:right;">
+sheet_rows
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+34
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-nf-inspection-check" class="quarto-xref">Table&nbsp;<span>7.13</span></a> shows 34 of each.</p>
+<p><em>Interpretation.</em> The spreadsheet is a fine way to <em>read</em> the results, and a query produces it on demand. Stored as the spreadsheet, it would repeat each inspector’s name on every measurement the inspector took, could not record a new part until its first lot was inspected, and would lose an inspector who left along with the last row naming that inspector. The tables record each of those facts once.</p>
+<p><em>Where it breaks.</em> The design rests on the rule that a lot is inspected once. If a failed lot were reworked and inspected again, <code>lot_number</code> would no longer determine the inspector, and the key of <code>inspection</code> would need the inspection’s time as well. So would the key of <code>measurement</code>, since the lot’s characteristics would be measured twice, and (<code>lot_number</code>, <code>characteristic</code>) would no longer decide the value measured. The book’s database anticipates this: it identifies an inspection by its own surrogate key and does not declare <code>lot_number</code> unique, so a second inspection of a lot can be recorded. In stage Q, every lot happens to have been inspected once.</p>
+</div>
+</section>
+</section>
+<section id="sec-nf-classmodels" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="sec-nf-classmodels"><span class="header-section-number">7.6</span> Normalization and class modeling</h2>
+<p>This section connects normalization to the class modeling of <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> and the mapping of <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a>.</p>
+<p>Recall that step 7 of the mapping (<a href="06-Chapter6.html#sec-map-process" class="quarto-xref"><span>Section 6.1</span></a>) checks the tables a class model produces, and reviews their normal form. The review seldom finds a problem, and the reason is worth stating. A class describes one kind of object, and its attributes describe that object: an order’s date, a product’s description. Mapped to a table, each attribute becomes a column that depends on the object’s identity, which is the table’s key, and on nothing else. That is the condition of BCNF. Thus, a class model in which every attribute describes the object of its own class maps to tables in BCNF.</p>
+<p>The converse makes normalization a test of the model. A normal form violation in a mapped table points to a modeling mistake, and <a href="#tbl-nf-model-errors" class="quarto-xref">Table&nbsp;<span>7.14</span></a> pairs the most common ones.</p>
+<div id="tbl-nf-model-errors" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-model-errors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.14: Normal Form Violations and the Modeling Mistakes Behind Them
+</figcaption>
+<div aria-describedby="tbl-nf-model-errors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">The mapped table fails</th>
+<th style="text-align: left;">Because the model</th>
+<th style="text-align: left;">For example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1NF</td>
+<td style="text-align: left;">stores several values in one attribute</td>
+<td style="text-align: left;">the products of an order as one attribute of <code>CustomerOrder</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2NF</td>
+<td style="text-align: left;">puts an attribute on a part that describes only its whole, or on an association class an attribute that describes only one end</td>
+<td style="text-align: left;"><code>orderDate</code> as an attribute of <code>OrderLine</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3NF</td>
+<td style="text-align: left;">puts an attribute on a class that describes another object</td>
+<td style="text-align: left;"><code>customerName</code> as an attribute of <code>CustomerOrder</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BCNF</td>
+<td style="text-align: left;">records as one association facts that belong to two</td>
+<td style="text-align: left;">the operator assignments of <a href="#tbl-nf-assignment" class="quarto-xref">Table&nbsp;<span>7.7</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Each row of <a href="#tbl-nf-model-errors" class="quarto-xref">Table&nbsp;<span>7.14</span></a> has a repair in the model, not only in the tables. For example, <code>customerName</code> on <code>CustomerOrder</code> is a transitive dependency, <code>order_number → customer_number → customer_name</code>, and its repair is the class <code>Customer</code> of <a href="05-Chapter5.html#fig-cm-class-d3b" class="quarto-xref">Figure&nbsp;<span>5.11</span></a>, with the association that links an order to it. The operator assignments are two associations: the machine an operator is assigned to run, and the machine’s place in a work center. The assignment is not the certification of <a href="05-Chapter5.html#fig-cm-class-production" class="quarto-xref">Figure&nbsp;<span>5.20</span></a>. Stage P3 certifies Linda Nguyen on two machines of Welding, while the rule of <a href="#tbl-nf-assignment" class="quarto-xref">Table&nbsp;<span>7.7</span></a> lets her run only one of them. The repaired model draws the assignment as an association of its own between operator and machine, beside the machine’s place in a work center. When the check of step 7 fails, the dashed arrow of <a href="06-Chapter6.html#fig-map-process" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> sends you back to the class model, and the repair belongs there.</p>
+<p>Normalization also judges what is <em>not</em> a repetition. The order line of stage D3 has a <code>unit_price</code>, and the product has a <code>list_price</code>, so the price of a product seems to be stored twice. It is not. Recall from <a href="05-Chapter5.html#exm-cm-order-line" class="quarto-xref">Example&nbsp;<span>5.1</span></a> that order SO-5004 lists the HT-100 twice, at $89.00 and at $79.00. The unit price is the price of one line, determined by the line and not by the product, while the list price is the product’s current price. The two columns record different facts, and a design that dropped <code>unit_price</code> in favor of <code>list_price</code> would lose the price at which each line was actually sold.</p>
+<p>Normalization governs the tables that store facts, not every table a database shows. A report such as the order report is produced by a query when it is needed, and a view (<a href="09-Chapter9.html#sec-tx-views" class="quarto-xref"><span>Section 9.1</span></a>) can give such a query a name, so that the report reads like a table while its facts stay stored once. In addition, a designer sometimes stores a repeated fact on purpose, to make reading faster or simpler, and accepts the anomalies it brings. This is <strong>denormalization</strong>, and it is the usual design of a data warehouse, where the data is loaded in bulk and rarely updated (<a href="11-Chapter11.html#sec-dw-star" class="quarto-xref"><span>Section 11.2</span></a>). A denormalized design is a decision made about a normalized one, and you should be able to say which dependencies it gives up.</p>
+</section>
+<section id="sec-nf-4nf" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="sec-nf-4nf"><span class="header-section-number">7.7</span> Multivalued dependencies and fourth normal form</h2>
+<p>This section presents one kind of repetition that BCNF does not catch, and the fourth normal form that removes it.</p>
+<p>A table can be in BCNF and still repeat facts. Suppose that HG Industries kept, for each machine, the operators certified to run it and the routine maintenance tasks it needs, in one table with a row for each combination. The operators are real; stage P3 records the certifications of machine M-04:</p>
+<div id="tbl-nf-m04-operators" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-m04-operators-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.15: The Operators Certified on Machine M-04
+</figcaption>
+<div aria-describedby="tbl-nf-m04-operators-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> m.machine_number, o.name <span class="kw">AS</span> <span class="kw">operator</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> production.certification <span class="kw">AS</span> c</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> production.machine <span class="kw">AS</span> m</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> m.machine_pk <span class="op">=</span> c.machine_fk</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> production.<span class="kw">operator</span> <span class="kw">AS</span> o</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> o.operator_pk <span class="op">=</span> c.operator_fk</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> m.machine_number <span class="op">=</span> <span class="st">'M-04'</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+machine_number
+</th>
+<th style="text-align:left;">
+operator
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+M-04
+</td>
+<td style="text-align:left;">
+Linda Nguyen
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M-04
+</td>
+<td style="text-align:left;">
+Maria Lopez
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The tasks are hypothetical, since the book’s database does not record maintenance: say that the welder needs its contact tip replaced, its wire feeder cleaned, and its gas flow checked. The rule of the business is that every certified operator performs every task on the machines they are certified on. The combined table must then hold each of the two operators of <a href="#tbl-nf-m04-operators" class="quarto-xref">Table&nbsp;<span>7.15</span></a> with each of the three tasks:</p>
+<div id="tbl-nf-machine-duty" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nf-machine-duty-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.16: Operators and Maintenance Tasks of M-04 in One Table (Hypothetical)
+</figcaption>
+<div aria-describedby="tbl-nf-machine-duty-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Machine</th>
+<th style="text-align: left;">Operator</th>
+<th style="text-align: left;">Task</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">M-04</td>
+<td style="text-align: left;">Linda Nguyen</td>
+<td style="text-align: left;">Replace contact tip</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M-04</td>
+<td style="text-align: left;">Linda Nguyen</td>
+<td style="text-align: left;">Clean wire feeder</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M-04</td>
+<td style="text-align: left;">Linda Nguyen</td>
+<td style="text-align: left;">Check gas flow</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M-04</td>
+<td style="text-align: left;">Maria Lopez</td>
+<td style="text-align: left;">Replace contact tip</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M-04</td>
+<td style="text-align: left;">Maria Lopez</td>
+<td style="text-align: left;">Clean wire feeder</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M-04</td>
+<td style="text-align: left;">Maria Lopez</td>
+<td style="text-align: left;">Check gas flow</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>No column of <a href="#tbl-nf-machine-duty" class="quarto-xref">Table&nbsp;<span>7.16</span></a> determines another: a machine has several operators and several tasks, and an operator and a task each go with several machines. The key is all three columns, the only determinant is the key, and the table is in BCNF. Yet it repeats facts, and counting rows shows it. That Linda Nguyen is certified on M-04 is written three times, once per task, and that M-04 needs its gas flow checked is written twice, once per operator. Adding a fourth task to M-04 takes two new rows, one for each operator; certifying a third operator takes three, one for each task. Leaving one of those rows out does not record less; it records something false, that the operator skips that task.</p>
+<p>The cause is a <strong>multivalued dependency</strong>. A multivalued dependency <code>machine →→ operator</code> holds when a machine determines a <em>set</em> of operators, and that set is the same whatever the other columns hold. The second half of the definition is the important one. A machine having many operators is only a one-to-many relationship; the multivalued dependency says, in addition, that the set of operators does not depend on the task, and so every operator must be paired with every task. Here <code>machine →→ task</code> holds as well, and the two sets vary independently of each other.</p>
+<p>A table is in <strong>fourth normal form</strong> (4NF) when it is in BCNF and every multivalued dependency in it, other than one that covers all of the table’s columns, has a candidate key, or a superkey, as its determinant. <a href="#tbl-nf-machine-duty" class="quarto-xref">Table&nbsp;<span>7.16</span></a> fails, since <code>machine</code> is not a key. The decomposition follows the same rule as before: move the dependency into a table of its own. The result is two tables, <code>machine_operator (machine, operator)</code> and <code>machine_task (machine, task)</code>, with two rows and three rows for M-04 instead of six, and a new task or a new certification is one row. The first of the two is the <code>certification</code> table of stage P3.</p>
+<p>The two tables join on <code>machine</code>, a key of neither, and yet the split loses nothing. The rule of <a href="#sec-nf-lossless" class="quarto-xref"><span>Section 7.5.1</span></a> is the test for a split on a functional dependency; a split on a multivalued dependency is lossless for a different reason. Since every operator of a machine performs every task of the machine, joining the two tables pairs each operator with each task, and each of those pairings is a row the original table holds. For M-04, the join gives 2 × 3 = 6 rows, the six rows of <a href="#tbl-nf-machine-duty" class="quarto-xref">Table&nbsp;<span>7.16</span></a> and no others.</p>
+<p>Notice what the business rule decided. If the rule were instead that each task is assigned to particular operators, the three-way combination would be a fact of its own, and <a href="#tbl-nf-machine-duty" class="quarto-xref">Table&nbsp;<span>7.16</span></a> would be a correct table recording a ternary association (<a href="06-Chapter6.html#sec-map-ternary" class="quarto-xref"><span>Section 6.3.7</span></a>). The test is the one of the counting argument: if deleting a single row would record something true, the combination is a fact, and the table stands; if it would record something false, the table hides two independent facts and belongs in 4NF.</p>
+<p>Normal forms continue beyond the fourth. The <strong>fifth normal form</strong> concerns tables that can be rebuilt only by joining three or more smaller tables made from their columns, a situation rare enough in practice that this book names it and goes no further. A class model with two separate many-to-many associations, which is how <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> would model operators and tasks, maps to 4NF tables from the start.</p>
+</section>
+<section id="sec-normalization-summary" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="sec-normalization-summary"><span class="header-section-number">7.8</span> Summary</h2>
+<p><strong>Normalization tests a table’s design against its dependencies and repairs it by decomposition.</strong> Its five steps look at the data, state the dependencies, find the key, name the normal form, and decompose.</p>
+<p><strong>A table that repeats facts invites anomalies.</strong> An update anomaly changes some copies of a fact and not others; a deletion anomaly loses a fact with an unrelated row; an insertion anomaly cannot record a fact until another exists. Queries find their symptoms and count the copies.</p>
+<p><strong>A functional dependency is a rule of the business that one set of columns decides another.</strong> Its determinant’s values decide its dependents’ values on every row, now and later; the data can refute a dependency but not prove it. A key is a smallest set of columns that determines every column, and a dependency on part of a key is partial, one through a column outside the key transitive.</p>
+<p><strong>Each normal form rules out one kind of repeated fact.</strong> 1NF requires atomic values; 2NF forbids partial dependencies, 3NF transitive ones; BCNF requires every determinant to be a candidate key. Every column outside a key must depend on the key, the whole key, and nothing but the key.</p>
+<p><strong>Decomposition repairs a table by splitting it on a violating dependency.</strong> The determinant and the columns it decides move to a new table keyed by the determinant, and the determinant stays behind as a foreign key. Decomposing the order report produces the four tables of stage D3 that <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> mapped from the class model.</p>
+<p><strong>A decomposition must be lossless, and should preserve dependencies.</strong> Joining the tables must give back the original rows, which holds when each split joins on a key of one of its tables; a split on a column that is a key of neither can add rows that were never true. Each dependency should lie within one table, where a key enforces it, and when BCNF would lose one, 3NF is the usual compromise.</p>
+<p><strong>A sound class model maps to normalized tables.</strong> An attribute that describes the object of its own class depends on the key and nothing else, so a normal form violation in a mapped table points to a mistake in the model, and the repair belongs in the model. A report is a query, not a stored table, and denormalization is a deliberate decision about a normalized design.</p>
+<p><strong>A multivalued dependency repeats facts that BCNF allows.</strong> When a determinant fixes two sets of values that vary independently, one table must pair every member of one set with every member of the other, and counting the rows an insertion needs exposes it. Fourth normal form moves each set into a table of its own.</p>
+</section>
+<section id="sec-normalization-exercises" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="sec-normalization-exercises"><span class="header-section-number">7.9</span> Exercises</h2>
+<div id="exr-ch7-terms" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.1</strong></span> Match each term on the left with the phrase on the right that defines it.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a. determinant</td>
+<td style="text-align: left;">1. a column depends on part of a composite key</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b. partial dependency</td>
+<td style="text-align: left;">2. the left side of a functional dependency</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">c.&nbsp;transitive dependency</td>
+<td style="text-align: left;">3. a fact changed in some of its copies but not all</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d.&nbsp;update anomaly</td>
+<td style="text-align: left;">4. every determinant is a candidate key</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">e. BCNF</td>
+<td style="text-align: left;">5. a column depends on the key through a column outside any key</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exr-ch7-true-false" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.2</strong></span> Mark each statement true or false, and correct each false one.</p>
+<ol type="a">
+<li>If a query finds no customer number with two names, then <code>customer_number → customer_name</code> holds.</li>
+<li>A table whose only key is a single column is in 2NF if it is in 1NF.</li>
+<li>A table in 3NF is always in BCNF.</li>
+<li>Normalization removes all repetition of values from a database.</li>
+<li>The flat order report is in 1NF.</li>
+</ol>
+</div>
+<div id="exr-ch7-shipment-report" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.3</strong></span> The shipping department keeps a flat shipment report at stage D5 with the columns <code>shipment_number</code>, <code>shipped_on</code>, <code>warehouse_code</code>, <code>warehouse_city</code>, <code>order_number</code>, <code>order_line_number</code>, and <code>quantity_shipped</code>, one row per shipment line.</p>
+<ol type="a">
+<li>Produce the report with a query, and look at its first ten rows (step 1). Which facts repeat?</li>
+<li>State its functional dependencies from the rules of stage D5, and draw them in the manner of <a href="#fig-nf-fd-report" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> (step 2).</li>
+<li>Find its key (step 3).</li>
+<li>Name the highest normal form it satisfies, and say why it fails the next (step 4).</li>
+</ol>
+</div>
+<div id="exr-ch7-fd-check" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.4</strong></span> Using the flat order report at stage G, write a query that checks the dependency <code>product_number → description</code>, in the manner of <a href="#tbl-nf-fd-check" class="quarto-xref">Table&nbsp;<span>7.5</span></a>. Then explain why an empty result does not prove the dependency, and what would.</p>
+</div>
+<div id="exr-ch7-stock-report" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.5</strong></span> A warehouse manager keeps a table with one row per stock level and the columns <code>warehouse_code</code>, <code>warehouse_city</code>, <code>product_number</code>, <code>description</code>, <code>quantity_on_hand</code>, and <code>reorder_point</code>.</p>
+<ol type="a">
+<li>Give its dependencies and its key.</li>
+<li>Test it against 1NF, 2NF, and 3NF, naming each dependency that causes a failure.</li>
+<li>Describe an update anomaly, a deletion anomaly, and an insertion anomaly in this table, each with HG Industries’ data.</li>
+</ol>
+</div>
+<div id="exr-ch7-bcnf" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.6</strong></span> Using <a href="#tbl-nf-assignment" class="quarto-xref">Table&nbsp;<span>7.7</span></a> and <a href="#fig-nf-fd-assignment" class="quarto-xref">Figure&nbsp;<span>7.2</span></a>:</p>
+<ol type="a">
+<li>Explain, with the table’s rows, why the table is in 3NF.</li>
+<li>Decompose it into two tables that are each in BCNF.</li>
+<li>The rule “an operator runs one machine in each work center” was a dependency of the original table. Can either of your two tables enforce it with a key? What does that say about BCNF?</li>
+</ol>
+</div>
+<div id="exr-ch7-lossy-join" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.7</strong></span> Using the flat order report at stage D3, restricted to orders SO-5001 through SO-5006, consider splitting it into (<code>order_number</code>, <code>line_number</code>, <code>quantity</code>) and (<code>order_number</code>, <code>product_number</code>, <code>description</code>).</p>
+<ol type="a">
+<li>Is the split lossless? Name the rule you use.</li>
+<li>Before running anything, predict the number of rows the join of the two parts on <code>order_number</code> returns. The lines of each order are in <a href="#tbl-nf-report" class="quarto-xref">Table&nbsp;<span>7.2</span></a>, and each part, being a table, holds no two identical rows.</li>
+<li>Write a query, in the manner of <a href="#tbl-nf-lossy" class="quarto-xref">Table&nbsp;<span>7.11</span></a>, that builds the two parts and counts the rows of their join, and compare the count with your prediction.</li>
+</ol>
+</div>
+<div id="exr-ch7-inspection-limits" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.8</strong></span> Suppose that the inspection sheet of <a href="#exm-nf-inspection" class="quarto-xref">Example&nbsp;<span>7.1</span></a> also carried each characteristic’s <code>nominal</code> value, the target the specification sets for it.</p>
+<ol type="a">
+<li>State the dependency that decides <code>nominal</code>, using the rules of the quality department: a part’s characteristic has one nominal value, and two parts may share a characteristic’s name with different nominal values.</li>
+<li>Which normal form does the extended sheet fail because of it, and why?</li>
+<li>Decompose the extended sheet into tables in BCNF, and compare the result with the <code>quality.characteristic</code> table of stage Q.</li>
+</ol>
+</div>
+<div id="exr-ch7-class-diagnosis" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.9</strong></span> A student models an order with a single class, <code>Order</code>, whose attributes are <code>orderNumber</code>, <code>orderDate</code>, <code>customerNumber</code>, <code>customerName</code>, and <code>customerCity</code>.</p>
+<ol type="a">
+<li>Map the class to a table, state its dependencies, and name its highest normal form.</li>
+<li>Which row of <a href="#tbl-nf-model-errors" class="quarto-xref">Table&nbsp;<span>7.14</span></a> describes the mistake?</li>
+<li>Repair the class model, and show that the repaired model maps to tables in BCNF.</li>
+</ol>
+</div>
+<div id="exr-ch7-4nf" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.10</strong></span> HG Industries offers each garden cart in several colors and with several wheel types. Assume that every color is offered with every wheel type, and consider the table <code>cart_option (product_number, color, wheel_type)</code>, which holds a row for each combination. The GC-300 comes in green and red, with pneumatic or solid wheels.</p>
+<ol type="a">
+<li>List the rows the table holds for the GC-300. What is its key, and is it in BCNF?</li>
+<li>How many rows must be added to offer the GC-300 in blue? How many to offer a third wheel type, first to the rows of part (a), and then once blue is offered?</li>
+<li>State the multivalued dependencies, and decompose the table into 4NF.</li>
+<li>Suppose instead that the solid wheels are not offered in red. Should the table still be decomposed as in part (c)? Explain with the counting test of <a href="#sec-nf-4nf" class="quarto-xref"><span>Section 7.7</span></a>.</li>
+</ol>
+</div>
+<div id="exr-ch7-chinook-billing" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.11</strong></span> Each invoice of the Chinook database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-public" class="quarto-xref"><span>Section C.11</span></a>, loaded with the book’s loader (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a>) stores a billing address (<code>billing_address</code>, <code>billing_city</code>, and so on), and each customer an address.</p>
+<ol type="a">
+<li>Write a query that counts the invoices, and those whose billing address differs from their customer’s address.</li>
+<li>The two agree on every invoice. Is the billing address then redundant, a copy the table should not keep (<a href="#sec-nf-anomalies" class="quarto-xref"><span>Section 7.2</span></a>)? State the functional dependency that would make it redundant, and say whether it holds for the business.</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-kent1983simple" class="csl-entry" role="listitem">
+Kent, William. 1983. <span>“A Simple Guide to Five Normal Forms in Relational Database Theory.”</span> <em>Communications of the ACM</em> 26 (2): 120–25. <a href="https://doi.org/10.1145/358024.358054">https://doi.org/10.1145/358024.358054</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./06-Chapter6.html" class="pagination-link" aria-label="From Class Models to Tables">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./08-Chapter8.html" class="pagination-link" aria-label="Defining and Populating Tables">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

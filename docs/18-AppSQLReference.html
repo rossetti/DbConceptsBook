@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>Appendix F — SQL Quick Reference – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./19-AppEmbeddedDatabases.html" rel="next">
+<link href="./17-AppDiagramTools.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./18-AppSQLReference.html"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-appsqlref-ddl" id="toc-sec-appsqlref-ddl" class="nav-link active" data-scroll-target="#sec-appsqlref-ddl"><span class="header-section-number">F.1</span> Defining tables</a></li>
+  <li><a href="#sec-appsqlref-dml" id="toc-sec-appsqlref-dml" class="nav-link" data-scroll-target="#sec-appsqlref-dml"><span class="header-section-number">F.2</span> Changing data</a></li>
+  <li><a href="#sec-appsqlref-queries" id="toc-sec-appsqlref-queries" class="nav-link" data-scroll-target="#sec-appsqlref-queries"><span class="header-section-number">F.3</span> Queries</a></li>
+  <li><a href="#sec-appsqlref-types" id="toc-sec-appsqlref-types" class="nav-link" data-scroll-target="#sec-appsqlref-types"><span class="header-section-number">F.4</span> PostgreSQL data types and functions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./18-AppSQLReference.html"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-appsqlref" class="quarto-section-identifier">Appendix F — SQL Quick Reference</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This appendix collects, in one place, the SQL this book teaches: the statements that define tables, the statements that change data, the clauses of a query, and the data types and functions the chapters use. It is a reminder, not a tutorial. Each entry names the section that teaches it, where the examples and the reasons are.</p>
+<p>The skeletons follow three conventions. Words in upper case are SQL; words in lower case stand for names or values you supply. Square brackets enclose what may be left out, and <code>...</code> means the previous item may repeat. PostgreSQL is the reference system (<a href="01-Chapter1.html#sec-dbms" class="quarto-xref"><span>Section 1.3</span></a>); a feature marked <strong>(PostgreSQL)</strong> is PostgreSQL’s own, not standard SQL, and may be written differently in another DBMS.</p>
+<section id="sec-appsqlref-ddl" class="level2" data-number="F.1">
+<h2 data-number="F.1" class="anchored" data-anchor-id="sec-appsqlref-ddl"><span class="header-section-number">F.1</span> Defining tables</h2>
+<p>A table is created with its columns and its rules together. The skeleton gives the parts the book’s tables use:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> schema_name.table_name (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    table_pk <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    column_name <span class="kw">type</span> [<span class="kw">NOT</span> <span class="kw">NULL</span>] [<span class="kw">DEFAULT</span> <span class="fu">value</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        [<span class="kw">UNIQUE</span>] [<span class="kw">CHECK</span> (condition)],</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    other_fk <span class="dt">INTEGER</span> [<span class="kw">NOT</span> <span class="kw">NULL</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">REFERENCES</span> schema_name.other_table</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        [<span class="kw">ON</span> <span class="kw">DELETE</span> action] [<span class="kw">ON</span> <span class="kw">UPDATE</span> action],</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">..</span>.</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    [<span class="kw">UNIQUE</span> (column_name, <span class="op">..</span>.)],</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    [<span class="kw">CHECK</span> (condition)]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-appsqlref-create" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-create-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.1: The Parts of CREATE TABLE
+</figcaption>
+<div aria-describedby="tbl-appsqlref-create-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Part</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>CREATE SCHEMA name</code></td>
+<td style="text-align: left;">creates a named group of tables</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-postgres" class="quarto-xref"><span>Section 8.1</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>GENERATED ALWAYS AS IDENTITY</code></td>
+<td style="text-align: left;">numbers the rows itself: a surrogate key</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-create" class="quarto-xref"><span>Section 8.3</span></a>, <a href="06-Chapter6.html#sec-map-keys" class="quarto-xref"><span>Section 6.6</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>PRIMARY KEY</code></td>
+<td style="text-align: left;">the column or columns that identify a row</td>
+<td style="text-align: left;"><a href="02-Chapter2.html#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>UNIQUE</code></td>
+<td style="text-align: left;">an alternate key: no two rows share the value</td>
+<td style="text-align: left;"><a href="02-Chapter2.html#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>NOT NULL</code></td>
+<td style="text-align: left;">the column must have a value</td>
+<td style="text-align: left;"><a href="02-Chapter2.html#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>DEFAULT value</code></td>
+<td style="text-align: left;">the value used when an insert gives none</td>
+<td style="text-align: left;"><a href="02-Chapter2.html#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>REFERENCES table</code></td>
+<td style="text-align: left;">a foreign key to the table’s primary key</td>
+<td style="text-align: left;"><a href="02-Chapter2.html#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ON DELETE</code> / <code>ON UPDATE</code></td>
+<td style="text-align: left;">what happens to referring rows: <code>NO ACTION</code> or <code>RESTRICT</code> (refuse), <code>CASCADE</code> (follow), <code>SET NULL</code></td>
+<td style="text-align: left;"><a href="06-Chapter6.html#sec-map-composition" class="quarto-xref"><span>Section 6.3.6</span></a>, <a href="08-Chapter8.html#sec-ddl-create" class="quarto-xref"><span>Section 8.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>CHECK (condition)</code></td>
+<td style="text-align: left;">a condition every row must satisfy</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-create" class="quarto-xref"><span>Section 8.3</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A table’s definition changes with <code>ALTER TABLE</code>, and the other statements that define things follow the same pattern:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">ADD</span> <span class="kw">COLUMN</span> column_name <span class="kw">type</span>;</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">DROP</span> <span class="kw">COLUMN</span> column_name;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ALTER</span> <span class="kw">COLUMN</span> column_name <span class="kw">SET</span> <span class="kw">NOT</span> <span class="kw">NULL</span>;</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ADD</span> <span class="kw">CONSTRAINT</span> name <span class="kw">CHECK</span> (condition);</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">RENAME</span> <span class="kw">TO</span> new_name;</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> table_name [<span class="kw">CASCADE</span>];</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">SCHEMA</span> schema_name [<span class="kw">CASCADE</span>];</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-appsqlref-define" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-define-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.2: Other Statements That Define a Database
+</figcaption>
+<div aria-describedby="tbl-appsqlref-define-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Statement</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>ALTER TABLE</code></td>
+<td style="text-align: left;">adds, drops, or changes columns and constraints</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-alter" class="quarto-xref"><span>Section 8.6</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>DROP TABLE</code>, <code>DROP SCHEMA</code></td>
+<td style="text-align: left;">removes a table or schema; <code>CASCADE</code> removes what depends on it</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-create" class="quarto-xref"><span>Section 8.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>TRUNCATE table</code></td>
+<td style="text-align: left;">removes every row at once</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>CREATE VIEW name AS query</code></td>
+<td style="text-align: left;">a stored query that is used like a table; <code>WITH CHECK OPTION</code> keeps changes through it within its condition</td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-views" class="quarto-xref"><span>Section 9.1</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>CREATE MATERIALIZED VIEW</code>, <code>REFRESH MATERIALIZED VIEW</code></td>
+<td style="text-align: left;">a view whose result is stored, and recomputed on request <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-views" class="quarto-xref"><span>Section 9.1</span></a>, <a href="11-Chapter11.html#sec-dw-olap" class="quarto-xref"><span>Section 11.5</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>CREATE ROLE name</code></td>
+<td style="text-align: left;">a user or group that privileges are granted to</td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-security" class="quarto-xref"><span>Section 9.4</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>GRANT</code>, <code>REVOKE</code></td>
+<td style="text-align: left;">give or take away a privilege (<code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) on a table or view</td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-security" class="quarto-xref"><span>Section 9.4</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="sec-appsqlref-dml" class="level2" data-number="F.2">
+<h2 data-number="F.2" class="anchored" data-anchor-id="sec-appsqlref-dml"><span class="header-section-number">F.2</span> Changing data</h2>
+<p>Three statements change rows, and a fourth loads them from a file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> table_name (column_name, <span class="op">..</span>.)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="fu">value</span>, <span class="op">..</span>.), <span class="op">..</span>.;</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> table_name (column_name, <span class="op">..</span>.)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">..</span>.;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> table_name</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> column_name <span class="op">=</span> expression, <span class="op">..</span>.</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>[<span class="kw">WHERE</span> condition];</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> table_name</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>[<span class="kw">WHERE</span> condition];</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-appsqlref-change" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-change-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.3: Statements That Change Data
+</figcaption>
+<div aria-describedby="tbl-appsqlref-change-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Statement</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>INSERT ... VALUES</code></td>
+<td style="text-align: left;">adds the rows listed</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>INSERT ... SELECT</code></td>
+<td style="text-align: left;">adds the rows a query returns</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>, <a href="11-Chapter11.html#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>UPDATE ... SET ... WHERE</code></td>
+<td style="text-align: left;">changes the rows the condition selects; without <code>WHERE</code>, every row</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>DELETE FROM ... WHERE</code></td>
+<td style="text-align: left;">removes the rows the condition selects; without <code>WHERE</code>, every row</td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\copy table FROM 'file.csv' WITH (FORMAT csv, HEADER true)</code></td>
+<td style="text-align: left;">loads a CSV file from your computer, in psql <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="08-Chapter8.html#sec-ddl-loading" class="quarto-xref"><span>Section 8.5</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A <strong>transaction</strong> groups changes so that they happen together or not at all (<a href="09-Chapter9.html#sec-tx-acid" class="quarto-xref"><span>Section 9.2</span></a>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span>;          <span class="co">-- or START TRANSACTION</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.             <span class="co">-- statements</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">COMMIT</span>;         <span class="co">-- keep the changes, or</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ROLLBACK</span>;       <span class="co">-- undo them</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-appsqlref-transactions" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-transactions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.4: Statements That Control Transactions
+</figcaption>
+<div aria-describedby="tbl-appsqlref-transactions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Statement</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>BEGIN</code>, <code>START TRANSACTION</code></td>
+<td style="text-align: left;">starts a transaction</td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-acid" class="quarto-xref"><span>Section 9.2</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>COMMIT</code>, <code>ROLLBACK</code></td>
+<td style="text-align: left;">ends it, keeping or undoing its changes</td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-acid" class="quarto-xref"><span>Section 9.2</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>BEGIN ISOLATION LEVEL level</code></td>
+<td style="text-align: left;">starts a transaction at <code>READ COMMITTED</code> (PostgreSQL’s default), <code>REPEATABLE READ</code>, or <code>SERIALIZABLE</code>; the standard sets the level with <code>SET TRANSACTION</code></td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-isolation" class="quarto-xref"><span>Section 9.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>SELECT ... FOR UPDATE</code></td>
+<td style="text-align: left;">reads rows and locks them against other writers until the transaction ends</td>
+<td style="text-align: left;"><a href="09-Chapter9.html#sec-tx-isolation" class="quarto-xref"><span>Section 9.3</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="sec-appsqlref-queries" class="level2" data-number="F.3">
+<h2 data-number="F.3" class="anchored" data-anchor-id="sec-appsqlref-queries"><span class="header-section-number">F.3</span> Queries</h2>
+<p>A query’s clauses are written in one order and evaluated in another. The skeleton gives the written order; the database evaluates <code>FROM</code> and its joins first, then <code>WHERE</code>, <code>GROUP BY</code>, <code>HAVING</code>, the window functions, the <code>SELECT</code> list, <code>DISTINCT</code>, <code>ORDER BY</code>, and finally <code>LIMIT</code>. That is why a <code>WHERE</code> clause cannot name a column alias from the <code>SELECT</code> list, and why it runs before the grouping that <code>HAVING</code> filters.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>[<span class="kw">WITH</span> [RECURSIVE] name <span class="kw">AS</span> (<span class="kw">query</span>), <span class="op">..</span>.]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> [<span class="kw">DISTINCT</span>] expression [<span class="kw">AS</span> alias], <span class="op">..</span>.</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> <span class="kw">table</span> [<span class="kw">AS</span> alias]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    [[<span class="kw">LEFT</span> | <span class="kw">RIGHT</span> | <span class="kw">FULL</span>] <span class="kw">JOIN</span> <span class="kw">table</span> [<span class="kw">AS</span> alias]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">ON</span> condition] <span class="op">..</span>.</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>[<span class="kw">WHERE</span> condition]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>[<span class="kw">GROUP</span> <span class="kw">BY</span> expression, <span class="op">..</span>.]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>[<span class="kw">HAVING</span> condition]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>[<span class="kw">ORDER</span> <span class="kw">BY</span> expression [<span class="kw">ASC</span> | <span class="kw">DESC</span>], <span class="op">..</span>.]</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>[<span class="kw">LIMIT</span> n];</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-appsqlref-clauses" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-clauses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.5: The Clauses of a Query
+</figcaption>
+<div aria-describedby="tbl-appsqlref-clauses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Clause</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>SELECT</code>, <code>FROM</code>, <code>AS</code></td>
+<td style="text-align: left;">the columns and expressions wanted, from which table, under what names</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-select" class="quarto-xref"><span>Section 3.1</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>DISTINCT</code></td>
+<td style="text-align: left;">removes duplicate rows from the result</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-select" class="quarto-xref"><span>Section 3.1</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>WHERE</code></td>
+<td style="text-align: left;">keeps the rows for which the condition is true</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-where" class="quarto-xref"><span>Section 3.2</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ORDER BY</code></td>
+<td style="text-align: left;">sorts the result; without it, the order is not defined</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-orderby" class="quarto-xref"><span>Section 3.4</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>LIMIT n</code></td>
+<td style="text-align: left;">keeps the first <code>n</code> rows <strong>(PostgreSQL)</strong>; the standard’s form is <code>FETCH FIRST n ROWS ONLY</code></td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-orderby" class="quarto-xref"><span>Section 3.4</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>JOIN ... ON</code></td>
+<td style="text-align: left;">pairs the rows of two tables that satisfy the condition</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-inner-joins" class="quarto-xref"><span>Section 3.6</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>LEFT</code>, <code>RIGHT</code>, <code>FULL JOIN</code></td>
+<td style="text-align: left;">also keeps the unmatched rows of one or both tables, with NULL for the other’s columns</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-outer-joins" class="quarto-xref"><span>Section 3.7</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>GROUP BY</code></td>
+<td style="text-align: left;">forms one group for each combination of values</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-groupby" class="quarto-xref"><span>Section 4.2</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>HAVING</code></td>
+<td style="text-align: left;">keeps the groups for which the condition is true</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-having" class="quarto-xref"><span>Section 4.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>WITH name AS (query)</code></td>
+<td style="text-align: left;">a common table expression: a named step used by the query after it</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-cte" class="quarto-xref"><span>Section 3.10</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>WITH RECURSIVE</code></td>
+<td style="text-align: left;">a common table expression that refers to itself, for chains of rows</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-recursive" class="quarto-xref"><span>Section 4.6</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Conditions combine comparisons with <code>AND</code>, <code>OR</code>, and <code>NOT</code>, under the three-valued logic of <a href="03-Chapter3.html#sec-q-null" class="quarto-xref"><span>Section 3.3</span></a>:</p>
+<div id="tbl-appsqlref-conditions" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-conditions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.6: Conditions
+</figcaption>
+<div aria-describedby="tbl-appsqlref-conditions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Condition</th>
+<th style="text-align: left;">True when</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>a = b</code>, <code>&lt;&gt;</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code></td>
+<td style="text-align: left;">the comparison holds; unknown if either side is NULL</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-where" class="quarto-xref"><span>Section 3.2</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>a BETWEEN low AND high</code></td>
+<td style="text-align: left;"><code>a &gt;= low AND a &lt;= high</code></td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-where" class="quarto-xref"><span>Section 3.2</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>a IN (value, ...)</code></td>
+<td style="text-align: left;"><code>a</code> equals one of the values</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-where" class="quarto-xref"><span>Section 3.2</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>a LIKE 'pattern'</code></td>
+<td style="text-align: left;"><code>a</code> matches the pattern, <code>%</code> for any characters and <code>_</code> for one; <code>ILIKE</code> ignores case <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-where" class="quarto-xref"><span>Section 3.2</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>a IS NULL</code>, <code>a IS NOT NULL</code></td>
+<td style="text-align: left;"><code>a</code> has no value, or has one</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-null" class="quarto-xref"><span>Section 3.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>EXISTS (subquery)</code></td>
+<td style="text-align: left;">the subquery returns at least one row</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-subqueries" class="quarto-xref"><span>Section 3.8</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>a IN (subquery)</code>, <code>a NOT IN (subquery)</code></td>
+<td style="text-align: left;"><code>a</code> is (or is not) among the subquery’s values; <code>NOT IN</code> is never true if the subquery returns a NULL</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-subqueries" class="quarto-xref"><span>Section 3.8</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Two queries’ results combine with the set operations, which require the same number of columns with compatible types in each:</p>
+<div id="tbl-appsqlref-set" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-set-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.7: Set Operations
+</figcaption>
+<div aria-describedby="tbl-appsqlref-set-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operation</th>
+<th style="text-align: left;">Result</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>query UNION query</code></td>
+<td style="text-align: left;">the rows in either, each once; <code>UNION ALL</code> keeps duplicates</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-set" class="quarto-xref"><span>Section 3.9</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>query INTERSECT query</code></td>
+<td style="text-align: left;">the rows in both</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-set" class="quarto-xref"><span>Section 3.9</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>query EXCEPT query</code></td>
+<td style="text-align: left;">the rows in the first and not the second</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-set" class="quarto-xref"><span>Section 3.9</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A <code>CASE</code> expression chooses a value by condition, and an aggregate’s <code>FILTER</code> restricts the rows it counts:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span> <span class="cf">WHEN</span> condition <span class="cf">THEN</span> <span class="fu">value</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>     [<span class="cf">WHEN</span> condition <span class="cf">THEN</span> <span class="fu">value</span>] <span class="op">..</span>.</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     [<span class="cf">ELSE</span> <span class="fu">value</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> condition)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A <strong>window function</strong> computes a value for each row from a window of related rows, without collapsing them into one:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span>(<span class="op">..</span>.) <span class="kw">OVER</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    [<span class="kw">PARTITION</span> <span class="kw">BY</span> expression, <span class="op">..</span>.]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    [<span class="kw">ORDER</span> <span class="kw">BY</span> expression, <span class="op">..</span>.]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    [<span class="kw">ROWS</span> <span class="kw">BETWEEN</span> n <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>PARTITION BY</code> divides the rows into windows, the <code>ORDER BY</code> orders each window, and the frame (<code>ROWS BETWEEN ...</code>) limits the rows an aggregate sees, as a moving average needs (<a href="04-Chapter4.html#sec-agg-window" class="quarto-xref"><span>Section 4.5</span></a>). Grouping for summaries at several levels at once extends <code>GROUP BY</code>:</p>
+<div id="tbl-appsqlref-olap" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-olap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.8: Grouping at Several Levels
+</figcaption>
+<div aria-describedby="tbl-appsqlref-olap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Form</th>
+<th style="text-align: left;">Groups formed</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>GROUP BY ROLLUP (a, b)</code></td>
+<td style="text-align: left;"><code>(a, b)</code>, <code>(a)</code>, and the grand total</td>
+<td style="text-align: left;"><a href="11-Chapter11.html#sec-dw-olap" class="quarto-xref"><span>Section 11.5</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>GROUP BY CUBE (a, b)</code></td>
+<td style="text-align: left;">every combination: <code>(a, b)</code>, <code>(a)</code>, <code>(b)</code>, and the grand total</td>
+<td style="text-align: left;"><a href="11-Chapter11.html#sec-dw-olap" class="quarto-xref"><span>Section 11.5</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>GROUP BY GROUPING SETS ((a), (b))</code></td>
+<td style="text-align: left;">only the groupings listed</td>
+<td style="text-align: left;"><a href="11-Chapter11.html#sec-dw-olap" class="quarto-xref"><span>Section 11.5</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>GROUPING(a)</code></td>
+<td style="text-align: left;">1 in a row where <code>a</code> was summarized away, 0 otherwise</td>
+<td style="text-align: left;"><a href="11-Chapter11.html#sec-dw-olap" class="quarto-xref"><span>Section 11.5</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="sec-appsqlref-types" class="level2" data-number="F.4">
+<h2 data-number="F.4" class="anchored" data-anchor-id="sec-appsqlref-types"><span class="header-section-number">F.4</span> PostgreSQL data types and functions</h2>
+<p><a href="#tbl-appsqlref-data-types" class="quarto-xref">Table&nbsp;<span>F.9</span></a> lists the data types the book’s tables use, with the engineer’s choice for each kind of value (<a href="08-Chapter8.html#sec-ddl-types" class="quarto-xref"><span>Section 8.2</span></a>).</p>
+<div id="tbl-appsqlref-data-types" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-data-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.9: Data Types
+</figcaption>
+<div aria-describedby="tbl-appsqlref-data-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Holds</th>
+<th style="text-align: left;">Use it for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>INTEGER</code>, <code>SMALLINT</code>, <code>BIGINT</code></td>
+<td style="text-align: left;">whole numbers</td>
+<td style="text-align: left;">counts, quantities, keys</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>NUMERIC(p, s)</code></td>
+<td style="text-align: left;">exact decimals, <code>p</code> digits with <code>s</code> after the point</td>
+<td style="text-align: left;">money, and any measure whose decimals matter</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>REAL</code>, <code>DOUBLE PRECISION</code></td>
+<td style="text-align: left;">approximate binary floating-point numbers</td>
+<td style="text-align: left;">scientific measures and statistics; never money</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>VARCHAR(n)</code></td>
+<td style="text-align: left;">text of at most <code>n</code> characters</td>
+<td style="text-align: left;">names, descriptions, codes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>CHAR(n)</code></td>
+<td style="text-align: left;">text of exactly <code>n</code> characters</td>
+<td style="text-align: left;">fixed codes, such as a state</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>TEXT</code></td>
+<td style="text-align: left;">text of any length <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;">long descriptions</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>DATE</code></td>
+<td style="text-align: left;">a calendar date</td>
+<td style="text-align: left;">order and ship dates</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>TIME</code>, <code>TIMESTAMP</code></td>
+<td style="text-align: left;">a time of day, or a date and time</td>
+<td style="text-align: left;">events during a day</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>INTERVAL</code></td>
+<td style="text-align: left;">a length of time</td>
+<td style="text-align: left;">durations, date arithmetic</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>BOOLEAN</code></td>
+<td style="text-align: left;">true or false</td>
+<td style="text-align: left;">flags</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appsqlref-functions" class="quarto-xref">Table&nbsp;<span>F.10</span></a> lists the functions the chapters use. Text is joined with the operator <code>||</code>: <code>product_number || ' ' || description</code> gives a label such as <code>HT-100 Two-wheel hand truck</code> (<a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a>).</p>
+<div id="tbl-appsqlref-functions" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsqlref-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;F.10: Functions Used in This Book
+</figcaption>
+<div aria-describedby="tbl-appsqlref-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Result</th>
+<th style="text-align: left;">Taught in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>UPPER(t)</code>, <code>LOWER(t)</code></td>
+<td style="text-align: left;"><code>t</code> in upper or lower case</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>LENGTH(t)</code>, <code>TRIM(t)</code>, <code>SUBSTRING(t FROM i FOR n)</code></td>
+<td style="text-align: left;">the length of <code>t</code>; <code>t</code> without surrounding spaces; <code>n</code> characters from position <code>i</code></td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a>, <a href="08-Chapter8.html#sec-ddl-loading" class="quarto-xref"><span>Section 8.5</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ROUND(x, d)</code></td>
+<td style="text-align: left;"><code>x</code> rounded to <code>d</code> places</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ABS(x)</code>, <code>SQRT(x)</code></td>
+<td style="text-align: left;">the absolute value of <code>x</code>; its square root</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-operational" class="quarto-xref"><span>Section 4.7</span></a>, <a href="12-Chapter12.html#sec-simdb-analysis" class="quarto-xref"><span>Section 12.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>CAST(x AS type)</code>, <code>x::type</code></td>
+<td style="text-align: left;"><code>x</code> converted to the type; <code>::</code> is <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>COALESCE(a, b, ...)</code></td>
+<td style="text-align: left;">the first argument that is not NULL</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>CURRENT_DATE</code></td>
+<td style="text-align: left;">today’s date</td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-null" class="quarto-xref"><span>Section 3.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>EXTRACT(part FROM d)</code></td>
+<td style="text-align: left;">a part of a date or time, such as <code>YEAR</code>, <code>MONTH</code>, <code>DAY</code>, or <code>ISODOW</code>, the day of the week from 1 for Monday <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a>, <a href="11-Chapter11.html#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>d2 - d1</code></td>
+<td style="text-align: left;">the number of days between two dates, as a whole number <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="03-Chapter3.html#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>d + INTERVAL '7 days'</code></td>
+<td style="text-align: left;">a date or time moved by an interval</td>
+<td style="text-align: left;"><a href="11-Chapter11.html#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>TO_CHAR(d, 'format')</code></td>
+<td style="text-align: left;">a date formatted as text <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="11-Chapter11.html#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>generate_series(a, b, step)</code></td>
+<td style="text-align: left;">a set of rows from <code>a</code> to <code>b</code> <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="11-Chapter11.html#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>COUNT(*)</code>, <code>COUNT(x)</code>, <code>COUNT(DISTINCT x)</code></td>
+<td style="text-align: left;">rows; values of <code>x</code> that are not NULL; distinct values of <code>x</code></td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-groupby" class="quarto-xref"><span>Section 4.2</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code></td>
+<td style="text-align: left;">the total, average, least, and greatest of a group’s values, ignoring NULL</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-groupby" class="quarto-xref"><span>Section 4.2</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>STDDEV_SAMP(x)</code>, <code>CORR(x, y)</code></td>
+<td style="text-align: left;">the sample standard deviation; the correlation of two columns</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-operational" class="quarto-xref"><span>Section 4.7</span></a>, <a href="12-Chapter12.html#sec-simdb-analysis" class="quarto-xref"><span>Section 12.3</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>PERCENTILE_CONT(p) WITHIN GROUP (ORDER BY x)</code></td>
+<td style="text-align: left;">the <code>p</code> quantile of <code>x</code>, interpolated</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-operational" class="quarto-xref"><span>Section 4.7</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>STRING_AGG(t, ', ')</code></td>
+<td style="text-align: left;">a group’s text values joined into one <strong>(PostgreSQL)</strong></td>
+<td style="text-align: left;"><a href="07-Chapter7.html#sec-nf-forms" class="quarto-xref"><span>Section 7.4</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ROW_NUMBER()</code>, <code>RANK()</code>, <code>DENSE_RANK()</code></td>
+<td style="text-align: left;">a row’s position within its partition, with ties handled in different ways</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-window-ranking" class="quarto-xref"><span>Section 4.5.5</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>NTILE(n)</code></td>
+<td style="text-align: left;">which of <code>n</code> nearly equal groups a row falls in</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-operational" class="quarto-xref"><span>Section 4.7</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>LAG(x)</code>, <code>LEAD(x)</code>, <code>FIRST_VALUE(x)</code></td>
+<td style="text-align: left;"><code>x</code> from the previous row, the next row, or the frame’s first row</td>
+<td style="text-align: left;"><a href="04-Chapter4.html#sec-agg-window-frames" class="quarto-xref"><span>Section 4.5.4</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A function not listed here is likely in PostgreSQL’s documentation <span class="citation" data-cites="postgresql">(<a href="references.html#ref-postgresql" role="doc-biblioref">The PostgreSQL Global Development Group, n.d.</a>)</span>, whose chapter on functions and operators is organized by the type of value each works on.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-postgresql" class="csl-entry" role="listitem">
+The PostgreSQL Global Development Group. n.d. <em><span>PostgreSQL</span> Documentation</em>. <a href="https://www.postgresql.org/docs/" class="uri">Https://www.postgresql.org/docs/</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./17-AppDiagramTools.html" class="pagination-link" aria-label="Tools for Drawing UML and ER Diagrams">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./19-AppEmbeddedDatabases.html" class="pagination-link" aria-label="Embedded Databases: SQLite and DuckDB">
+        <span class="nav-page-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>Appendix D — Translating Between Crow’s Foot and UML – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./17-AppDiagramTools.html" rel="next">
+<link href="./15-AppSampleDatabases.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./16-AppERDandUML.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-apperduml-why" id="toc-sec-apperduml-why" class="nav-link active" data-scroll-target="#sec-apperduml-why"><span class="header-section-number">D.1</span> Why two notations</a></li>
+  <li><a href="#sec-apperduml-entities" id="toc-sec-apperduml-entities" class="nav-link" data-scroll-target="#sec-apperduml-entities"><span class="header-section-number">D.2</span> Entities and classes</a></li>
+  <li><a href="#sec-apperduml-attributes" id="toc-sec-apperduml-attributes" class="nav-link" data-scroll-target="#sec-apperduml-attributes"><span class="header-section-number">D.3</span> Attributes and keys</a></li>
+  <li><a href="#sec-apperduml-multiplicity" id="toc-sec-apperduml-multiplicity" class="nav-link" data-scroll-target="#sec-apperduml-multiplicity"><span class="header-section-number">D.4</span> Relationships and multiplicity</a></li>
+  <li><a href="#sec-apperduml-associative" id="toc-sec-apperduml-associative" class="nav-link" data-scroll-target="#sec-apperduml-associative"><span class="header-section-number">D.5</span> Associative entities and association classes</a></li>
+  <li><a href="#sec-apperduml-identifying" id="toc-sec-apperduml-identifying" class="nav-link" data-scroll-target="#sec-apperduml-identifying"><span class="header-section-number">D.6</span> Identifying relationships and composition</a></li>
+  <li><a href="#sec-apperduml-generalization" id="toc-sec-apperduml-generalization" class="nav-link" data-scroll-target="#sec-apperduml-generalization"><span class="header-section-number">D.7</span> Subtypes and generalization</a></li>
+  <li><a href="#sec-apperduml-limits" id="toc-sec-apperduml-limits" class="nav-link" data-scroll-target="#sec-apperduml-limits"><span class="header-section-number">D.8</span> What does not translate</a></li>
+  <li><a href="#sec-apperduml-procedure" id="toc-sec-apperduml-procedure" class="nav-link" data-scroll-target="#sec-apperduml-procedure"><span class="header-section-number">D.9</span> Translating a model, step by step</a></li>
+  <li><a href="#sec-apperduml-exercises" id="toc-sec-apperduml-exercises" class="nav-link" data-scroll-target="#sec-apperduml-exercises"><span class="header-section-number">D.10</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./16-AppERDandUML.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-apperduml" class="quarto-section-identifier">Appendix D — Translating Between Crow’s Foot and UML</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This book draws its data models as UML class diagrams. Other books, many courses, and most database tools draw them as entity-relationship diagrams in the crow’s foot notation. <a href="05-Chapter5.html#sec-cm-other-notations" class="quarto-xref"><span>Section 5.10</span></a> showed how to read the crow’s foot marks; this appendix translates every construct in both directions, says what is lost on the way, and ends with a procedure for translating a whole model and a worked example.</p>
+<p>The examples come from HG Industries’ production and distribution schemas, drawn both ways, so that each crow’s foot diagram can be set beside a class diagram the book has already explained.</p>
+<section id="sec-apperduml-why" class="level2" data-number="D.1">
+<h2 data-number="D.1" class="anchored" data-anchor-id="sec-apperduml-why"><span class="header-section-number">D.1</span> Why two notations</h2>
+<p>The entity-relationship model was introduced by Peter Chen as a way to describe data independently of how it is stored <span class="citation" data-cites="chen1976entity">(<a href="references.html#ref-chen1976entity" role="doc-biblioref">Chen 1976</a>)</span>. Chen’s diagrams drew relationships as diamonds; the crow’s foot notation, which draws a relationship as a line with marks at its ends, dates from the same decade and spread with the Information Engineering method and the design tools built on it. UML came later, in the 1990s, from object-oriented software design, and its class diagrams are a standard of the Object Management Group.</p>
+<p>The two notations describe the same things: kinds of objects, their facts, and the associations among them, with how many of each may be linked. They differ in emphasis. A crow’s foot diagram is usually drawn close to the tables it will become, with identifiers marked and foreign keys often shown, while a UML class diagram describes the business and leaves keys to the mapping of <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a>. That is why this book models in UML and maps afterwards. You will still meet crow’s foot diagrams in other textbooks, in DataGrip’s and DBeaver’s generated diagrams, and in design documents at work, and you should be able to read one as a class model and draw one when asked.</p>
+</section>
+<section id="sec-apperduml-entities" class="level2" data-number="D.2">
+<h2 data-number="D.2" class="anchored" data-anchor-id="sec-apperduml-entities"><span class="header-section-number">D.2</span> Entities and classes</h2>
+<p>An <strong>entity type</strong> is the ERD’s name for a class: a kind of thing the business records, drawn as a box with its name above its attributes. An <strong>entity</strong>, or entity instance, is one object of it. Crow’s foot diagrams conventionally write entity names in upper case with underscores (<code>WORK_CENTER</code>), the style of the tables they become, where UML writes class names in upper camel case (<code>WorkCenter</code>); <a href="05-Chapter5.html#fig-cm-crowsfoot" class="quarto-xref">Figure&nbsp;<span>5.21</span></a> kept the class names only so that it could be set beside its class diagram. The difference is one of spelling only: an entity type translates to a class with the same meaning, and a class to an entity type.</p>
+<p>Recall from <a href="05-Chapter5.html#sec-cm-classes" class="quarto-xref"><span>Section 5.3</span></a> that the book distinguishes a class from the table it maps to; in a crow’s foot diagram that distinction is often blurred, and the box is read as both. Translating to UML restores it: the class describes the business, and <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> decides the table.</p>
+</section>
+<section id="sec-apperduml-attributes" class="level2" data-number="D.3">
+<h2 data-number="D.3" class="anchored" data-anchor-id="sec-apperduml-attributes"><span class="header-section-number">D.3</span> Attributes and keys</h2>
+<p><a href="#fig-apperduml-keys" class="quarto-xref">Figure&nbsp;<span>D.1</span></a> draws work centers and their machines as a design tool draws them. Each entity lists its identifier above the line, marked with an asterisk, and its other attributes below. <code>MACHINE</code> also lists <code>work_center_code</code>, marked <code>(FK)</code>: the foreign key by which each machine refers to its work center.</p>
+<div id="fig-apperduml-keys" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-keys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-machine-keys.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-keys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.1: Work Centers and Machines, with Identifiers and a Foreign Key
+</figcaption>
+</figure>
+</div>
+<p>Three rules translate these boxes to classes.</p>
+<ul>
+<li><strong>An identifier that the business uses becomes an attribute.</strong> Work center codes and machine numbers are business identifiers, so <code>workCenterCode</code> and <code>machineNumber</code> are attributes of <code>WorkCenter</code> and <code>Machine</code>, as in <a href="05-Chapter5.html#fig-cm-class-p3" class="quarto-xref">Figure&nbsp;<span>5.16</span></a>. The class description records that each is unique (<a href="05-Chapter5.html#sec-cm-classes" class="quarto-xref"><span>Section 5.3</span></a>).</li>
+<li><strong>An artificial identifier is dropped.</strong> A column such as <code>checkout_id</code> that exists only to number rows has no place in a class model; the mapping of <a href="06-Chapter6.html#sec-map-keys" class="quarto-xref"><span>Section 6.6</span></a> adds a surrogate key to every table in any case.</li>
+<li><strong>A foreign key is dropped, and the line carries its meaning.</strong> <code>work_center_code (FK)</code> in <code>MACHINE</code> repeats what the relationship line already says, that each machine belongs to a work center. A class model shows the association and no foreign key attribute (1).</li>
+</ul>
+<p>Some ERD styles mark other kinds of attribute: a <em>multivalued</em> attribute, such as an employee’s several phone numbers, and a <em>derived</em> attribute, such as an age computed from a birth date. A multivalued attribute translates to a class of its own with a one-to-many association, since a table’s column holds one value (<a href="02-Chapter2.html#sec-rm-tables" class="quarto-xref"><span>Section 2.1</span></a>); a derived attribute is left out of the class model, or noted in the class description, since it is computed rather than recorded.</p>
+</section>
+<section id="sec-apperduml-multiplicity" class="level2" data-number="D.4">
+<h2 data-number="D.4" class="anchored" data-anchor-id="sec-apperduml-multiplicity"><span class="header-section-number">D.4</span> Relationships and multiplicity</h2>
+<p>A <strong>relationship</strong> is the ERD’s association, drawn as a line between two entity types. Recall <a href="05-Chapter5.html#tbl-cm-crowsfoot" class="quarto-xref">Table&nbsp;<span>5.8</span></a>: the mark nearer the box gives the maximum (a bar for one, the crow’s foot for many) and the mark farther from the box the minimum (a bar for one, a circle for zero). The marks sit at the same ends as UML’s numbers, so each end translates on its own:</p>
+<div id="tbl-apperduml-ends" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-apperduml-ends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;D.1: Translating the Four Crow’s Foot Ends
+</figcaption>
+<div aria-describedby="tbl-apperduml-ends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Crow’s foot end</th>
+<th style="text-align: center;">UML multiplicity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">bar, bar</td>
+<td style="text-align: center;"><code>1</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">circle, bar</td>
+<td style="text-align: center;"><code>0..1</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">circle, crow’s foot</td>
+<td style="text-align: center;"><code>0..*</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bar, crow’s foot</td>
+<td style="text-align: center;"><code>1..*</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In <a href="#fig-apperduml-keys" class="quarto-xref">Figure&nbsp;<span>D.1</span></a>, the line has two bars at <code>WORK_CENTER</code> and a circle with a crow’s foot at <code>MACHINE</code>. The UML association of <a href="05-Chapter5.html#fig-cm-class-p3" class="quarto-xref">Figure&nbsp;<span>5.16</span></a> has <code>1</code> at the work center and <code>0..*</code> at the machine: each machine belongs to exactly one work center, and a work center has zero or more machines.</p>
+<p>The translation is exact for the four ends of <a href="#tbl-apperduml-ends" class="quarto-xref">Table&nbsp;<span>D.1</span></a> and no further. Crow’s foot has no mark for a count other than zero, one, and many, so a UML multiplicity such as <code>2..*</code> or <code>1..3</code> becomes the nearest end (<code>1..*</code>) and a note. A relationship’s name, often a verb phrase written on the line (“performs”, “is assigned to”), translates to a UML association name or, when it names what one end is to the other, to a role name. A relationship between an entity type and itself, a <strong>unary</strong> or recursive relationship, translates to a recursive association with role names (1).</p>
+</section>
+<section id="sec-apperduml-associative" class="level2" data-number="D.5">
+<h2 data-number="D.5" class="anchored" data-anchor-id="sec-apperduml-associative"><span class="header-section-number">D.5</span> Associative entities and association classes</h2>
+<p>Crow’s foot draws only lines between two boxes. A many-to-many relationship with facts of its own, or a relationship among three entity types, is therefore drawn as an <strong>associative entity</strong>: an entity type in the middle, with a one-to-many line to each of the entity types it connects. <a href="#fig-apperduml-stock-level" class="quarto-xref">Figure&nbsp;<span>D.2</span></a> draws the stock levels of stage D4 this way.</p>
+<div id="fig-apperduml-stock-level" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-stock-level-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-d4-stock-level.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-stock-level-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.2: Stage D4’s Stock Levels in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<p>Read each line of <a href="#fig-apperduml-stock-level" class="quarto-xref">Figure&nbsp;<span>D.2</span></a> on its own: a warehouse has zero or more stock levels, each stock level is of exactly one warehouse, and the same for products. Its identifier is the pair of foreign keys. In UML the same facts are the association class <code>StockLevel</code> of <a href="05-Chapter5.html#fig-cm-class-d4" class="quarto-xref">Figure&nbsp;<span>5.7</span></a>: an association between <code>Warehouse</code> and <code>Product</code>, <code>0..*</code> at both ends, with <code>quantityOnHand</code> and <code>reorderPoint</code> on the association class.</p>
+<p>An associative entity does not always become an association class. Recall the decision of <a href="05-Chapter5.html#sec-cm-association-classes" class="quarto-xref"><span>Section 5.5</span></a> about order lines: an association class allows at most one link per pair of objects, so it is right only when the pair identifies the associative entity. The test in translation is the identifier:</p>
+<ul>
+<li><strong>Identified by the pair of foreign keys</strong>, as <code>STOCK_LEVEL</code> is: an association class.</li>
+<li><strong>Identified by something else</strong>, a number of its own or the pair plus another attribute, because the same pair may occur more than once: a class with two associations. The order line of <a href="05-Chapter5.html#fig-cm-class-d3b" class="quarto-xref">Figure&nbsp;<span>5.11</span></a>, drawn as <code>OrderLine</code> in <a href="05-Chapter5.html#fig-cm-crowsfoot" class="quarto-xref">Figure&nbsp;<span>5.21</span></a>, is one; so is a checkout of a tool (<a href="05-Chapter5.html#exr-ch5-tool-crib" class="quarto-xref">Exercise&nbsp;<span>5.18</span></a>).</li>
+</ul>
+<p>The same test applies to an associative entity with three lines, the crow’s foot form of a ternary association (<a href="05-Chapter5.html#sec-cm-ternary" class="quarto-xref"><span>Section 5.5.1</span></a>): identified by the three foreign keys, it is a ternary association with an association class; otherwise, a class with three binary associations.</p>
+</section>
+<section id="sec-apperduml-identifying" class="level2" data-number="D.6">
+<h2 data-number="D.6" class="anchored" data-anchor-id="sec-apperduml-identifying"><span class="header-section-number">D.6</span> Identifying relationships and composition</h2>
+<p>Crow’s foot distinguishes two kinds of relationship line. An <strong>identifying relationship</strong>, drawn as a solid line, is one whose parent’s identifier is part of the child’s identifier: the child cannot be identified, and so cannot exist, without its parent. A <strong>non-identifying relationship</strong>, drawn as a dashed line, only refers to the parent. A child entity type with an identifying relationship is often called a <strong>weak entity</strong>, and the part of its identifier that it adds is its partial identifier. <a href="#fig-apperduml-routing" class="quarto-xref">Figure&nbsp;<span>D.3</span></a> shows both kinds.</p>
+<div id="fig-apperduml-routing" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-routing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-p3-routing.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-routing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.3: Stage P3’s Routing in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<p>An operation of <a href="#fig-apperduml-routing" class="quarto-xref">Figure&nbsp;<span>D.3</span></a> is identified by its part’s number and its own operation number, so its line to <code>MANUFACTURED_PART</code> is identifying, solid: operation 20 means nothing without the part it belongs to. Its line to <code>WORK_CENTER</code> is dashed: the work center is a fact about the operation, not part of its name.</p>
+<p>Now compare <a href="05-Chapter5.html#fig-cm-class-p3" class="quarto-xref">Figure&nbsp;<span>5.16</span></a>. The identifying relationship with a partial identifier is the qualified composition <code>ManufacturedPart [operationNumber] "1" *-- "0..1" Operation</code>: the partial identifier <code>operation_number</code> becomes the qualifier, and the dependence of the operation on its part becomes the filled diamond. The non-identifying relationship is an ordinary association. The translation rules are:</p>
+<ul>
+<li><strong>Identifying, with a partial identifier</strong>: a qualified association, usually a composition (<a href="05-Chapter5.html#sec-cm-aggregation" class="quarto-xref"><span>Section 5.6</span></a>).</li>
+<li><strong>Identifying, with no partial identifier</strong> (the child’s identifier is the parent’s alone): a one-to-one association, often a composition, or, if the child is a kind of the parent, a generalization (the next section).</li>
+<li><strong>Non-identifying</strong>: an ordinary association or an aggregation.</li>
+</ul>
+<p>The translation back is looser, because UML distinguishes what crow’s foot does not. A UML composition says that the part cannot exist without its whole and is deleted with it, which <a href="06-Chapter6.html#sec-map-composition" class="quarto-xref"><span>Section 6.3.6</span></a> maps to <code>on delete cascade</code>; an identifying relationship says only how the child is named. An aggregation, such as a work center’s machines in <a href="05-Chapter5.html#fig-cm-class-p3" class="quarto-xref">Figure&nbsp;<span>5.16</span></a>, has no crow’s foot mark at all: it becomes a non-identifying line, and the diamond is lost.</p>
+</section>
+<section id="sec-apperduml-generalization" class="level2" data-number="D.7">
+<h2 data-number="D.7" class="anchored" data-anchor-id="sec-apperduml-generalization"><span class="header-section-number">D.7</span> Subtypes and generalization</h2>
+<p>ERDs record kinds of an entity type as <strong>supertypes and subtypes</strong>, drawn in many styles: a subtype box inside its supertype, a circle joining the lines, or, as design tools and <a href="#fig-apperduml-parts" class="quarto-xref">Figure&nbsp;<span>D.4</span></a> draw it, a one-to-zero-or-one line from the supertype to each subtype, with the subtype sharing the supertype’s identifier.</p>
+<div id="fig-apperduml-parts" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-parts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-p1-parts.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-parts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.4: Stage P1’s Parts as a Supertype and Two Subtypes
+</figcaption>
+</figure>
+</div>
+<p>Each line of <a href="#fig-apperduml-parts" class="quarto-xref">Figure&nbsp;<span>D.4</span></a> says that a part may have one row of manufactured-part facts and one of purchased-part facts. The note adds what the lines cannot: a <strong>subtype discriminator</strong>, <code>part_kind</code>, whose value says which subtype a part belongs to, and two constraints. <em>Exclusive</em> (also called disjoint) means a part belongs to at most one subtype; <em>total</em> (also called complete) means every part belongs to one. Their opposites are <em>overlapping</em> and <em>partial</em>.</p>
+<p>The translation is the generalization of <a href="05-Chapter5.html#fig-cm-class-p1" class="quarto-xref">Figure&nbsp;<span>5.17</span></a>: <code>Part</code> is the superclass, <code>ManufacturedPart</code> and <code>PurchasedPart</code> its subclasses, and the constraints translate word for word: exclusive to <code>{disjoint}</code> and total to <code>{complete}</code>, and their opposites, overlapping and partial, to <code>{overlapping}</code> and <code>{incomplete}</code>. A total supertype has no objects of its own, so it becomes an abstract class, its name in italics, as <code>Part</code> is in <a href="05-Chapter5.html#fig-cm-class-p1" class="quarto-xref">Figure&nbsp;<span>5.17</span></a>. The discriminator is dropped from the class model, since in UML an object’s class says its kind; it returns in the mapping, as the <code>part_kind</code> column of the single-table mapping of <a href="06-Chapter6.html#sec-map-gen-single" class="quarto-xref"><span>Section 6.5.3</span></a>. The subtypes’ copies of <code>part_number</code>, marked <code>(FK)</code>, are dropped as foreign keys are.</p>
+<p>Reading a diagram drawn with plain one-to-zero-or-one lines and no note, you cannot tell a subtype from an ordinary optional one-to-one relationship. The test is the one of <a href="05-Chapter5.html#sec-cm-generalization" class="quarto-xref"><span>Section 5.7</span></a>: is every manufactured part a part, with all of a part’s facts? If so, it is a subtype.</p>
+</section>
+<section id="sec-apperduml-limits" class="level2" data-number="D.8">
+<h2 data-number="D.8" class="anchored" data-anchor-id="sec-apperduml-limits"><span class="header-section-number">D.8</span> What does not translate</h2>
+<p>Most of a model survives translation in either direction. What does not is worth knowing before you translate, so that the losses are recorded in a note rather than silently dropped.</p>
+<div id="tbl-apperduml-limits" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-apperduml-limits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;D.2: What Is Lost Translating UML to Crow’s Foot
+</figcaption>
+<div aria-describedby="tbl-apperduml-limits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">UML construct</th>
+<th style="text-align: left;">In crow’s foot</th>
+<th style="text-align: left;">What is lost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Multiplicity other than 0, 1, many (<code>2..*</code>)</td>
+<td style="text-align: left;">nearest end (<code>1..*</code>)</td>
+<td style="text-align: left;">the exact count; keep it in a note</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Qualifier</td>
+<td style="text-align: left;">partial identifier of a weak entity</td>
+<td style="text-align: left;">nothing, if the relationship is drawn as identifying</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Composition</td>
+<td style="text-align: left;">identifying relationship</td>
+<td style="text-align: left;">that the part is deleted with its whole</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aggregation</td>
+<td style="text-align: left;">ordinary relationship</td>
+<td style="text-align: left;">the whole-part meaning</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Association class</td>
+<td style="text-align: left;">associative entity</td>
+<td style="text-align: left;">nothing, but the reverse translation needs the identifier test</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>{ordered}</code></td>
+<td style="text-align: left;">a sequence-number attribute</td>
+<td style="text-align: left;">the constraint becomes data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>{disjoint, complete}</code> and their opposites</td>
+<td style="text-align: left;">a note or a style-specific symbol</td>
+<td style="text-align: left;">the constraint, where the style has no symbol</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Operations of a class</td>
+<td style="text-align: left;">nothing</td>
+<td style="text-align: left;">not used in data models</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In the other direction, a crow’s foot diagram carries facts that a class model leaves to the mapping: identifiers, foreign keys, and sometimes types and lengths. None of these is lost in translation, since <a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a> recreates them, but you should record in the class descriptions any business identifier and any rule the ERD states through its keys, such as the uniqueness of an operation number within its part.</p>
+</section>
+<section id="sec-apperduml-procedure" class="level2" data-number="D.9">
+<h2 data-number="D.9" class="anchored" data-anchor-id="sec-apperduml-procedure"><span class="header-section-number">D.9</span> Translating a model, step by step</h2>
+<p>The sections above translate one construct at a time. A whole model is translated in a fixed order, so that each decision rests on the ones before it. From crow’s foot to UML:</p>
+<ol type="1">
+<li><strong>Entity types to classes.</strong> Rename each to upper camel case. Set aside the associative entities and the subtypes for steps 4 and 5.</li>
+<li><strong>Attributes.</strong> Keep each business attribute and business identifier; drop artificial identifiers and every attribute marked as a foreign key.</li>
+<li><strong>Relationships to associations.</strong> Translate each end with <a href="#tbl-apperduml-ends" class="quarto-xref">Table&nbsp;<span>D.1</span></a>. Turn relationship names into association names or role names; give role names to every recursive relationship and to every second relationship between the same pair.</li>
+<li><strong>Associative entities.</strong> Apply the identifier test of <a href="#sec-apperduml-associative" class="quarto-xref"><span>Section D.5</span></a>: an association class if the foreign keys alone identify it, a class of its own otherwise.</li>
+<li><strong>Identifying relationships and subtypes.</strong> A partial identifier becomes a qualifier; decide whether the dependence is a composition. Subtypes become a generalization with the constraints of the note.</li>
+<li><strong>Read the result both ways.</strong> Read every association as two sentences
+<ol class="example" type="1">
+<li>and review the model with <a href="05-Chapter5.html#tbl-cm-review" class="quarto-xref">Table&nbsp;<span>5.6</span></a>.</li>
+</ol></li>
+</ol>
+<p>From UML to crow’s foot, the steps run in the same order: classes to entity types; attributes, adding the identifiers the class descriptions name; associations to relationships by <a href="#tbl-apperduml-ends" class="quarto-xref">Table&nbsp;<span>D.1</span></a>; association classes to associative entities; qualifiers to partial identifiers on identifying relationships; generalizations to subtypes with a discriminator; and every loss of <a href="#tbl-apperduml-limits" class="quarto-xref">Table&nbsp;<span>D.2</span></a> to a note.</p>
+<div id="exm-apperduml-production" class="theorem example">
+<p><span class="theorem-title"><strong>Example D.1 (Translating a production model from crow’s foot to UML)</strong></span> A consultant’s report on HG Industries’ production floor includes <a href="#fig-apperduml-production" class="quarto-xref">Figure&nbsp;<span>D.5</span></a>, drawn in crow’s foot notation with a design tool. The plant’s engineers maintain their models in UML.</p>
+<div id="fig-apperduml-production" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-p3-production.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.5: Part of HG Industries’ Production Model in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<p><em>The request.</em> Translate <a href="#fig-apperduml-production" class="quarto-xref">Figure&nbsp;<span>D.5</span></a> into a UML class diagram, and check it against the class model of <a href="05-Chapter5.html#fig-cm-class-production" class="quarto-xref">Figure&nbsp;<span>5.20</span></a>.</p>
+<p><em>The translation.</em> We follow the procedure.</p>
+<ol type="1">
+<li><strong>Classes.</strong> <code>WORK_CENTER</code>, <code>MACHINE</code>, <code>OPERATOR</code>, <code>OPERATION</code>, and <code>MANUFACTURED_PART</code> become <code>WorkCenter</code>, <code>Machine</code>, <code>Operator</code>, <code>Operation</code>, and <code>ManufacturedPart</code>. <code>CERTIFICATION</code> is associative and waits for step 4.</li>
+<li><strong>Attributes.</strong> The business identifiers stay as attributes: <code>workCenterCode</code>, <code>machineNumber</code>, <code>employeeNumber</code>, <code>partNumber</code>. Every <code>(FK)</code> attribute is dropped: <code>work_center_code</code> from <code>MACHINE</code> and <code>OPERATION</code>, and the foreign keys of <code>CERTIFICATION</code> and <code>OPERATION</code>. <code>operation_number</code> is not a foreign key; it waits for step 5.</li>
+<li><strong>Associations.</strong> <code>WORK_CENTER ||..o{ MACHINE</code> becomes <code>1</code> at the work center and <code>0..*</code> at the machine; <code>WORK_CENTER ||..o{ OPERATION</code> becomes <code>1</code> and <code>0..*</code>.</li>
+<li><strong>The associative entity.</strong> <code>CERTIFICATION</code> is identified by the pair <code>(employee_number, machine_number)</code>, its two foreign keys alone, so it is the association class <code>Certification</code> (<code>certifiedOn</code>, <code>level</code>) of an association between <code>Operator</code> and <code>Machine</code>, <code>0..*</code> at both ends. Each end’s multiplicity comes from the crow’s foot at the associative entity: an operator has zero or more certifications, so zero or more machines.</li>
+<li><strong>The identifying relationship.</strong> <code>OPERATION</code> is identified by its part’s number and <code>operation_number</code>, through a solid line: <code>operationNumber</code> becomes a qualifier, and since an operation cannot exist without its part’s routing, the association is a composition, <code>ManufacturedPart [operationNumber] "1" *-- "0..1" Operation</code>. The crow’s foot <code>1..*</code> at <code>OPERATION</code> (every manufactured part has at least one operation) is not visible through the qualifier and goes into the class description.</li>
+</ol>
+<p><em>The check.</em> The result is the part of <a href="05-Chapter5.html#fig-cm-class-production" class="quarto-xref">Figure&nbsp;<span>5.20</span></a> that <a href="#fig-apperduml-production" class="quarto-xref">Figure&nbsp;<span>D.5</span></a> covers, with one difference: the diagram draws the work center’s machines with an ordinary line, and the class model with an aggregation. The crow’s foot diagram cannot state the whole-part meaning, so the translation cannot recover it; whether a work center is an assembly of its machines is a question for the engineers, not for the notation. Reading each association both ways confirms the rest: <em>each operation is performed at exactly one work center; a work center performs zero or more operations.</em></p>
+<p><em>Where it breaks.</em> Had <code>CERTIFICATION</code> carried an identifier of its own, a certification number, the identifier test would have made it a class with two associations, allowing an operator to be certified twice on one machine. The diagram alone cannot say which the business intends; <a href="05-Chapter5.html#exr-ch5-certification" class="quarto-xref">Exercise&nbsp;<span>5.5</span></a> asks the question the business must answer.</p>
+</div>
+</section>
+<section id="sec-apperduml-exercises" class="level2" data-number="D.10">
+<h2 data-number="D.10" class="anchored" data-anchor-id="sec-apperduml-exercises"><span class="header-section-number">D.10</span> Exercises</h2>
+<div id="exr-apperduml-terms" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.1</strong></span> Match each crow’s foot term with the UML term it translates to, and say where the translation can lose information.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Crow’s foot</th>
+<th style="text-align: left;">UML</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a. entity type</td>
+<td style="text-align: left;">1. qualifier</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">b. relationship</td>
+<td style="text-align: left;">2. generalization</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">c.&nbsp;associative entity</td>
+<td style="text-align: left;">3. class</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d.&nbsp;partial identifier</td>
+<td style="text-align: left;">4. association</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">e. supertype and subtypes</td>
+<td style="text-align: left;">5. association class, or a class of its own</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="exr-apperduml-tool-crib" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.2</strong></span> Translate <a href="#fig-apperduml-tool-crib" class="quarto-xref">Figure&nbsp;<span>D.6</span></a> to a UML class diagram with the procedure of <a href="#sec-apperduml-procedure" class="quarto-xref"><span>Section D.9</span></a>, and compare it with your model of <a href="05-Chapter5.html#exr-ch5-tool-crib" class="quarto-xref">Exercise&nbsp;<span>5.18</span></a>.</p>
+<div id="fig-apperduml-tool-crib" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-tool-crib-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-tool-crib.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-tool-crib-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.6: The Tool Crib in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<ol type="a">
+<li>Which attributes did you drop, and why?</li>
+<li><code>CHECKOUT</code> connects <code>TOOL</code> and <code>MECHANIC</code>. Why is it not an association class?</li>
+</ol>
+</div>
+<div id="exr-apperduml-calibration" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.3</strong></span> Translate <a href="#fig-apperduml-calibration" class="quarto-xref">Figure&nbsp;<span>D.7</span></a> to UML.</p>
+<div id="fig-apperduml-calibration" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-calibration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-calibration.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-calibration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.7: Gauge Calibration in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<ol type="a">
+<li>Which relationship is identifying, and what does it become?</li>
+<li>The line from <code>LABORATORY</code> has a bar with a crow’s foot at <code>CALIBRATION</code>. Where does that minimum of one go in your UML model?</li>
+</ol>
+</div>
+<div id="exr-apperduml-project-network" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.4</strong></span> Translate <a href="#fig-apperduml-project-network" class="quarto-xref">Figure&nbsp;<span>D.8</span></a> to UML.</p>
+<div id="fig-apperduml-project-network" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-project-network-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-project-network.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-project-network-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.8: A Project Network in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<ol type="a">
+<li><code>PRECEDENCE</code> is related to <code>ACTIVITY</code> twice. What does that become?</li>
+<li><code>PRECEDENCE</code> carries <code>project_name</code> once, as part of both foreign keys. What rule does that state, and can your UML model state it?</li>
+</ol>
+</div>
+<div id="exr-apperduml-fleet" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.5</strong></span> Translate <a href="#fig-apperduml-fleet" class="quarto-xref">Figure&nbsp;<span>D.9</span></a> to UML, and state the generalizations’ constraints.</p>
+<div id="fig-apperduml-fleet" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-fleet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-fleet.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-fleet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.9: The Fleet as Supertypes and Subtypes
+</figcaption>
+</figure>
+</div>
+<ol type="a">
+<li>What happens to <code>vehicle_kind</code>?</li>
+<li>The note applies to <code>VEHICLE</code>. Does it say anything about the subtypes of <code>ROAD_VEHICLE</code>? What would you ask the business?</li>
+</ol>
+</div>
+<div id="exr-apperduml-kanban" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.6</strong></span> Translate the kanban model of <a href="06-Chapter6.html#fig-map-exr-kanban" class="quarto-xref">Figure&nbsp;<span>6.15</span></a> from UML to crow’s foot notation, with identifiers.</p>
+<ol type="a">
+<li>Which multiplicity cannot be drawn, and how do you record it?</li>
+<li>Choose an identifier for each entity type, and say which you had to invent.</li>
+</ol>
+</div>
+<div id="exr-apperduml-rental" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.7</strong></span> Translate the equipment rental model of <a href="06-Chapter6.html#fig-map-exr-rental" class="quarto-xref">Figure&nbsp;<span>6.21</span></a> from UML to crow’s foot notation, with identifiers and foreign keys.</p>
+<ol type="a">
+<li>What does the association class <code>Rate</code> become, and what is its identifier?</li>
+<li>Which of your relationships are identifying?</li>
+</ol>
+</div>
+<div id="exr-apperduml-bike-share" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.8</strong></span> Translate the bike share model of <a href="06-Chapter6.html#fig-map-exr-bike-share" class="quarto-xref">Figure&nbsp;<span>6.19</span></a> from UML to crow’s foot notation.</p>
+<ol type="a">
+<li>What does the qualifier on <code>dockNumber</code> become?</li>
+<li>Which UML construct of the model has no crow’s foot mark, and what is lost?</li>
+</ol>
+</div>
+<div id="exr-apperduml-transit-routes" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.9</strong></span> Translate the route network of <a href="06-Chapter6.html#fig-map-exr-transit-routes" class="quarto-xref">Figure&nbsp;<span>6.23</span></a> to crow’s foot notation, and list everything <a href="#tbl-apperduml-limits" class="quarto-xref">Table&nbsp;<span>D.2</span></a> says is lost, for this model in particular.</p>
+</div>
+<div id="exr-apperduml-read-clinic" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.10</strong></span> Describe <a href="#fig-apperduml-clinic" class="quarto-xref">Figure&nbsp;<span>D.10</span></a> in English, writing each relationship as two sentences with its multiplicities in words, as 1 does for UML.</p>
+<div id="fig-apperduml-clinic" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-clinic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-clinic.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-clinic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.10: A Clinic’s Appointments in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<p>Which relationship is one-to-one, and which end of it is optional?</p>
+</div>
+<div id="exr-apperduml-read-schedules" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise D.11</strong></span> Describe <a href="#fig-apperduml-schedules" class="quarto-xref">Figure&nbsp;<span>D.11</span></a> in English.</p>
+<div id="fig-apperduml-schedules" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apperduml-schedules-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/crowsfoot-transit-schedule.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apperduml-schedules-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;D.11: Transit Schedules in Crow’s Foot Notation
+</figcaption>
+</figure>
+</div>
+<ol type="a">
+<li>Which entity type is associative, and is it an association class or a class in UML?</li>
+<li>Which relationships are identifying, and what do they become in UML?</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-chen1976entity" class="csl-entry" role="listitem">
+Chen, Peter Pin-Shan. 1976. <span>“The Entity-Relationship Model: Toward a Unified View of Data.”</span> <em>ACM Transactions on Database Systems</em> 1 (1): 9–36. <a href="https://doi.org/10.1145/320434.320440">https://doi.org/10.1145/320434.320440</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./15-AppSampleDatabases.html" class="pagination-link" aria-label="The Book's Databases">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./17-AppDiagramTools.html" class="pagination-link" aria-label="Tools for Drawing UML and ER Diagrams">
+        <span class="nav-page-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
