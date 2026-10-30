@@ -1278,9 +1278,9 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li>A <strong>dirty read</strong> reads a change another transaction has made but not committed, and may yet roll back</li>
 <li>A <strong>nonrepeatable read</strong> reads a row twice and gets two values, because another transaction changed and committed it in between</li>
-<li>A <strong>phantom read</strong> runs a query twice and finds new rows the second time, because another transaction inserted them</li>
+<li>A <strong>phantom read</strong> runs the same query twice and finds new rows the second time, because another transaction inserted them</li>
 </ul>
-<p>One more involves no row both change: in a <strong>write skew</strong>, two transactions read the same rows, and each changes a different row on the strength of what it read.</p>
+<p>One more involves no row both change: in a <strong>write skew</strong>, two transactions read the same rows, and each changes a different row on the strength of what it read, so that the two changes together break a rule that each alone keeps.</p>
 </section>
 <section id="isolation-levels" class="slide level2">
 <h2>Isolation levels</h2>
@@ -1649,7 +1649,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>At <code>REPEATABLE READ</code> both commit, and the total falls to <strong>15</strong>: neither changed a row the other changed, so nothing was refused</li>
 <li>At <code>SERIALIZABLE</code>, PostgreSQL also tracks what each transaction read, and refuses a commit whose result no one-at-a-time order could give</li>
 <li>B’s <code>COMMIT</code> fails (step 8); the total stays at 40, and B’s retry reads 40 and finds that taking 25 would break the rule</li>
-<li>The price is the same: a transaction that fails and must be retried</li>
+<li>The price is the same: a transaction that fails and must be retried; to be safe, PostgreSQL may also refuse one that would have done no harm</li>
 </ul>
 </section>
 <section id="row-versions-and-deadlocks" class="slide level2">
@@ -1677,7 +1677,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>Every session connects as a <strong>role</strong>, a name the database knows and grants privileges to</li>
 <li>A role that can log in is a user; a role granted to other roles is a group, whose privileges its members share</li>
 <li>A <strong>privilege</strong> is permission to perform one kind of operation on one object: <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> on a table or view; <code>USAGE</code> on a schema</li>
-<li><code>GRANT</code> gives privileges, and <code>REVOKE</code> takes them back; a new role has none</li>
+<li><code>GRANT</code> gives privileges, and <code>REVOKE</code> takes them back; a new role has none, apart from what is granted to everyone (<code>PUBLIC</code>)</li>
 </ul>
 </section>
 <section id="privileges-follow-the-jobs" class="slide level2">
@@ -1843,9 +1843,9 @@ EA
 <h2>Rows, and programs</h2>
 <ul>
 <li>PostgreSQL can restrict the <em>rows</em> a role sees with row-level security; the book does not use it</li>
-<li>A program that reads for a report connects as a role that may only read</li>
-<li>A program that records inspections connects as a role that may insert inspections and measurements, and nothing more</li>
-<li>No program connects as the database’s owner or as a superuser</li>
+<li>A program that reads for a report should connect as a role that may only read</li>
+<li>A program that records inspections should connect as a role that may insert inspections and measurements, and nothing more</li>
+<li>No program should connect as the database’s owner or as a superuser</li>
 <li>No password belongs in a script or in code under version control: the companion code reads it from <code>db.properties</code>, never committed</li>
 </ul>
 </section>

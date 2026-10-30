@@ -1291,6 +1291,7 @@ AR
 </section>
 <section id="the-properties-of-a-relation" class="slide level2">
 <h2>The properties of a relation</h2>
+<p>The place where a row and a column meet is a <strong>cell</strong>, as in a spreadsheet.</p>
 <ol type="1">
 <li>Each cell holds one value that cannot be broken into parts, or none at all</li>
 <li>The values of each column come from one <strong>domain</strong></li>
@@ -1387,11 +1388,11 @@ AR
 <ul>
 <li>A <strong>superkey</strong>: one or more columns whose values identify a row; no two rows may <strong>ever</strong> agree in all of them</li>
 <li>The set of all columns is always a superkey</li>
-<li>A <strong>candidate key</strong>: a superkey from which no column can be removed</li>
+<li>A <strong>candidate key</strong>: a superkey from which no column can be removed without losing the property</li>
 </ul>
 <p>That is, a candidate key satisfies two conditions:</p>
 <ol type="1">
-<li>The table will never contain two rows that agree on all its columns.</li>
+<li>The table will never contain two rows that agree on all the key’s columns.</li>
 <li>No smaller set of those columns satisfies the first condition.</li>
 </ol>
 <p><em>Never</em> is the important word: a key is a rule about every state, a fact about the business. The rows in the table now can show that columns are <em>not</em> a key; they can never prove that they are one.</p>
@@ -1936,7 +1937,7 @@ SO-5012
 <section id="a-promise-the-database-keeps" class="slide level2">
 <h2>A promise the database keeps</h2>
 <ul>
-<li>It may only be set to <code>DEFAULT</code>, a new generated value, and nothing about a customer ever requires that</li>
+<li>A surrogate key may only be set to <code>DEFAULT</code>, a new generated value, and nothing about a customer ever requires that</li>
 <li>Thus, a surrogate key is not meant to change, and a reference to one never needs to follow a change</li>
 <li>A foreign key is a <strong>promise the database keeps</strong></li>
 <li>When you query a table with a foreign key, every value in it that is not NULL has a matching row in the table it refers to</li>
@@ -1950,7 +1951,7 @@ SO-5012
 <li><strong>A table’s schema is its structure, and its state is its current rows</strong>; keys and integrity rules are part of the schema, so they hold for every state</li>
 <li><strong>Keys identify rows, and the business decides what the keys are</strong>: the data can show a set of columns is not a key, only the business can make one a key</li>
 <li>The designer chooses a <strong>primary key</strong>; the other candidate keys are <strong>alternate keys</strong></li>
-<li><strong>Foreign keys connect tables, and referential integrity keeps the connections sound</strong>: the database refuses a reference to a missing row, and the designer chooses the response to removing a referred-to row</li>
+<li><strong>Foreign keys connect tables, and referential integrity keeps the connections sound</strong>: the database refuses a reference to a missing row, and the designer chooses the response to removing or changing a referred-to row</li>
 </ul>
 </section>
 <section id="next" class="slide level2">

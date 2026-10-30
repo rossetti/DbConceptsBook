@@ -1099,7 +1099,7 @@ Manuel D. Rossetti, PhD P.E.
 <li><strong>State the functional dependencies.</strong> Write each rule that says one fact decides another, and draw them.</li>
 <li><strong>Find the key.</strong> The smallest set of columns that decides every other column.</li>
 <li><strong>Name the normal form.</strong> Test from the first up; find the first it fails.</li>
-<li><strong>Decompose.</strong> Split into tables that each pass, losing no row and, where the normal form allows it, no dependency.</li>
+<li><strong>Decompose.</strong> Split into tables that each pass, losing no row and, where the normal form allows it, no dependency, and test each again.</li>
 </ol>
 </section>
 <section id="look-at-the-data-first" class="slide level2">
@@ -1655,7 +1655,7 @@ orders
 <ul>
 <li>Over the year of history in stage G, <strong>1,065</strong> rows record the names of 29 customers and the descriptions of 4 products</li>
 <li>Each customer’s name is stored about <strong>37</strong> times on average</li>
-<li>Each product’s description over <strong>250</strong> times</li>
+<li>Each product’s description over <strong>250</strong> times on average</li>
 <li>The tables of the book’s database store each <strong>once</strong></li>
 </ul>
 <p>Next: the rules that decide which facts repeat.</p>
@@ -1763,8 +1763,8 @@ names
 <section id="partial-and-transitive-dependencies" class="slide level2">
 <h2>Partial and transitive dependencies</h2>
 <ul>
-<li><strong>Partial</strong>: a column depends on only part of a composite key. <code>customer_number</code> depends on <code>order_number</code> alone</li>
-<li><strong>Transitive</strong>: a column depends on the key only through another column that is not a key. <code>customer_name</code> depends on the key through <code>customer_number</code></li>
+<li><strong>Partial</strong>: a column that is not part of a key depends on only part of a composite key. <code>customer_number</code> depends on <code>order_number</code> alone</li>
+<li><strong>Transitive</strong>: a column that is not part of a key depends on the key only through another column that is not a key. <code>customer_name</code> depends on the key through <code>customer_number</code></li>
 </ul>
 <p>In the diagram, a partial dependency is an arrow that leaves one oval inside the key’s outline; a transitive one is a chain, the second arrow leaving an unshaded oval.</p>
 </section>
@@ -1853,7 +1853,7 @@ HT-100, GC-300, HT-100
 </section>
 <section id="second-normal-form" class="slide level2">
 <h2>Second normal form</h2>
-<p>A table is in <strong>second normal form</strong> (2NF) when it is in 1NF and has no <strong>partial dependency</strong>.</p>
+<p>A table is in <strong>second normal form</strong> (2NF) when it is in 1NF and no column that is not part of a key depends on only part of a key: no <strong>partial dependency</strong>.</p>
 <ul>
 <li>The order report fails: <code>customer_number</code> and <code>customer_name</code> depend on <code>order_number</code> alone, part of the key</li>
 <li>That is the cause of the repetition: an order’s customer is repeated on every line, because it depends on the order, not on the line</li>
@@ -1862,7 +1862,7 @@ HT-100, GC-300, HT-100
 </section>
 <section id="third-normal-form" class="slide level2">
 <h2>Third normal form</h2>
-<p>A table is in <strong>third normal form</strong> (3NF) when it is in 2NF and has no <strong>transitive dependency</strong> on a key.</p>
+<p>A table is in <strong>third normal form</strong> (3NF) when it is in 2NF and no column that is not part of a key depends on another such column: no <strong>transitive dependency</strong> on a key.</p>
 <ul>
 <li>The report fails twice: <code>customer_name</code> depends on <code>customer_number</code>, and <code>description</code> on <code>product_number</code>, neither a key</li>
 <li>Each repeats a fact about a customer or a product on every row that mentions it</li>
@@ -1874,7 +1874,7 @@ HT-100, GC-300, HT-100
 <p>2NF and 3NF speak of columns that are <em>not</em> part of a key. A column that <em>is</em> part of a key may still depend on one that is not.</p>
 <ul>
 <li>A table is in <strong>Boyce-Codd normal form</strong> (BCNF) when every determinant is a candidate key</li>
-<li>Strictly, a determinant may also contain a candidate key, a <strong>superkey</strong></li>
+<li>Strictly, a determinant may also be a set of columns that contains a candidate key, a <strong>superkey</strong></li>
 <li>BCNF is stricter than 3NF; the difference shows only with overlapping composite keys</li>
 </ul>
 </section>
@@ -1979,7 +1979,7 @@ HT-100, GC-300, HT-100
 <li><strong>Normalization tests a table’s design against its dependencies</strong> and repairs it by decomposition, in five steps</li>
 <li><strong>A table that repeats facts invites anomalies</strong>: update, deletion, and insertion; queries find their symptoms and count the copies</li>
 <li><strong>A functional dependency is a rule of the business</strong>; the data can refute it but not prove it</li>
-<li>A <strong>key</strong> determines every column; a dependency on part of it is <strong>partial</strong>, one through a column outside it <strong>transitive</strong></li>
+<li>A <strong>key</strong> is a smallest set of columns that determines every column; a dependency of a column outside the keys on part of a key is <strong>partial</strong>, one through another such column <strong>transitive</strong></li>
 <li><strong>Each normal form rules out one kind of repeated fact</strong>: the key, the whole key, and nothing but the key</li>
 </ul>
 </section>

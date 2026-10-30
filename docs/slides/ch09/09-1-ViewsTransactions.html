@@ -1209,7 +1209,7 @@ Two-wheel hand truck
 </section>
 <section id="a-change-made-once" class="slide level2">
 <h2>A change made once</h2>
-<p>The view stores no rows, so the update anomalies cannot arise in it. A product’s description is changed once, in <code>product</code>:</p>
+<p>The view stores no rows, so the anomalies of chapter 7 cannot arise in it. A product’s description is changed once, in <code>product</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href></a><span class="kw">UPDATE</span> distribution.product</span>
 <span id="cb3-2"><a href></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">&#39;Two-wheel steel hand truck&#39;</span></span>
@@ -1644,7 +1644,7 @@ GC-400
 </section>
 <section id="a-savepoint" class="slide level2">
 <h2>A savepoint</h2>
-<p>After the first shipment of SO-5011, 30 more hand trucks, and 12 carts if the stock allows:</p>
+<p>After the first shipment of SO-5011, 30 more hand trucks for another order, and 12 carts if the stock allows:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href></a><span class="cf">BEGIN</span>;</span>
 <span id="cb13-2"><a href></a><span class="kw">UPDATE</span> distribution.stock_level</span>
 <span id="cb13-3"><a href></a><span class="kw">SET</span> quantity_on_hand <span class="op">=</span> quantity_on_hand <span class="op">-</span> <span class="dv">30</span></span>
@@ -1661,7 +1661,7 @@ GC-400
 <ul>
 <li><strong>Atomicity</strong>: the changes take effect all together or not at all</li>
 <li><strong>Consistency</strong>: from a state that satisfies every rule to another that does, the declared constraints and the business rules the statements carry out together</li>
-<li><strong>Isolation</strong>: concurrent transactions do not see each other’s unfinished changes, to the degree the isolation level promises</li>
+<li><strong>Isolation</strong>: concurrent transactions do not see each other’s unfinished changes, and do not spoil each other’s work, to the degree the isolation level promises</li>
 <li><strong>Durability</strong>: once <code>COMMIT</code> returns, the changes survive a crash</li>
 </ul>
 </section>
@@ -1671,7 +1671,7 @@ GC-400
 <li>PostgreSQL writes every change first to a <strong>write-ahead log</strong>, a file of changes in the order they were made</li>
 <li>Under its default settings it does not report a commit until the log records it, and after a crash it replays the log</li>
 <li>Durability does <strong>not</strong> protect against a committed mistaken <code>DELETE</code>, a failed disk, or a lost machine</li>
-<li>For those you need a <strong>backup</strong>, a copy made on purpose and kept elsewhere: <code>pg_dump</code> writes it, <code>pg_restore</code> (or psql) rebuilds it</li>
+<li>For those you need a <strong>backup</strong>, a copy made on purpose and kept elsewhere: <code>pg_dump</code> writes it; psql rebuilds a plain SQL dump, <code>pg_restore</code> one in <code>pg_dump</code>’s other formats</li>
 </ul>
 <p>A backup that has never been restored should not be trusted.</p>
 </section>
@@ -1707,7 +1707,7 @@ GC-400
 <section id="next" class="slide level2">
 <h2>Next</h2>
 <p><strong>Concurrency and security</strong>: transactions that run at the same time, the isolation levels that keep them apart, and the privileges that decide who may do what.</p>
-<p>Practice: the chapter 9 exercises on the ACID terms, a view of the orders not yet shipped, and a transaction cut off before it commits.</p>
+<p>Practice: the chapter 9 exercises on its terms, a view of the orders not yet shipped, and a transaction cut off before it commits.</p>
 
 </section>
     </div>

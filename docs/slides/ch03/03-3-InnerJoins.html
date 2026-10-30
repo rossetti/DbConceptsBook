@@ -1072,6 +1072,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>Evaluating a join by hand, before trusting the database</li>
 <li>Joining along a path of foreign keys</li>
 <li>Fan-out: why a join repeats rows, and what to do about it</li>
+<li>A table joined to itself</li>
 </ul>
 <p>Book: chapter 3, section <em>Inner joins</em>.</p>
 </section>
@@ -1886,6 +1887,69 @@ Tri-County Farm and Home
 <li>Before you run a join, reason out how many rows each table contributes to each row of the result</li>
 </ul>
 </section>
+<section id="a-table-joined-to-itself" class="slide level2">
+<h2>A table joined to itself</h2>
+<p>A planner wants the pairs of products that appear on the same order.</p>
+<div class="cell" data-stage="d5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> a.product_fk <span class="kw">AS</span> first_product,</span>
+<span id="cb7-2"><a href></a>       b.product_fk <span class="kw">AS</span> second_product</span>
+<span id="cb7-3"><a href></a><span class="kw">FROM</span> distribution.order_line <span class="kw">AS</span> a</span>
+<span id="cb7-4"><a href></a><span class="kw">JOIN</span> distribution.order_line <span class="kw">AS</span> b</span>
+<span id="cb7-5"><a href></a>  <span class="kw">ON</span> b.customer_order_fk <span class="op">=</span> a.customer_order_fk</span>
+<span id="cb7-6"><a href></a> <span class="kw">AND</span> b.product_fk <span class="op">&gt;</span> a.product_fk</span>
+<span id="cb7-7"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> first_product, second_product;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+first_product
+</th>
+<th style="text-align:right;">
+second_product
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="reading-the-self-join" class="slide level2">
+<h2>Reading the self-join</h2>
+<ul>
+<li>A table joined to itself is a <strong>self-join</strong>; the two copies need different aliases, <code>a</code> and <code>b</code>, so the query can tell them apart</li>
+<li>The first part of the condition pairs two lines of the <strong>same order</strong></li>
+<li><code>b.product_fk &gt; a.product_fk</code> keeps each pair once, in one order, and drops the pairing of a line with itself</li>
+<li>Without it, the result would hold every pair twice, as (1, 3) and (3, 1), and every product paired with itself</li>
+<li>Every pair of the three products ordered has appeared together on at least one order</li>
+</ul>
+</section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
 <ul>
@@ -1893,6 +1957,7 @@ Tri-County Farm and Home
 <li>Evaluate a join <strong>by hand</strong> on a few rows; the database must agree</li>
 <li>Write joins with <code>JOIN ... ON</code>, one per foreign key along the path</li>
 <li>A join to a table with many matching rows <strong>fans out</strong>; <code>DISTINCT</code> on the key collapses the repeats</li>
+<li>A table joined to itself is a <strong>self-join</strong>, with a different alias for each copy</li>
 <li>Predict the <strong>row count</strong> before running a query</li>
 </ul>
 </section>

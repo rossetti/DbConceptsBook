@@ -1371,7 +1371,7 @@ Manuel D. Rossetti, PhD P.E.
 </div><div class="column" style="width:55%;">
 <ul>
 <li>Database, then schemas, then tables, then each table’s columns and constraints</li>
-<li><code>customer_order</code>: five columns, two keys, one foreign key, one check, as in the D5 relational schema</li>
+<li><code>customer_order</code>: five columns, two keys, one foreign key, and one check, as in its complete schema</li>
 <li><code>information_schema</code> and <code>pg_catalog</code> are schemas too: the catalog the tool reads to draw the tree</li>
 <li>Your tool may look a little different; the outline is the same</li>
 </ul>
@@ -1409,6 +1409,7 @@ Manuel D. Rossetti, PhD P.E.
 </ul>
 <p>Loading stage D2 of the book’s database, from the <code>sql</code> folder of the companion code:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-d2.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>On Windows, add <code>-U postgres</code> and give the superuser’s password when psql asks; the PostgreSQL appendix gives the form for each system.</p>
 </section>
 <section id="psqls-own-commands" class="slide level2">
 <h2>psql’s own commands</h2>

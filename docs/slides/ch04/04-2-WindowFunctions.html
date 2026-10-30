@@ -1279,7 +1279,7 @@ product_average
 <ol type="1">
 <li><strong>Whose rows?</strong> The current row’s <strong>partition</strong>: the rows are <em>sliced</em> by the values of some columns</li>
 <li><strong>In what order?</strong> The rows of the partition are <em>sorted</em></li>
-<li><strong>Which of them, for this row?</strong> The <strong>frame</strong>: the rows the function reads, which <em>slide</em> as the current row moves</li>
+<li><strong>Which of them, for this row?</strong> The <strong>frame</strong>: the rows of the partition that the function reads for the current row; it may <em>slide</em> as the current row moves</li>
 </ol>
 <p>Slice, sort, slide: each answer is one part of <code>OVER</code>.</p>
 </section>

@@ -1605,7 +1605,7 @@ HT-200
 <li>The query groups by <code>product_number</code>, the alternate key, so each group is one product</li>
 <li>Grouping by a descriptive column alone merges two products with the same description</li>
 <li>When you group by a name, group by the key as well: <code>GROUP BY p.product_pk, p.description</code></li>
-<li>PostgreSQL lets a query grouped by a primary key select any column of that table; many databases do not, and the book groups by every column it selects</li>
+<li>PostgreSQL, as the SQL standard allows, lets a query grouped by a primary key select any column of that table; many databases do not, and the book groups by every column it selects</li>
 </ul>
 </div><div class="column" style="width:45%;">
 <ul>

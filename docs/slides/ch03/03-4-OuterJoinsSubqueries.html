@@ -1527,7 +1527,7 @@ GC-400
 <h2>A subquery that supplies one value</h2>
 <ul>
 <li>The subquery returns one value, 139.00; the outer query compares each product’s price with it</li>
-<li>Used this way, a subquery must return <strong>exactly one row</strong>; with several, the comparison has no meaning, and PostgreSQL stops with an error</li>
+<li>Used this way, a subquery must return <strong>at most one row</strong>; with several, the comparison has no meaning, and PostgreSQL stops with an error; with none, its value is NULL</li>
 <li>Looking a product up by its <strong>alternate key</strong> guarantees one row at most</li>
 </ul>
 </section>
@@ -1684,7 +1684,7 @@ Poly garden cart
 <section id="name-every-column-with-its-alias" class="slide level2">
 <h2>Name every column with its alias</h2>
 <ul>
-<li>In a correlated subquery, every column should be named with its table’s alias</li>
+<li>In a subquery, every column should be named with its table’s alias; a slip can make a subquery correlated by accident</li>
 <li>A column without one belongs to the subquery’s table if that table has it, and otherwise to the <strong>outer query’s</strong> table</li>
 <li>Written <code>SELECT customer_pk</code> in the March customers’ subquery, the name comes from <code>customer</code>: the query lists all eight customers, not two</li>
 <li>The error produces a <strong>wrong answer</strong>, not a message</li>

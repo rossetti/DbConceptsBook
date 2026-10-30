@@ -1435,10 +1435,10 @@ Bar stock, 5/8 in
 </ul>
 <p>A planner who multiplies the last column by a work order’s quantity has the materials the work order needs.</p>
 </section>
-<section id="two-cautions" class="slide level2">
-<h2>Two cautions</h2>
+<section id="two-cautions-and-two-notes" class="slide level2">
+<h2>Two cautions, and two notes</h2>
 <ul>
-<li><strong>A recursive query stops only when a step produces no rows.</strong> A cycle in the data, a part that is its own component, never ends; bound the depth with <code>WHERE e.depth &lt; 20</code>, or, in PostgreSQL 14 and later, a <code>CYCLE</code> clause</li>
+<li><strong>A recursive query stops only when a step produces no rows.</strong> A cycle in the data, a part that is directly or indirectly its own component, never ends; bound the depth with <code>WHERE e.depth &lt; 20</code> in the recursive part, or, in PostgreSQL 14 and later, a <code>CYCLE</code> clause</li>
 <li><strong><code>UNION ALL</code> keeps every row</strong>, which an explosion needs: the hardware kit, in every product, appears once for each place it is used. <code>UNION</code> would remove exact repeats, wrong for quantities</li>
 <li><code>WITH RECURSIVE</code> is standard SQL, and PostgreSQL requires <code>RECURSIVE</code>; some databases, such as SQL Server, omit it</li>
 <li>The same pattern serves an organization chart, a network of routes, a chain of work orders</li>
@@ -1895,7 +1895,7 @@ on_time
 <span id="cb4-18"><a href></a><span class="kw">JOIN</span> <span class="kw">demand</span> <span class="kw">AS</span> d</span>
 <span id="cb4-19"><a href></a>  <span class="kw">ON</span> d.warehouse_fk <span class="op">=</span> st.warehouse_fk</span>
 <span id="cb4-20"><a href></a> <span class="kw">AND</span> d.product_fk <span class="op">=</span> st.product_fk</span>
-<span id="cb4-21"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> days_of_supply;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-21"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> days_of_supply, st.warehouse_fk, st.product_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="days-of-supply-for-each-stock-level-the-result" class="slide level2 tall">

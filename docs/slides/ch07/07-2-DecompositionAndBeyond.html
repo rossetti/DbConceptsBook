@@ -1081,7 +1081,7 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li>The flat order report has the key (<code>order_number</code>, <code>line_number</code>)</li>
 <li>It is in 1NF, and fails 2NF through a <strong>partial</strong> dependency and 3NF through two <strong>transitive</strong> ones</li>
-<li>A table in <strong>BCNF</strong> has a candidate key as every determinant</li>
+<li>A table is in <strong>BCNF</strong> when every determinant is a candidate key</li>
 </ul>
 </section>
 <section id="decomposition" class="slide level2">
@@ -1136,7 +1136,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>Every arrow now lies inside one outline, and in every outline the arrows leave the key and nothing else</li>
 <li>Thus each table is in BCNF: its only determinant is its key</li>
 </ul>
-<p>These are the four tables of stage D3 that chapter 6 mapped from the class model. Normalizing the report and mapping the class model are two routes to one design.</p>
+<p>These are the four tables of stage D3 that chapter 6 mapped from the class model, with a surrogate key in each and columns the report did not carry, such as <code>order_date</code>; the dependencies are the same. Normalizing the report and mapping the class model are two routes to one design.</p>
 </section>
 <section id="lossless-decomposition" class="slide level2">
 <h2>Lossless decomposition</h2>
@@ -1812,7 +1812,7 @@ Linda Nguyen
 <li>The four tables match the four outlines of the decomposed diagram</li>
 <li>The database adds surrogate keys, columns the sheet did not carry (such as <code>inspected_at</code>), and a <code>characteristic</code> table that records the specifications of each part’s characteristics</li>
 </ul>
-<p><em>The check.</em> The decomposition is lossless if the sheet has one row per measurement. Each of the first four lots has two measurements, and the sheet showed eight rows.</p>
+<p><em>The check.</em> The decomposition is lossless if the sheet has one row per measurement, since every join is on a key. Each of the first four lots has two measurements, and the sheet showed eight rows.</p>
 </section>
 <section id="measurements-and-rows-of-the-sheet-stage-q" class="slide level2">
 <h2>Measurements and rows of the sheet, stage Q</h2>

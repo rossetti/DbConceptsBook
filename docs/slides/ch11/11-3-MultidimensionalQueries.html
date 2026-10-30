@@ -1676,7 +1676,7 @@ All quarters
 <ul>
 <li>Each year is followed by its subtotal; the last row is the grand total, <strong>$1,529,026.99</strong></li>
 <li>The first quarter alone, <strong>349,063.00</strong>, is the first quarter of 2026, 21,568.00, plus the first quarter of 2027, 327,495.00</li>
-<li>The first quarter of 2026 holds only the base orders: the history of stage G begins in April 2026</li>
+<li>The first quarter of 2026 holds only the twelve starting orders of stage D5: the history of stage G begins in April 2026</li>
 <li>The 2027 first quarter matches the grand total of the hand roll-up</li>
 </ul>
 <p>To <strong>drill down</strong> to months, add <code>d.calendar_month</code> as the third column of the <code>ROLLUP</code>.</p>
@@ -1844,7 +1844,7 @@ Tulsa region
 <li><code>GROUP BY GROUPING SETS ((p.product_line), (c.sales_region))</code>: the two sets of subtotals, without the cells or the total</li>
 <li><code>ROLLUP</code> and <code>CUBE</code> are shorthand: <code>ROLLUP (a, b)</code> is <code>GROUPING SETS ((a, b), (a), ())</code></li>
 </ul>
-<p>All three are standard SQL, and PostgreSQL supports them. A pivot with <code>FILTER</code> lays the same numbers out as a crosstab.</p>
+<p>All three are standard SQL, and PostgreSQL supports them. A pivot with <code>FILTER</code> lays the same numbers out as a cross tab.</p>
 </section>
 <section id="storing-a-summary" class="slide level2">
 <h2>Storing a summary</h2>

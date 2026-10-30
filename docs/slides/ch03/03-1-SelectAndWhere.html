@@ -1081,7 +1081,7 @@ Manuel D. Rossetti, PhD P.E.
 <h2>Recall</h2>
 <ul>
 <li>Chapter 2 showed how to read a database: its <strong>tables</strong>, their <strong>keys</strong>, and the <strong>foreign keys</strong> that connect them</li>
-<li>The book’s tables belong to <strong>schemas</strong>: <code>distribution</code>, <code>production</code>, <code>quality</code></li>
+<li>The book’s tables belong to <strong>schemas</strong>, one per department: <code>distribution</code>, <code>production</code>, <code>quality</code>, <code>sales</code></li>
 <li>A <strong>query</strong> is a statement that describes the rows wanted and leaves the database to find them</li>
 </ul>
 </section>
@@ -1161,7 +1161,7 @@ Manuel D. Rossetti, PhD P.E.
 <li><code>FROM</code> names the table the rows come from</li>
 <li><code>WHERE</code> keeps the rows that satisfy its condition</li>
 <li><code>GROUP BY</code> forms groups, and <code>HAVING</code> keeps some (chapter 4)</li>
-<li><code>SELECT</code> computes the columns of the result from each row kept</li>
+<li><code>SELECT</code> computes the columns of the result from each row, or group, kept</li>
 <li><code>DISTINCT</code>, if present, removes repeated rows</li>
 <li><code>ORDER BY</code> sorts the result, and <code>LIMIT</code> keeps its first rows</li>
 </ol>
@@ -1731,7 +1731,7 @@ reorder_point
 <ul>
 <li><code>AND</code> is true when both parts are true; <code>OR</code> when either part is true</li>
 <li><code>NOT</code> reverses a condition</li>
-<li>In a condition that mixes them, <code>AND</code> is evaluated <strong>first</strong>, as multiplication is before addition</li>
+<li>In a condition that mixes <code>AND</code> and <code>OR</code>, <code>AND</code> is evaluated <strong>first</strong>, as multiplication is before addition</li>
 <li>That rule is a frequent source of wrong answers</li>
 </ul>
 </section>

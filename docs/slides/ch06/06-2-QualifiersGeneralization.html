@@ -1080,7 +1080,7 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li>Step 4 of the mapping maps each association by its multiplicity, to a foreign key or a table of its own</li>
 <li>A composition’s foreign key cascades a deletion, as <code>order_line</code>’s <code>customer_order_fk</code> does</li>
-<li>Chapter 5: a <strong>qualifier</strong> reduces the multiplicity at the far end; a <strong>generalization</strong> says every part is either manufactured or purchased</li>
+<li>Chapter 5: a <strong>qualifier</strong> reduces the multiplicity at the far end; a <strong>generalization</strong> relates a superclass to its subclasses, and in stage P1, <code>{disjoint, complete}</code>, every part is either manufactured or purchased</li>
 </ul>
 </section>
 <section id="mapping-a-qualified-association" class="slide level2">
@@ -1332,7 +1332,7 @@ Wheel assembly, 10 in
 <ul>
 <li><code>{disjoint, complete}</code>: nothing stops a part from having a row in <strong>both</strong> subclass tables, or in <strong>neither</strong></li>
 <li>A query can find such parts, using <code>EXISTS</code></li>
-<li>It is the kind of check that step 7 runs, and that the book’s own tests run on every stage</li>
+<li>It is the kind of check that step 7 runs, and that the book’s own tests run on the database</li>
 </ul>
 </section>
 <section id="parts-that-break-disjoint-or-complete" class="slide level2">

@@ -1133,7 +1133,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>A foreign key: the name of the table it refers to with <code>_fk</code>: <code>customer_fk</code> refers to <code>customer_pk</code></li>
 <li>A table that refers to another twice, or to its own class: each foreign key named for its <strong>role</strong>: <code>assembly_fk</code>, <code>component_fk</code></li>
 <li>A subclass table’s key is named for the superclass, <code>part_fk</code>; a table that refers to the subclass uses <code>manufactured_part_fk</code></li>
-<li>A foreign key that refers to a natural key keeps that key’s name: <code>locker_number</code>, <code>state_code</code></li>
+<li>A foreign key that refers to a natural key keeps that key’s name: <code>locker_number</code></li>
 </ul>
 <p>These rules make the book’s schema readable without its diagram. They are a convention: teams adopt their own, and every convention has exceptions, which a design should state.</p>
 </section>
@@ -1205,7 +1205,7 @@ shipment_order
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href></a>shipment (shipment_number, customer_order_fk, shipped_on,</span>
 <span id="cb2-2"><a href></a>          carrier, warehouse_fk)</span>
 <span id="cb2-3"><a href></a>    primary key: shipment_number</span>
-<span id="cb2-4"><a href></a>    alternate key: (shipment_number, customer_order_fk)</span>
+<span id="cb2-4"><a href></a>    unique: (shipment_number, customer_order_fk)</span>
 <span id="cb2-5"><a href></a>    customer_order_fk references customer_order_pk in</span>
 <span id="cb2-6"><a href></a>        customer_order, must not be NULL</span>
 <span id="cb2-7"><a href></a>    warehouse_fk references warehouse_pk in warehouse,</span>
@@ -1213,16 +1213,16 @@ shipment_order
 <span id="cb2-9"><a href></a></span>
 <span id="cb2-10"><a href></a>shipment_line (shipment_number, customer_order_fk,</span>
 <span id="cb2-11"><a href></a>               line_number, quantity)</span>
-<span id="cb2-12"><a href></a>    primary key: (shipment_number, customer_order_fk,</span>
-<span id="cb2-13"><a href></a>                  line_number)</span>
-<span id="cb2-14"><a href></a>    (shipment_number, customer_order_fk) references</span>
-<span id="cb2-15"><a href></a>        (shipment_number, customer_order_fk) in shipment</span>
-<span id="cb2-16"><a href></a>    (customer_order_fk, line_number) references</span>
-<span id="cb2-17"><a href></a>        (customer_order_fk, line_number) in order_line</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-12"><a href></a>    primary key: (shipment_number, line_number)</span>
+<span id="cb2-13"><a href></a>    (shipment_number, customer_order_fk) references</span>
+<span id="cb2-14"><a href></a>        (shipment_number, customer_order_fk) in shipment</span>
+<span id="cb2-15"><a href></a>    (customer_order_fk, line_number) references</span>
+<span id="cb2-16"><a href></a>        (customer_order_fk, line_number) in order_line</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="composite-foreign-keys-enforce-the-rule" class="slide level2">
 <h2>Composite foreign keys enforce the rule</h2>
 <ul>
+<li>The <code>unique:</code> pair is not a key, since <code>shipment_number</code> alone identifies a shipment; it is declared so the shipment line’s foreign key can refer to it</li>
 <li>With value-based identity, an order line’s key is its order and line number, so a shipment line that refers to it holds the order’s key itself</li>
 <li>The shipment line holds <strong>one</strong> <code>customer_order_fk</code>, and both composite foreign keys use it</li>
 <li>The first says the shipment was made for that order; the second says the order line belongs to that order</li>

@@ -715,7 +715,7 @@ Table&nbsp;C.2: Stages of the Book’s Database
 <li><strong>Table names</strong> are singular nouns in lower case with underscores (<code>customer</code>, <code>order_line</code>), like the class each table implements. No table or column is named with a word reserved in the SQL standard. That is why an order is a <code>customer_order</code> (<code>ORDER</code> is reserved) and a date column is <code>full_date</code> rather than <code>date</code>.</li>
 <li><strong>Primary keys</strong> are named for their table with the suffix <code>_pk</code> (<code>customer.customer_pk</code>). They are surrogate keys: integers that PostgreSQL generates, which carry no business meaning.</li>
 <li><strong>Business identifiers</strong>, the numbers people use (<code>customer_number</code>, <code>part_number</code>, <code>order_number</code>), are separate columns declared <code>UNIQUE</code>. Where a row is identified by two columns together, such as an order line by its order and its line number, the pair is declared <code>UNIQUE</code>.</li>
-<li><strong>Foreign keys</strong> are named for the table they refer to with the suffix <code>_fk</code> (<code>customer_order.customer_fk</code>). Where a table refers to the same table more than once, each column is named for its role: a bill of materials line has an <code>assembly_fk</code> and a <code>component_fk</code>, both referring to <code>part</code>.</li>
+<li><strong>Foreign keys</strong> are named for the table they refer to with the suffix <code>_fk</code> (<code>customer_order.customer_fk</code>). Where the table’s name would not say what a reference means, the column is named for its role: a bill of materials line has an <code>assembly_fk</code>, referring to <code>manufactured_part</code>, and a <code>component_fk</code>, referring to <code>part</code>, and a sales fact has an <code>order_date_fk</code>.</li>
 </ul>
 </section>
 <section id="sec-appsampledbs-distribution" class="level2" data-number="C.4">
@@ -877,7 +877,7 @@ Table&nbsp;C.4: Tables of the Production Schema
 </figure>
 </div>
 <!-- end generated -->
-<p>The eighteen parts form a bill of materials up to four levels deep. The HT-100 hand truck contains the WA-10 wheel assembly, which contains the AX-10 axle, which is machined from BS-075 bar stock. The wheel assembly is used in all four products. Tubing and bar stock are bought by the foot, so their quantities per assembly are not whole numbers. In addition, the data holds:</p>
+<p>The eighteen parts form a bill of materials up to four levels deep. The HT-100 hand truck contains the WA-10 wheel assembly, which contains the AX-10 axle, which is machined from BS-075 bar stock. The wheel assembly is used in all four products. Tubing and bar stock are bought by the foot, so a quantity per assembly can be a fraction: 1.25 feet of bar stock for each axle. In addition, the data holds:</p>
 <ul>
 <li>a work center, Assembly, with no machines;</li>
 <li>a machine, the M-07 robotic welder, on which no one is certified yet;</li>

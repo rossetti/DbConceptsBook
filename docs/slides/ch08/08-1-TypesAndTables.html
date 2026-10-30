@@ -1268,6 +1268,42 @@ true
 <ul>
 <li><code>::</code> is PostgreSQL’s shorthand for the standard’s <code>CAST(0.1 AS DOUBLE PRECISION)</code></li>
 <li>Use <code>NUMERIC</code> for money and recorded measurements; keep floating point for computed quantities, such as a simulation’s output</li>
+</ul>
+</section>
+<section id="printed-and-stored" class="slide level2">
+<h2>Printed, and stored</h2>
+<div class="cell" data-stage="d1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href></a><span class="kw">SELECT</span> <span class="fl">32.38</span>:<span class="ch">:REAL</span> <span class="kw">AS</span> real_value,</span>
+<span id="cb4-2"><a href></a>       <span class="fl">32.38</span>:<span class="ch">:REAL</span>:<span class="ch">:DOUBLE</span> <span class="dt">PRECISION</span> <span class="kw">AS</span> stored_value;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table class="table table-condensed" style="width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:right;">
+real_value
+</th>
+<th style="text-align:right;">
+stored_value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+32.38
+</td>
+<td style="text-align:right;">
+32.380001068115234
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>PostgreSQL prints a <code>REAL</code> as the shortest decimal that reads back to the same stored value, so 32.38 prints as 32.38</li>
+<li>The value stored is 32.380001068115234, which converting it to <code>DOUBLE PRECISION</code> reveals</li>
+<li>A column of floating-point prices can look right and still not add up to the cent</li>
 <li>Avoid PostgreSQL’s <code>MONEY</code>: how it reads and prints depends on locale</li>
 </ul>
 </section>
@@ -1284,8 +1320,8 @@ true
 <section id="a-postal-code-stored-as-a-number-and-as-text" class="slide level2">
 <h2>A postal code stored as a number and as text</h2>
 <div class="cell" data-stage="d1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href></a><span class="kw">SELECT</span> <span class="st">&#39;07201&#39;</span>:<span class="ch">:INTEGER</span> <span class="kw">AS</span> as_integer,</span>
-<span id="cb4-2"><a href></a>       <span class="st">&#39;07201&#39;</span>:<span class="ch">:VARCHAR</span>(<span class="dv">5</span>) <span class="kw">AS</span> as_text;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href></a><span class="kw">SELECT</span> <span class="st">&#39;07201&#39;</span>:<span class="ch">:INTEGER</span> <span class="kw">AS</span> as_integer,</span>
+<span id="cb5-2"><a href></a>       <span class="st">&#39;07201&#39;</span>:<span class="ch">:VARCHAR</span>(<span class="dv">5</span>) <span class="kw">AS</span> as_text;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
 <table class="table table-condensed" style="width: auto !important; ">
 <thead>
@@ -1398,14 +1434,14 @@ as_text
 <section id="creating-the-customer-table" class="slide level2">
 <h2>Creating the customer table</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.customer (</span>
-<span id="cb5-2"><a href></a>    customer_pk     <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
-<span id="cb5-3"><a href></a>                    <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb5-4"><a href></a>    customer_number <span class="dt">VARCHAR</span>(<span class="dv">10</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>,</span>
-<span id="cb5-5"><a href></a>    name            <span class="dt">VARCHAR</span>(<span class="dv">60</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb5-6"><a href></a>    city            <span class="dt">VARCHAR</span>(<span class="dv">40</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb5-7"><a href></a>    state           <span class="dt">CHAR</span>(<span class="dv">2</span>)     <span class="kw">NOT</span> <span class="kw">NULL</span></span>
-<span id="cb5-8"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.customer (</span>
+<span id="cb6-2"><a href></a>    customer_pk     <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
+<span id="cb6-3"><a href></a>                    <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb6-4"><a href></a>    customer_number <span class="dt">VARCHAR</span>(<span class="dv">10</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>,</span>
+<span id="cb6-5"><a href></a>    name            <span class="dt">VARCHAR</span>(<span class="dv">60</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb6-6"><a href></a>    city            <span class="dt">VARCHAR</span>(<span class="dv">40</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb6-7"><a href></a>    state           <span class="dt">CHAR</span>(<span class="dv">2</span>)     <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb6-8"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li>Each line declares one column: name, type, and <strong>column constraints</strong>, the rules about that column alone</li>
@@ -1417,16 +1453,16 @@ as_text
 <h2>Table constraints</h2>
 <p>A rule about several columns is a <strong>table constraint</strong>, written after the columns.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.customer_order (</span>
-<span id="cb6-2"><a href></a>    customer_order_pk   <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
-<span id="cb6-3"><a href></a>                        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb6-4"><a href></a>    order_number        <span class="dt">VARCHAR</span>(<span class="dv">10</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>,</span>
-<span id="cb6-5"><a href></a>    order_date          <span class="dt">DATE</span>        <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
-<span id="cb6-6"><a href></a>    requested_ship_date <span class="dt">DATE</span>,</span>
-<span id="cb6-7"><a href></a>    customer_fk         <span class="dt">INTEGER</span>     <span class="kw">NOT</span> <span class="kw">NULL</span></span>
-<span id="cb6-8"><a href></a>        <span class="kw">REFERENCES</span> distribution.customer (customer_pk),</span>
-<span id="cb6-9"><a href></a>    <span class="kw">CHECK</span> (requested_ship_date <span class="op">&gt;=</span> order_date)</span>
-<span id="cb6-10"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.customer_order (</span>
+<span id="cb7-2"><a href></a>    customer_order_pk   <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
+<span id="cb7-3"><a href></a>                        <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb7-4"><a href></a>    order_number        <span class="dt">VARCHAR</span>(<span class="dv">10</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>,</span>
+<span id="cb7-5"><a href></a>    order_date          <span class="dt">DATE</span>        <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb7-6"><a href></a>    requested_ship_date <span class="dt">DATE</span>,</span>
+<span id="cb7-7"><a href></a>    customer_fk         <span class="dt">INTEGER</span>     <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb7-8"><a href></a>        <span class="kw">REFERENCES</span> distribution.customer (customer_pk),</span>
+<span id="cb7-9"><a href></a>    <span class="kw">CHECK</span> (requested_ship_date <span class="op">&gt;=</span> order_date)</span>
+<span id="cb7-10"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="reading-the-order-table" class="slide level2">
@@ -1456,23 +1492,23 @@ as_text
 <section id="the-design" class="slide level2">
 <h2>The design</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.order_line (</span>
-<span id="cb7-2"><a href></a>    order_line_pk     <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
-<span id="cb7-3"><a href></a>                      <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
-<span id="cb7-4"><a href></a>    customer_order_fk <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
-<span id="cb7-5"><a href></a>        <span class="kw">REFERENCES</span> distribution.customer_order</span>
-<span id="cb7-6"><a href></a>            (customer_order_pk)</span>
-<span id="cb7-7"><a href></a>        <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
-<span id="cb7-8"><a href></a>    line_number       <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
-<span id="cb7-9"><a href></a>                      <span class="kw">CHECK</span> (line_number <span class="op">&gt;</span> <span class="dv">0</span>),</span>
-<span id="cb7-10"><a href></a>    product_fk        <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
-<span id="cb7-11"><a href></a>        <span class="kw">REFERENCES</span> distribution.product (product_pk),</span>
-<span id="cb7-12"><a href></a>    quantity          <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
-<span id="cb7-13"><a href></a>                      <span class="kw">CHECK</span> (quantity <span class="op">&gt;</span> <span class="dv">0</span>),</span>
-<span id="cb7-14"><a href></a>    unit_price        <span class="dt">NUMERIC</span>(<span class="dv">10</span>,<span class="dv">2</span>) <span class="kw">NOT</span> <span class="kw">NULL</span></span>
-<span id="cb7-15"><a href></a>                      <span class="kw">CHECK</span> (unit_price <span class="op">&gt;</span> <span class="dv">0</span>),</span>
-<span id="cb7-16"><a href></a>    <span class="kw">UNIQUE</span> (customer_order_fk, line_number)</span>
-<span id="cb7-17"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> distribution.order_line (</span>
+<span id="cb8-2"><a href></a>    order_line_pk     <span class="dt">INTEGER</span> <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> IDENTITY</span>
+<span id="cb8-3"><a href></a>                      <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb8-4"><a href></a>    customer_order_fk <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-5"><a href></a>        <span class="kw">REFERENCES</span> distribution.customer_order</span>
+<span id="cb8-6"><a href></a>            (customer_order_pk)</span>
+<span id="cb8-7"><a href></a>        <span class="kw">ON</span> <span class="kw">DELETE</span> <span class="kw">CASCADE</span>,</span>
+<span id="cb8-8"><a href></a>    line_number       <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-9"><a href></a>                      <span class="kw">CHECK</span> (line_number <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb8-10"><a href></a>    product_fk        <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-11"><a href></a>        <span class="kw">REFERENCES</span> distribution.product (product_pk),</span>
+<span id="cb8-12"><a href></a>    quantity          <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-13"><a href></a>                      <span class="kw">CHECK</span> (quantity <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb8-14"><a href></a>    unit_price        <span class="dt">NUMERIC</span>(<span class="dv">10</span>,<span class="dv">2</span>) <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-15"><a href></a>                      <span class="kw">CHECK</span> (unit_price <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb8-16"><a href></a>    <span class="kw">UNIQUE</span> (customer_order_fk, line_number)</span>
+<span id="cb8-17"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="two-foreign-keys-two-delete-rules" class="slide level2">
@@ -1487,12 +1523,12 @@ as_text
 <section id="the-constraints-of-the-order-line-table" class="slide level2">
 <h2>The constraints of the order line table</h2>
 <div class="cell" data-stage="d3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href></a><span class="kw">SELECT</span> constraint_name, constraint_type</span>
-<span id="cb8-2"><a href></a><span class="kw">FROM</span> information_schema.table_constraints</span>
-<span id="cb8-3"><a href></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">&#39;distribution&#39;</span></span>
-<span id="cb8-4"><a href></a>  <span class="kw">AND</span> table_name <span class="op">=</span> <span class="st">&#39;order_line&#39;</span></span>
-<span id="cb8-5"><a href></a>  <span class="kw">AND</span> constraint_name <span class="kw">NOT</span> <span class="kw">LIKE</span> <span class="st">&#39;%not_null&#39;</span></span>
-<span id="cb8-6"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> constraint_type, constraint_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href></a><span class="kw">SELECT</span> constraint_name, constraint_type</span>
+<span id="cb9-2"><a href></a><span class="kw">FROM</span> information_schema.table_constraints</span>
+<span id="cb9-3"><a href></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">&#39;distribution&#39;</span></span>
+<span id="cb9-4"><a href></a>  <span class="kw">AND</span> table_name <span class="op">=</span> <span class="st">&#39;order_line&#39;</span></span>
+<span id="cb9-5"><a href></a>  <span class="kw">AND</span> constraint_name <span class="kw">NOT</span> <span class="kw">LIKE</span> <span class="st">&#39;%not_null&#39;</span></span>
+<span id="cb9-6"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> constraint_type, constraint_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
 <table class="table table-condensed" style="width: auto !important; ">
 <thead>
@@ -1578,33 +1614,33 @@ UNIQUE
 <h2>Constraints at work: a duplicate customer number</h2>
 <p>A statement that breaks a constraint is <strong>refused</strong>, with a message that names the constraint.</p>
 <div class="cell" data-stage="d3" data-refused="true">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
-<span id="cb9-2"><a href></a>    (customer_number, name, city, state)</span>
-<span id="cb9-3"><a href></a><span class="kw">VALUES</span> (<span class="st">&#39;C-1001&#39;</span>, <span class="st">&#39;Riverside Supply&#39;</span>, <span class="st">&#39;Rogers&#39;</span>, <span class="st">&#39;AR&#39;</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb10-1"><a href></a>ERROR:  duplicate key value violates unique constraint &quot;customer_customer_number_key&quot;</span>
-<span id="cb10-2"><a href></a>DETAIL:  Key (customer_number)=(C-1001) already exists.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb10-2"><a href></a>    (customer_number, name, city, state)</span>
+<span id="cb10-3"><a href></a><span class="kw">VALUES</span> (<span class="st">&#39;C-1001&#39;</span>, <span class="st">&#39;Riverside Supply&#39;</span>, <span class="st">&#39;Rogers&#39;</span>, <span class="st">&#39;AR&#39;</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb11-1"><a href></a>ERROR:  duplicate key value violates unique constraint &quot;customer_customer_number_key&quot;</span>
+<span id="cb11-2"><a href></a>DETAIL:  Key (customer_number)=(C-1001) already exists.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="a-product-that-does-not-exist" class="slide level2">
 <h2>A product that does not exist</h2>
 <div class="cell" data-stage="d3" data-refused="true">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
-<span id="cb11-2"><a href></a>    (customer_order_fk, line_number, product_fk,</span>
-<span id="cb11-3"><a href></a>     quantity, unit_price)</span>
-<span id="cb11-4"><a href></a><span class="kw">VALUES</span> (<span class="dv">12</span>, <span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">5</span>, <span class="fl">89.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb12-1"><a href></a>ERROR:  insert or update on table &quot;order_line&quot; violates foreign key constraint &quot;order_line_product_fk_fkey&quot;</span>
-<span id="cb12-2"><a href></a>DETAIL:  Key (product_fk)=(9) is not present in table &quot;product&quot;.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb12-2"><a href></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb12-3"><a href></a>     quantity, unit_price)</span>
+<span id="cb12-4"><a href></a><span class="kw">VALUES</span> (<span class="dv">12</span>, <span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">5</span>, <span class="fl">89.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb13-1"><a href></a>ERROR:  insert or update on table &quot;order_line&quot; violates foreign key constraint &quot;order_line_product_fk_fkey&quot;</span>
+<span id="cb13-2"><a href></a>DETAIL:  Key (product_fk)=(9) is not present in table &quot;product&quot;.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="a-quantity-of-zero" class="slide level2">
 <h2>A quantity of zero</h2>
 <div class="cell" data-stage="d3" data-refused="true">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
-<span id="cb13-2"><a href></a>    (customer_order_fk, line_number, product_fk,</span>
-<span id="cb13-3"><a href></a>     quantity, unit_price)</span>
-<span id="cb13-4"><a href></a><span class="kw">VALUES</span> (<span class="dv">12</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">89.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb14-1"><a href></a>ERROR:  new row for relation &quot;order_line&quot; violates check constraint &quot;order_line_quantity_check&quot;</span>
-<span id="cb14-2"><a href></a>DETAIL:  Failing row contains (23, 12, 3, 1, 0, 89.00).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.order_line</span>
+<span id="cb14-2"><a href></a>    (customer_order_fk, line_number, product_fk,</span>
+<span id="cb14-3"><a href></a>     quantity, unit_price)</span>
+<span id="cb14-4"><a href></a><span class="kw">VALUES</span> (<span class="dv">12</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">89.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb15-1"><a href></a>ERROR:  new row for relation &quot;order_line&quot; violates check constraint &quot;order_line_quantity_check&quot;</span>
+<span id="cb15-2"><a href></a>DETAIL:  Failing row contains (23, 12, 3, 1, 0, 89.00).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Each message names the table, the constraint, and for a key the offending value: usually enough to find the bad row in a long script.</p>
 </section>
@@ -1612,12 +1648,12 @@ UNIQUE
 <h2>A value for an identity column</h2>
 <p><code>GENERATED ALWAYS</code> refuses a supplied value, so the database alone numbers its rows:</p>
 <div class="cell" data-stage="d3" data-refused="true">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
-<span id="cb15-2"><a href></a>    (customer_pk, customer_number, name, city, state)</span>
-<span id="cb15-3"><a href></a><span class="kw">VALUES</span> (<span class="dv">9</span>, <span class="st">&#39;C-1009&#39;</span>, <span class="st">&#39;Rogers Farm Supply&#39;</span>, <span class="st">&#39;Rogers&#39;</span>, <span class="st">&#39;AR&#39;</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb16-1"><a href></a>ERROR:  cannot insert a non-DEFAULT value into column &quot;customer_pk&quot;</span>
-<span id="cb16-2"><a href></a>DETAIL:  Column &quot;customer_pk&quot; is an identity column defined as GENERATED ALWAYS.</span>
-<span id="cb16-3"><a href></a>HINT:  Use OVERRIDING SYSTEM VALUE to override.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> distribution.customer</span>
+<span id="cb16-2"><a href></a>    (customer_pk, customer_number, name, city, state)</span>
+<span id="cb16-3"><a href></a><span class="kw">VALUES</span> (<span class="dv">9</span>, <span class="st">&#39;C-1009&#39;</span>, <span class="st">&#39;Rogers Farm Supply&#39;</span>, <span class="st">&#39;Rogers&#39;</span>, <span class="st">&#39;AR&#39;</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb17-1"><a href></a>ERROR:  cannot insert a non-DEFAULT value into column &quot;customer_pk&quot;</span>
+<span id="cb17-2"><a href></a>DETAIL:  Column &quot;customer_pk&quot; is an identity column defined as GENERATED ALWAYS.</span>
+<span id="cb17-3"><a href></a>HINT:  Use OVERRIDING SYSTEM VALUE to override.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The hint names the override a script copying rows, keys and all, would use.</p>
 </section>
@@ -1625,10 +1661,10 @@ UNIQUE
 <h2>Dropping a table others refer to</h2>
 <p>Tables are created after every table they refer to, and removed the other way.</p>
 <div class="cell" data-stage="d3" data-refused="true">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href></a><span class="kw">DROP</span> <span class="kw">TABLE</span> distribution.customer;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb18-1"><a href></a>ERROR:  cannot drop table distribution.customer because other objects depend on it</span>
-<span id="cb18-2"><a href></a>DETAIL:  constraint customer_order_customer_fk_fkey on table distribution.customer_order depends on table distribution.customer</span>
-<span id="cb18-3"><a href></a>HINT:  Use DROP ... CASCADE to drop the dependent objects too.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href></a><span class="kw">DROP</span> <span class="kw">TABLE</span> distribution.customer;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource text book-error number-lines code-with-copy"><code class="sourceCode"><span id="cb19-1"><a href></a>ERROR:  cannot drop table distribution.customer because other objects depend on it</span>
+<span id="cb19-2"><a href></a>DETAIL:  constraint customer_order_customer_fk_fkey on table distribution.customer_order depends on table distribution.customer</span>
+<span id="cb19-3"><a href></a>HINT:  Use DROP ... CASCADE to drop the dependent objects too.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li><code>DROP TABLE ... CASCADE</code> removes the dependent foreign keys, then the table</li>

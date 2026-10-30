@@ -1080,7 +1080,7 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li>The previous deck created the tables of stages D1 to D3, with their constraints</li>
 <li>A statement that breaks a constraint is <strong>refused</strong>, with a message naming it</li>
-<li>Chapter 3: a <strong>scalar subquery</strong> returns one value, and can stand where a value is expected</li>
+<li>Chapter 3: a <strong>subquery</strong> that returns one value can stand where a value is expected</li>
 </ul>
 </section>
 <section id="adding-rows" class="slide level2">
@@ -1600,11 +1600,11 @@ lines_of_so5012
 <tbody>
 <tr class="odd">
 <td style="text-align: left;"><code>DELETE</code> without <code>WHERE</code></td>
-<td style="text-align: left;">the table, with no rows</td>
+<td style="text-align: left;">the table, with no rows; each foreign key’s delete rule applies, so it may cascade or be refused</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>TRUNCATE</code> (standard since SQL:2008)</td>
-<td style="text-align: left;">the table, with no rows, done faster; refused if another table refers to it</td>
+<td style="text-align: left;">the table, with no rows, done faster; refused if another table refers to it, unless that table is truncated with it</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><code>DROP TABLE</code></td>
@@ -1612,7 +1612,7 @@ lines_of_so5012
 </tr>
 </tbody>
 </table>
-<p>Each statement changes the database as soon as it runs. To try a change without keeping it, run <code>BEGIN</code> before it and <code>ROLLBACK</code> after it; chapter 9 presents these transactions.</p>
+<p>Under auto-commit, each statement changes the database as soon as it runs. To try a change without keeping it, run <code>BEGIN</code> before it and <code>ROLLBACK</code> after it; chapter 9 presents these transactions.</p>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>

@@ -1082,7 +1082,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>PostgreSQL is a <strong>client-server</strong> database: the server is a program of its own, always running; DataGrip, psql, and programs are clients that connect, sign in, and send SQL</li>
 <li>An <strong>embedded database</strong> has no server: its engine is a library inside the program, and its data is an ordinary file</li>
 <li>Nothing to install or start, no user, no password: opening the database means opening the file</li>
-<li>Thus, it trades the server’s services for simplicity: no many users at once, and whoever can read the file can read the data</li>
+<li>Thus, it trades the server’s services for simplicity: it cannot serve many users at once, and whoever can read the file can read the data</li>
 </ul>
 </section>
 <section id="when-to-use-one" class="slide level2">
@@ -1120,7 +1120,7 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb2-12"><a href></a>        CHECK (quantity_on_hand &gt;= 0),</span>
 <span id="cb2-13"><a href></a>    UNIQUE (warehouse_fk, product_number)</span>
 <span id="cb2-14"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The book’s own statements, with SQLite’s types (<code>TEXT</code>), and a key declared <code>INTEGER PRIMARY KEY</code> numbered by SQLite itself, the role of an identity column.</p>
+<p>The book’s own statements, simplified (the product’s number, no reorder point), with SQLite’s types (<code>TEXT</code>) and a key declared <code>INTEGER PRIMARY KEY</code> numbered by SQLite itself, the role of an identity column.</p>
 </section>
 <section id="departure-1-a-type-is-a-preference" class="slide level2">
 <h2>Departure 1: a type is a preference</h2>
@@ -1170,7 +1170,7 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li><strong>No date type</strong>: dates are text in the ISO form, or numbers, and the date functions work on either</li>
 <li><strong>One writer at a time</strong>: many readers, but a write locks the whole file briefly</li>
-<li><strong>Limited <code>ALTER TABLE</code></strong>: a foreign key or a <code>UNIQUE</code> constraint cannot be added to an existing table; the table is rebuilt instead</li>
+<li><strong>Limited <code>ALTER TABLE</code></strong>: a foreign key or a <code>UNIQUE</code> constraint cannot be added to an existing table’s columns; the table is rebuilt instead</li>
 <li><strong>No schemas</strong>: one file is one set of tables; <code>ATTACH</code> opens a second file under a name</li>
 </ul>
 </section>
@@ -1201,7 +1201,7 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb6-7"><a href></a>    state CHAR(2) NOT NULL</span>
 <span id="cb6-8"><a href></a>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
-<li>The book’s own DDL, with one change: no identity columns, so each key draws from a <strong>sequence</strong>, a named counter that <code>nextval</code> advances (PostgreSQL’s identity columns are built on one)</li>
+<li>The book’s own DDL, simplified as in SQLite, with one further change: no identity columns, so each key draws from a <strong>sequence</strong>, a named counter that <code>nextval</code> advances (PostgreSQL’s identity columns are built on one)</li>
 <li>Types are enforced, but a <strong>length</strong> (<code>VARCHAR(10)</code>) is accepted and ignored: a length rule that matters belongs in a <code>CHECK</code></li>
 </ul>
 </section>
@@ -1408,7 +1408,7 @@ Manuel D. Rossetti, PhD P.E.
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
 <ul>
-<li>An <strong>embedded database</strong> is a library and a file: no server, no users, no administration, and no sharing</li>
+<li>An <strong>embedded database</strong> is a library and a file: no server, no users, no administration, and not for many users at once</li>
 <li><strong>SQLite</strong> suits data that belongs to one program; declare its tables <code>STRICT</code> and turn its connections’ foreign keys on</li>
 <li><strong>DuckDB</strong> is a column store for analysis: it queries CSV and Parquet files directly, and its constraints suit data loaded once and then analyzed</li>
 <li><strong>PostgreSQL</strong>, or another server, is for data that is shared</li>

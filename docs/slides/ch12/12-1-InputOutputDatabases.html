@@ -1926,7 +1926,7 @@ maximum
 <li>Counters (<code>LotsCompleted</code>, <code>WLD:R:SeizeCount</code>) are not in <code>within_rep_stat</code>: their final values are in <code>within_rep_counter_stat</code></li>
 <li><code>within_rep_view</code>: each response’s and counter’s value in each replication, combining both tables</li>
 <li><code>across_rep_view</code>: each response’s summary over the replications</li>
-<li>The views copy the element’s name beside its key, and join with commas and <code>WHERE</code>, the older style</li>
+<li>Each statistics table copies the element’s name (<code>stat_name</code>) beside its key <code>element_id_fk</code>; several views join tables with commas and <code>WHERE</code>, the older style</li>
 </ul>
 </section>
 <section id="simulated-utilization-over-30-replications" class="slide level2">

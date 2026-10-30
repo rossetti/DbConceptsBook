@@ -929,7 +929,7 @@ operator (operator_pk, employee_number, name, hire_date,
 </figure>
 </div>
 <p><em>The result.</em> With the tables of <a href="#lst-map-locker-natural" class="quarto-xref">Listing&nbsp;<span>6.6</span></a>, the everyday question reads one table:</p>
-<div id="tbl-map-locker" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="map-locker-setup">
+<div id="tbl-map-locker" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="map-locker-setup" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-locker-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.3: Each Operator with a Locker, from One Table (Hypothetical Lockers)
@@ -1033,7 +1033,7 @@ L-103
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> production.locker (locker_number, location)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'L-107'</span>, <span class="st">'Locker room, row 2'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-map-locker-spare" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="[&quot;map-locker-setup&quot;,&quot;map-locker-spare&quot;]">
+<div id="tbl-map-locker-spare" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;map-locker-setup&quot;,&quot;map-locker-spare&quot;]" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-locker-spare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.4: A Locker That No Operator Uses (Hypothetical Lockers)
@@ -1173,7 +1173,7 @@ Listing&nbsp;6.8: The Operator Table with Each Operator’s Lead (Hypothetical)
 </figure>
 </div>
 <p><em>The result.</em> With the column of <a href="#lst-map-recursive-lead" class="quarto-xref">Listing&nbsp;<span>6.8</span></a> added, each operator’s row holds the key of its lead:</p>
-<div id="tbl-map-lead-rows" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="map-lead-setup">
+<div id="tbl-map-lead-rows" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="map-lead-setup" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-lead-rows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.5: Each Operator’s Row with Its Lead’s Key (Hypothetical Leads)
@@ -1292,7 +1292,7 @@ Tom Becker
 </figure>
 </div>
 <p>A key means nothing to a reader, so a query that shows each operator beside the lead joins <code>operator</code> to itself, a self-join (<a href="03-Chapter3.html#sec-q-inner-joins" class="quarto-xref"><span>Section 3.6</span></a>), once as the crew member and once as the lead. A left join (<a href="03-Chapter3.html#sec-q-outer-joins" class="quarto-xref"><span>Section 3.7</span></a>) keeps the operator who has no lead:</p>
-<div id="tbl-map-lead-names" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="map-lead-setup">
+<div id="tbl-map-lead-names" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="map-lead-setup" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-lead-names-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.6: Each Operator and the Operator’s Lead (Hypothetical Leads)
@@ -1940,7 +1940,7 @@ part_number
 </div>
 </figure>
 </div>
-<p><a href="#tbl-map-gen-violations" class="quarto-xref">Table&nbsp;<span>6.10</span></a> is empty: every part of stage P1 is in exactly one subclass table. The query does not prevent a violation; it finds one, and it is the kind of check that step 7 of <a href="#fig-map-process" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> runs, and that the book’s own tests run on every stage.</p>
+<p><a href="#tbl-map-gen-violations" class="quarto-xref">Table&nbsp;<span>6.10</span></a> is empty: every part of stage P1 is in exactly one subclass table. The query does not prevent a violation; it finds one, and it is the kind of check that step 7 of <a href="#fig-map-process" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> runs, and that the book’s own tests run on the database.</p>
 </section>
 <section id="sec-map-gen-per-subclass" class="level3" data-number="6.5.2">
 <h3 data-number="6.5.2" class="anchored" data-anchor-id="sec-map-gen-per-subclass"><span class="header-section-number">6.5.2</span> A table for each subclass only</h3>
@@ -2122,7 +2122,7 @@ shipment_order
 </figure>
 </div>
 <p><a href="#tbl-map-keys-check" class="quarto-xref">Table&nbsp;<span>6.12</span></a> is empty, so the data of stage D5 obeys the rule, but only because it was loaded correctly: the database would have accepted a line that broke it.</p>
-<p>Composite foreign keys can enforce the rule. If a shipment line holds its order’s key itself, one foreign key can pair it with the shipment and another with the order line. Natural keys supply such keys directly. With value-based identity, an order line’s key is its order and line number, so a shipment line that refers to an order line must hold the order’s key, and a shipment’s key can be made to carry its order’s key too. <a href="#lst-map-keys-natural" class="quarto-xref">Listing&nbsp;<span>6.18</span></a> writes the two tables out by hand.</p>
+<p>Composite foreign keys can enforce the rule. If a shipment line holds its order’s key itself, one foreign key can pair it with the shipment and another with the order line. Natural keys supply such keys directly. With value-based identity, an order line’s key is its order and line number, so a shipment line that refers to an order line must hold the order’s key, and a shipment can declare its number unique together with its order’s key. <a href="#lst-map-keys-natural" class="quarto-xref">Listing&nbsp;<span>6.18</span></a> writes the two tables out by hand.</p>
 <div id="lst-map-keys-natural" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-map-keys-natural-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2132,7 +2132,7 @@ Listing&nbsp;6.18: Shipment Lines with Composite Foreign Keys (Hypothetical)
 <pre class="text"><code>shipment (shipment_number, customer_order_fk, shipped_on,
           carrier, warehouse_fk)
     primary key: shipment_number
-    alternate key: (shipment_number, customer_order_fk)
+    unique: (shipment_number, customer_order_fk)
     customer_order_fk references customer_order_pk in
         customer_order, must not be NULL
     warehouse_fk references warehouse_pk in warehouse,
@@ -2140,8 +2140,7 @@ Listing&nbsp;6.18: Shipment Lines with Composite Foreign Keys (Hypothetical)
 
 shipment_line (shipment_number, customer_order_fk,
                line_number, quantity)
-    primary key: (shipment_number, customer_order_fk,
-                  line_number)
+    primary key: (shipment_number, line_number)
     (shipment_number, customer_order_fk) references
         (shipment_number, customer_order_fk) in shipment
     (customer_order_fk, line_number) references
@@ -2149,6 +2148,7 @@ shipment_line (shipment_number, customer_order_fk,
 </div>
 </figure>
 </div>
+<p>The <code>unique:</code> line of <code>shipment</code> is not a key, since <code>shipment_number</code> alone identifies a shipment. PostgreSQL lets a foreign key refer only to columns declared <code>UNIQUE</code> or a primary key, so the pair is declared unique for the shipment line’s foreign key to refer to.</p>
 <p>In <a href="#lst-map-keys-natural" class="quarto-xref">Listing&nbsp;<span>6.18</span></a>, the shipment line holds one <code>customer_order_fk</code>, and both of its composite foreign keys use it. The first says the shipment was made for that order; the second says the order line belongs to that order. A shipment line that shipped another order’s line would need two different values in one column, which is impossible. The rule is enforced by the structure of the keys.</p>
 <p>The natural keys are a convenience here, not a requirement. The same two composite foreign keys work beside surrogate primary keys, if <code>shipment_line</code> gains a <code>customer_order_fk</code> column that must not be NULL and <code>shipment</code> and <code>order_line</code> each declare <code>UNIQUE</code> the pair of columns that a foreign key refers to. The column must not be NULL because PostgreSQL does not check a composite foreign key when one of its columns is NULL; a line with no order would pass both foreign keys. That is the real cost of surrogate keys: they do not carry the order’s key along, so a designer who wants the rule enforced must add a <code>NOT NULL</code> column and two constraints that the tables would not otherwise need.</p>
 <p><em>The check.</em> <a href="#tbl-map-keys-check" class="quarto-xref">Table&nbsp;<span>6.12</span></a> joins along the two paths that the rule compares, one join per foreign key, and keeps only the rows where they disagree, so an empty result means that every shipment line passes.</p>

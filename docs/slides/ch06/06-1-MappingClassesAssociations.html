@@ -1282,9 +1282,10 @@ Manuel D. Rossetti, PhD P.E.
 <h2>A surrogate key still needs a join</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb5-1"><a href></a>operator (operator_pk, employee_number, name, hire_date,</span>
 <span id="cb5-2"><a href></a>          locker_fk)</span>
-<span id="cb5-3"><a href></a>    alternate keys: employee_number, locker_fk</span>
-<span id="cb5-4"><a href></a>    locker_fk references locker_pk in locker,</span>
-<span id="cb5-5"><a href></a>        must not be NULL</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-3"><a href></a>    primary key: operator_pk</span>
+<span id="cb5-4"><a href></a>    alternate keys: employee_number, locker_fk</span>
+<span id="cb5-5"><a href></a>    locker_fk references locker_pk in locker,</span>
+<span id="cb5-6"><a href></a>        must not be NULL</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>locker_fk</code> = 4 means nothing to a clerk: printing L-104 needs a join</li>
 <li>A foreign key may refer to <strong>any candidate key</strong>, any <code>UNIQUE</code> column: refer to the locker’s number instead, and the operator’s row shows it</li>
@@ -1739,7 +1740,7 @@ Maria Lopez
 <ul>
 <li>A ternary association maps to a table with <strong>three</strong> foreign keys; each link is one row</li>
 <li>Which columns form a key depends on the multiplicities: with <code>0..*</code> at every end, the three foreign keys together are a key</li>
-<li>Several runs of the same three? Promote the run to a class: the same columns, but <strong>no key</strong> over the three foreign keys</li>
+<li>Several runs of the same three? Add the date to the key, or promote the run to a class: the same columns, but <strong>no key</strong> over the three foreign keys</li>
 </ul>
 </section>
 <section id="example-mapping-the-refined-order-model-of-stage-d3" class="slide level2">

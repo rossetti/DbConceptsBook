@@ -1733,7 +1733,7 @@ correlation
 <li>The view pairs rows by <code>rep_id</code> and requires the two experiments to have the same number of replications (<code>num_reps</code>)</li>
 <li>An experiment run again with 40 replications silently drops out: a count of 0 and a NULL average, not an error</li>
 <li>The view pairs <strong>any</strong> two experiments with equal replication counts, whether or not they used common random numbers</li>
-<li>No single column records it. In one program: both <code>reset_start_stream_option</code> true, equal <code>num_stream_advances</code>, <code>antithetic_option</code>, and <code>adv_next_sub_stream_option</code> (which lines up the replications); separate programs share streams with the first false</li>
+<li>No single column records it. In one program: both <code>reset_start_stream_option</code> true, equal <code>num_stream_advances</code>, <code>antithetic_option</code>, and <code>adv_next_sub_stream_option</code> (which lines up the replications); separate programs can share streams with the first false</li>
 <li>Compare these columns of <code>ksl_db.experiment</code> and know how the experiments were run before trusting a paired comparison</li>
 </ul>
 </section>

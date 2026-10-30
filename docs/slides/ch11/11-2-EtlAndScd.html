@@ -1138,8 +1138,9 @@ Manuel D. Rossetti, PhD P.E.
 <li>The customer and product dimensions are extracted from the operational tables, and transformed on the way, with <code>CASE</code> expressions:
 <ul>
 <li>the customer’s sales region, from the state</li>
-<li>the product line, from the product number, and the standard cost, from production</li>
+<li>the product line, from the product number</li>
 </ul></li>
+<li>The product’s standard cost is brought in from production</li>
 <li>The facts come last, and a refresh, nightly for example, should add only what is new</li>
 <li>The fact load skips order lines already loaded, found by the <strong>degenerate dimension</strong>, the order and line numbers</li>
 </ul>
@@ -1228,7 +1229,7 @@ Manuel D. Rossetti, PhD P.E.
 </section>
 <section id="the-refresh-new-customers-first" class="slide level2">
 <h2>The refresh: new customers first</h2>
-<p>A <code>VALUES</code> list with a name and column names, <code>AS v (line_number, ...)</code>, stands in <code>FROM</code> as a small table: both order lines in one statement.</p>
+<p>On the previous slide, a <code>VALUES</code> list with a name and column names, <code>AS v (line_number, ...)</code>, stands in <code>FROM</code> as a small table: both order lines in one statement. The customer load skips customers already there:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href></a><span class="kw">INSERT</span> <span class="kw">INTO</span> sales.customer_dim</span>
 <span id="cb4-2"><a href></a>    (customer_number, name, city, state, sales_region)</span>

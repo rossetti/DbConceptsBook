@@ -1235,7 +1235,7 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li>An <strong>attribute</strong> is a named property every object of a class has a value for, such as a customer’s name or an order’s date</li>
 <li>Each attribute draws its values from a domain, just as a column does</li>
-<li>UML names: a class is a singular noun, each word capitalized (<code>CustomerOrder</code>); an attribute begins in lower case (<code>requestedShipDate</code>)</li>
+<li>UML names: a class name is a singular noun, each word capitalized (<code>CustomerOrder</code>); an attribute begins in lower case (<code>requestedShipDate</code>)</li>
 <li><code>requestedShipDate [0..1]</code>: an order has zero or one requested ship date, the fact the column’s NULLs record; no mark means exactly one</li>
 </ul>
 </section>
@@ -1309,7 +1309,7 @@ Manuel D. Rossetti, PhD P.E.
 </tbody>
 </table>
 <ul>
-<li>An address kept whole cannot answer “which customers are in ZIP code 72701?”</li>
+<li>An address kept whole answers “which customers are in ZIP code 72701?” only by picking the ZIP code out of the text, and an address typed without it slips past</li>
 <li><code>phone1</code>, <code>phone2</code> is a repeating group: a third number changes the model</li>
 </ul>
 </section>
@@ -1413,7 +1413,7 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li>A <strong>role name</strong> at an end of an association says what the objects at that end are to the objects at the other</li>
 <li>Optional when the class names make the meaning plain; essential when they do not</li>
-<li>A <strong>recursive association</strong> has both ends on the same class, or one end on a class and the other on one of its subclasses</li>
+<li>A <strong>recursive association</strong> has both ends on the same class, or one end on a class and the other on one of its subclasses (generalization, two decks on)</li>
 </ul>
 <p>The bill of materials is recursive, with the roles <em>assembly</em> (a manufactured part) and <em>component</em> (any part).</p>
 </section>
@@ -1430,7 +1430,7 @@ Manuel D. Rossetti, PhD P.E.
 <p><strong>One association holds at most one link between a given pair of objects.</strong></p>
 <ul>
 <li>A customer either has placed a given order or has not; it cannot have placed the same order twice</li>
-<li>A second link between the same two objects needs a <strong>second association</strong> with a different meaning (a customer who <em>places</em> an order, another who <em>pays</em> for it), or an association of more than two classes</li>
+<li>A second link between the same two objects needs a <strong>second association</strong> with a different meaning (a customer who <em>placed</em> an order and also <em>pays</em> for it), or an association of more than two classes</li>
 </ul>
 <p>This rule matters more than it seems: the next deck’s worked example turns on it.</p>
 </section>

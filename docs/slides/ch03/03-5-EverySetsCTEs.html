@@ -1657,7 +1657,7 @@ NULL
 <ul>
 <li>A <strong>common table expression</strong> (CTE) is a query given a name at the start of a statement, with <code>WITH</code></li>
 <li>The statement that follows refers to the name as it would to a table</li>
-<li>The simplest use solves an earlier problem: a column alias cannot be used in <code>WHERE</code>, so listing the lines worth $1,000 or more repeated <code>quantity * unit_price</code></li>
+<li>The simplest use solves an earlier problem: a column alias cannot be used in <code>WHERE</code>, so listing the lines worth more than $1,000 repeated <code>quantity * unit_price</code></li>
 </ul>
 </section>
 <section id="order-lines-worth-1000-or-more" class="slide level2">
@@ -1906,7 +1906,7 @@ Tri-County Farm and Home
 <h2>What a CTE is, and is not</h2>
 <ul>
 <li>A CTE stores nothing; it exists only while its statement runs</li>
-<li>It adds no power that subqueries lack: every CTE could be a subquery in <code>FROM</code></li>
+<li>A CTE that does not refer to itself adds no power that subqueries lack: it could be a subquery in <code>FROM</code></li>
 <li>What it adds is <strong>readability</strong>, which decides whether the next person, or you in six months, can check a long query</li>
 <li>A CTE can also refer to itself: the recursive queries of chapter 4</li>
 </ul>

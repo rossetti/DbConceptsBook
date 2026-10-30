@@ -724,7 +724,7 @@ Table&nbsp;H.1: The Four Families of NoSQL Databases
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> c.customer_pk <span class="op">=</span> o.customer_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Two operators reach inside a document. The operator <code>-&gt;</code> returns the value of a field as JSON, so that another operator can be applied to it, and <code>-&gt;&gt;</code> returns it as text. The following query lists the orders placed in January, with each one’s customer and its number of lines.</p>
-<div id="tbl-appnosql-january" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]" data-stage="d5">
+<div id="tbl-appnosql-january" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-january-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;H.2: January’s Orders, Read from Their Documents
@@ -826,7 +826,7 @@ Lakeside Distributors
 </div>
 <p><a href="#tbl-appnosql-january" class="quarto-xref">Table&nbsp;<span>H.2</span></a> lists six orders. Notice that the condition compares the order date as text, since <code>-&gt;&gt;</code> returns text; it works here only because dates written in the form <code>2026-01-05</code> sort as text in the same order as dates. The customer’s name comes from the copy in each document, without a join. PostgreSQL stores a <code>JSONB</code> document’s fields in an order of its own, which does no harm: a query finds a field by its name, as it finds a column.</p>
 <p>The operator <code>@&gt;</code> asks whether a document contains another. The following query finds the orders whose lines include a GC-300, by asking whether the document contains a list of lines with one line for that product.</p>
-<div id="tbl-appnosql-contains" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]" data-stage="d5">
+<div id="tbl-appnosql-contains" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-contains-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;H.3: The Orders That Include a GC-300
@@ -926,7 +926,7 @@ SO-5012
 <p><span class="theorem-title"><strong>Example H.1 (Units ordered, from the documents)</strong></span> <em>The system.</em> The twelve order documents of stage D5, loaded into <code>order_document</code> as above.</p>
 <p><em>The request.</em> The production planner asks how many units of each product have been ordered, and the order documents are all the program has.</p>
 <p>The units are inside each document’s list of lines, so the query must first turn each list into rows, one per line. The function <code>jsonb_array_elements</code> does that; written in the <code>FROM</code> clause after the table, it produces the lines of each document, which the query names <code>line</code>.</p>
-<div id="tbl-appnosql-units" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]" data-stage="d5">
+<div id="tbl-appnosql-units" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-units-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;H.4: Units Ordered by Product, from the Order Documents
@@ -1052,7 +1052,7 @@ HT-200
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="st">             "qty": 5, "unit_price": 119.00}]}'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The database accepts the document, since it is well-formed JSON. The same query, run after it, counts the new line and adds nothing for it:</p>
-<div id="tbl-appnosql-units-typo" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;,&quot;insert-so5013&quot;]" data-stage="d5">
+<div id="tbl-appnosql-units-typo" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;,&quot;insert-so5013&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-units-typo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;H.6: Units Ordered by Product, After the Misspelled Document
@@ -1128,8 +1128,8 @@ HT-200
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">'Steel utility cart'</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'GC-300'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The following query sets the description in <code>product</code> beside the copies in the documents. The keywords <code>CROSS JOIN</code> before the function produce each document’s lines, as the comma did above, so that a <code>JOIN</code> to <code>product</code> can follow.</p>
-<div id="tbl-appnosql-rename" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;,&quot;rename-gc300&quot;]" data-stage="d5">
+<p>The following query sets the description in <code>product</code> beside the copies in the documents. The keywords <code>CROSS JOIN</code> before the function produce each document’s lines, as the comma did above; written out, the cross join reads more clearly than a comma when a <code>JOIN</code> to <code>product</code> follows it.</p>
+<div id="tbl-appnosql-rename" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;,&quot;rename-gc300&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appnosql-rename-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;H.7: The GC-300’s Description in the Table and in the Documents

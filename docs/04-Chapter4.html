@@ -5051,7 +5051,7 @@ Table&nbsp;4.32: Days of Supply for Each Stock Level
 <span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> <span class="kw">demand</span> <span class="kw">AS</span> d</span>
 <span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.warehouse_fk <span class="op">=</span> st.warehouse_fk</span>
 <span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a> <span class="kw">AND</span> d.product_fk <span class="op">=</span> st.product_fk</span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> days_of_supply;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> days_of_supply, st.warehouse_fk, st.product_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
 <table class="table table-condensed" style="width: auto !important; ">
 <thead>

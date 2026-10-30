@@ -1008,7 +1008,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>A procedure for a whole model, worked on HG’s production floor</li>
 <li>Design diagrams and generated diagrams</li>
 </ul>
-<p>Book: appendix <em>Translating Between Crow’s Foot and UML</em>.</p>
+<p>Book: appendix <em>Translating Between Crow’s Foot and UML</em>, and the last slide from appendix <em>Tools for Drawing UML and ER Diagrams</em>.</p>
 </section>
 <section id="recall" class="slide level2">
 <h2>Recall</h2>
@@ -1024,7 +1024,7 @@ Manuel D. Rossetti, PhD P.E.
 <li><strong>UML</strong>: the 1990s, from object-oriented software design; a standard of the Object Management Group</li>
 <li>Both describe kinds of objects, their facts, and their associations with multiplicities. They differ in <strong>emphasis</strong>:
 <ul>
-<li>crow’s foot is usually drawn close to the tables, identifiers and foreign keys marked</li>
+<li>crow’s foot is usually drawn close to the tables, identifiers marked and foreign keys often shown</li>
 <li>UML describes the business and leaves keys to the mapping</li>
 </ul></li>
 <li>You will meet crow’s foot in other books, in DataGrip’s and DBeaver’s diagrams, and at work: read it as a class model, and draw one when asked</li>
@@ -1241,15 +1241,15 @@ Manuel D. Rossetti, PhD P.E.
 </section>
 <section id="check-and-where-it-breaks" class="slide level2">
 <h2>Check, and where it breaks</h2>
-<p><strong>The check.</strong> The result matches the book’s production class model except for one thing: the diagram draws a work center’s machines with an ordinary line, the class model with an <strong>aggregation</strong>. Crow’s foot cannot state the whole-part meaning, so the translation cannot recover it; that is a question for the engineers.</p>
+<p><strong>The check.</strong> The result matches the part of the book’s production class model that the diagram covers, except for one thing: the diagram draws a work center’s machines with an ordinary line, the class model with an <strong>aggregation</strong>. Crow’s foot cannot state the whole-part meaning, so the translation cannot recover it; that is a question for the engineers.</p>
 <p><strong>Where it breaks.</strong> Had <code>CERTIFICATION</code> carried a certification number of its own, the identifier test would make it a class with two associations, allowing an operator to be certified twice on one machine. The diagram alone cannot say which the business intends.</p>
 </section>
 <section id="design-diagrams-and-generated-diagrams" class="slide level2">
 <h2>Design diagrams and generated diagrams</h2>
 <ul>
-<li>A <strong>design diagram</strong>, in UML or crow’s foot, states what the business records before any table exists, with no foreign keys</li>
+<li>A <strong>design diagram</strong>, in UML or crow’s foot, states what the business records before any table exists; in UML it shows no foreign keys</li>
 <li>A <strong>generated diagram</strong> is drawn by a database tool from the catalog: each table a box, each foreign key a line. Exact and current, but a picture of the <strong>implementation</strong></li>
-<li>Stage D4’s stock levels: an association class in the design; in a generated diagram, a table with two foreign keys, and nothing showing that a warehouse and a product share at most one stock level</li>
+<li>Stage D4’s stock levels: an association class in the design; in a generated diagram, a table with two foreign keys, and nothing showing that a warehouse and a product share at most one stock level, except a <code>UNIQUE</code> constraint the diagram may not show</li>
 <li>You need both: a design tool for the models you discuss, your database tool for checking what you built</li>
 </ul>
 </section>

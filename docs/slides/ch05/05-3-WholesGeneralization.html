@@ -1032,6 +1032,7 @@ Manuel D. Rossetti, PhD P.E.
 <li>An order line of SO-5004 is meaningless without SO-5004, never moves to another order, and goes when the order is canceled</li>
 <li>The multiplicity at the whole’s end is therefore <code>1</code>, except at the root of a hierarchy (a recursive composition), which is part of nothing: <code>0..1</code></li>
 <li>A part’s quality characteristics (stage Q) are a composition too</li>
+<li>UML allows a part to be moved to another whole; this book uses composition only for a part that never moves</li>
 </ul>
 </section>
 <section id="aggregation" class="slide level2">
@@ -1061,7 +1062,7 @@ Manuel D. Rossetti, PhD P.E.
 <ol type="1">
 <li>Is the relationship “is part of”? If not, as for a customer and its orders, the association is an ordinary one, whatever its multiplicity.</li>
 <li>Can the part exist without the whole, or move to another whole? If not, a composition; if so, an aggregation.</li>
-<li>Does something done to the whole happen to its parts? Copying an order copies its lines; moving a work center does not scrap its machines.</li>
+<li>Does something done to the whole happen to its parts? Copying an order copies its lines; moving a work center’s floor space does not scrap its machines.</li>
 </ol>
 <p>In tables, both use the same foreign keys as ordinary associations; the difference is in how deletions are handled. A composition is where cascading a deletion is right.</p>
 </section>
@@ -1149,7 +1150,7 @@ Manuel D. Rossetti, PhD P.E.
 <li><strong>A diamond says that one object is part of another</strong>: composition for a part that belongs to one whole for life, aggregation for a part with a life of its own</li>
 <li>A bill of materials relates kinds of parts, not particular objects, and is an ordinary association</li>
 <li><strong>A subclass is a kind of its superclass, and inherits all of it</strong>; a superclass with no objects of its own is <strong>abstract</strong></li>
-<li>Use a subclass for a kind that stays that kind, and a role name for a part an object plays</li>
+<li>Use a subclass for a kind that stays that kind, with facts of its own, and a role name for a part an object plays</li>
 </ul>
 </section>
 <section id="next" class="slide level2">

@@ -1174,14 +1174,15 @@ Manuel D. Rossetti, PhD P.E.
 <h2>Trade-off 1: schema on write, schema on read</h2>
 <ul>
 <li><strong>Schema on write</strong>: a relational database checks every row against its catalog when it is written, and refuses a row that does not fit</li>
-<li><strong>Schema on read</strong>: a document database stores whatever document it is given; the program that reads it decides what its fields mean</li>
+<li><strong>Schema on read</strong>: a document database usually stores whatever document it is given; the program that reads it decides what its fields mean</li>
+<li>Many now let a designer declare rules documents must obey, part of the way back to schema on write</li>
 <li>Schema on read lets the structure change without a redesign and lets one collection hold several shapes</li>
 <li>Its cost: <strong>every reader must cope with every shape ever written</strong>, mistakes included</li>
 </ul>
 </section>
 <section id="trade-off-2-nesting-is-denormalization" class="slide level2">
 <h2>Trade-off 2: nesting is denormalization</h2>
-<p>A document that nests an order’s lines and copies its customer’s and products’ facts is an unnormalized table, with all its anomalies.</p>
+<p>A document that nests an order’s lines and copies its customer’s and products’ facts is a table that has not been normalized, with all its anomalies.</p>
 <p>So for each connection, <strong>nest or refer</strong>. The class model gives the rule:</p>
 <ul>
 <li><strong>Nest a composition</strong>, whose parts belong to one whole and are created and removed with it: an order’s lines</li>
@@ -1295,7 +1296,7 @@ Manuel D. Rossetti, PhD P.E.
 </section>
 <section id="reaching-inside-a-document" class="slide level2">
 <h2>Reaching inside a document</h2>
-<p><code>-&gt;</code> returns a field as JSON, so another operator can follow; <code>-&gt;&gt;</code> returns it as text. January’s orders:</p>
+<p><code>-&gt;</code> returns a field as JSON, so another operator can follow; <code>-&gt;&gt;</code> returns it as text. January’s orders, with the date compared as text, which works only because dates written <code>2026-01-05</code> sort as text in date order:</p>
 <div class="cell" data-stage="d5" data-changes="[&quot;create-order-document&quot;,&quot;load-order-documents&quot;]">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href></a><span class="kw">SELECT</span> order_number,</span>
 <span id="cb4-2"><a href></a>       document <span class="op">-&gt;</span> <span class="st">&#39;customer&#39;</span> <span class="op">-&gt;&gt;</span> <span class="st">&#39;name&#39;</span> <span class="kw">AS</span> customer,</span>
@@ -1684,7 +1685,7 @@ HT-200
 <span id="cb10-2"><a href></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">&#39;Steel utility cart&#39;</span></span>
 <span id="cb10-3"><a href></a><span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">&#39;GC-300&#39;</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><code>CROSS JOIN</code> before the function produces each document’s lines, as the comma did, so that a <code>JOIN</code> to <code>product</code> can follow.</p>
+<p><code>CROSS JOIN</code> before the function produces each document’s lines, as the comma did; written out, it reads more clearly when a <code>JOIN</code> to <code>product</code> follows.</p>
 </section>
 <section id="the-table-and-the-copies" class="slide level2 tall">
 <h2>The table and the copies</h2>
@@ -1744,7 +1745,7 @@ Steel garden cart
 <ul>
 <li><strong>Written and read whole, varying in structure</strong> (test records, configurations, a supplier’s web service replies): a <code>JSONB</code> column, or a document database if the volume calls for one</li>
 <li><strong>Measurements at a high rate</strong>: a historian or time-series database, with summaries loaded into a relational one</li>
-<li><strong>A value read by key many times a second</strong>: a key-value store in front of the database of record</li>
+<li><strong>A value read by key many times a second</strong>: a key-value store in front of the database that holds the facts</li>
 <li><strong>Networks whose questions are about paths</strong>: a graph database, or a recursive query while the network is small</li>
 </ul>
 </section>
@@ -1760,7 +1761,7 @@ Steel garden cart
 <h2>Summary</h2>
 <ul>
 <li><strong>NoSQL</strong> databases arose for data spread over many machines, structures that change, and records shaped as documents</li>
-<li><strong>Four families</strong>: key-value, document, wide-column, and graph; in a plant, the <strong>historian</strong> is the one you will meet</li>
+<li><strong>Four families</strong>: key-value, document, wide-column, and graph; in a plant, you are most likely to meet a <strong>historian</strong>, a time-series database outside the four</li>
 <li><strong>Trade-offs</strong>: schema on read, nesting as denormalization, eventual consistency, and designing around known questions</li>
 <li>PostgreSQL’s <strong><code>JSONB</code></strong> stores and queries documents beside tables; a misspelled field and a stale copy are the two ways documents go wrong</li>
 <li><strong>Start relational</strong>; add another kind where the data calls for it</li>

@@ -595,7 +595,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The view is queried as a table is. A user who wants the lines of SO-5004 no longer writes the joins:</p>
-<div id="tbl-tx-view-so5004" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="view-order-report">
+<div id="tbl-tx-view-so5004" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="view-order-report" data-stage="d3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-view-so5004-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.1: The Lines of SO-5004, from the Order Report View
@@ -703,7 +703,7 @@ Two-wheel hand truck
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">'Two-wheel steel hand truck'</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-100'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-view-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;view-order-report&quot;,&quot;upd-ht100-description&quot;]">
+<div id="tbl-tx-view-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;view-order-report&quot;,&quot;upd-ht100-description&quot;]" data-stage="d3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-view-after-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.2: The Lines of SO-5004 After the Description Changes
@@ -793,7 +793,7 @@ Two-wheel steel hand truck
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> s.product_fk</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> s.quantity_on_hand <span class="op">&lt;</span> s.reorder_point;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-reorder" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d4" data-changes="view-stock-to-reorder">
+<div id="tbl-tx-reorder" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="view-stock-to-reorder" data-stage="d4">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-reorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.3: Stock Levels Below Their Reorder Points, Stage D4
@@ -907,7 +907,7 @@ DETAIL:  Failing row contains (9, C-1009, Rogers Farm Supply, Rogers, AR).</code
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">3</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The four statements belong together. A shipment recorded without its stock decrease overstates the stock; a stock decrease without its shipment loses carts from the books. Suppose that the clerk, not noticing that SO-5011 has already shipped, runs the four statements again, as shipment SH-9013. The warehouse had 18 GC-300 carts and now has 6, so the last statement drives the quantity below zero, and the check of <code>stock_level</code> refuses it. Run one at a time, as the tools run statements by default, the first three have already taken effect:</p>
-<div id="tbl-tx-no-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true" data-changes="ship-so5011">
+<div id="tbl-tx-no-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="ship-so5011" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-no-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.4: Shipping SO-5011 a Second Time, Statement by Statement
@@ -968,7 +968,7 @@ Table&nbsp;9.4: Shipping SO-5011 a Second Time, Statement by Statement
 </div>
 <p>The database of <a href="#tbl-tx-no-transaction" class="quarto-xref">Table&nbsp;<span>9.4</span></a> now contradicts itself. It records two shipments of SO-5011, and a second 30 hand trucks gone from Fayetteville (90 became 60), but the 12 carts of the second shipment never left the stock (6 remain). Someone must find and repair the damage by hand.</p>
 <p>A <strong>transaction</strong> is a sequence of statements that the database treats as one unit: either every change it makes takes effect, or none does. <code>BEGIN</code> (or the standard <code>START TRANSACTION</code>) opens a transaction; <code>COMMIT</code> ends it and makes its changes permanent; <code>ROLLBACK</code> ends it and discards them. In PostgreSQL, a statement that fails inside a transaction makes the whole transaction fail: the database refuses every later statement until the transaction ends, and a <code>COMMIT</code> then rolls it back. (The SQL standard, and several other systems, undo only the failed statement and let the transaction go on.) The same mistake, made inside a transaction, leaves no trace:</p>
-<div id="tbl-tx-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true" data-changes="ship-so5011">
+<div id="tbl-tx-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="ship-so5011" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.5: Shipping SO-5011 a Second Time, Inside a Transaction
@@ -1073,7 +1073,7 @@ Table&nbsp;9.5: Shipping SO-5011 a Second Time, Inside a Transaction
 <p>This section considers transactions that run at the same time, and the isolation that keeps them from spoiling each other’s work.</p>
 <p>A database serves many sessions at once, and their transactions interleave: one clerk’s statements run between another’s. Most of the time they touch different rows and nothing goes wrong. Trouble comes when two transactions read and change the same rows, and the classic case is the <strong>lost update</strong>: two transactions read a value, each computes a new value from what it read, and the second to write overwrites the first, whose change is lost.</p>
 <p>At stage D5 the Fayetteville warehouse holds 18 GC-300 carts (stock level 3). Clerk A ships the 12 carts of SO-5011, and at the same moment clerk B ships 10 carts for another order. Each reads the quantity on hand, subtracts, and writes the result back:</p>
-<div id="tbl-tx-lost-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<div id="tbl-tx-lost-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-lost-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.6: Two Clerks Ship GC-300 Carts at Once, Reading Before Writing
@@ -1158,7 +1158,7 @@ Table&nbsp;9.6: Two Clerks Ship GC-300 Carts at Once, Reading Before Writing
 </div>
 <p>Both clerks read 18 (steps 3 and 4). Clerk A writes 6, which is 18 − 12. Clerk B’s write must wait (step 6), because A’s uncommitted change locks the row; when A commits, B’s write goes ahead and sets 8, which is 18 − 10. The books now say 8 carts remain, after 22 carts were shipped from 18. A’s update is lost, and nothing refused anything: each statement was legal on its own.</p>
 <p>Notice step 6. A transaction that changes a row holds a <strong>lock</strong> on it until the transaction ends, and another transaction that wants to change the same row waits. The lock did not prevent the lost update, because B’s mistake was made earlier, when it read 18 and decided on 8. The repair is to let the database do the arithmetic, in a single statement that reads and writes the row while holding its lock, and to state the condition under which the change is allowed:</p>
-<div id="tbl-tx-safe-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<div id="tbl-tx-safe-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-safe-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.7: The Same Two Shipments, Letting the Database Subtract
@@ -1296,7 +1296,7 @@ Table&nbsp;9.8: The Standard’s Isolation Levels and the Anomalies Each Allows
 </figure>
 </div>
 <p>PostgreSQL’s default, and that of most systems, is <code>READ COMMITTED</code>: each statement sees the data as committed when the statement began. It is a sensible default for short transactions, and it allows the nonrepeatable read. Suppose that the production planner runs a report inside one transaction, totaling the GC-300 carts in both warehouses, while a shipment commits:</p>
-<div id="tbl-tx-nonrepeatable" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<div id="tbl-tx-nonrepeatable" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-nonrepeatable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.9: A Report’s Total Changes Within One Transaction, Read Committed
@@ -1350,7 +1350,7 @@ Table&nbsp;9.9: A Report’s Total Changes Within One Transaction, Read Committe
 </figure>
 </div>
 <p>The planner’s two totals disagree, 58 and then 46, within one transaction. A report whose parts are computed by several queries, a total on one page and a breakdown on the next, can then fail to add up. Under <code>REPEATABLE READ</code>, the transaction sees the database as it was when its first statement ran, and every query in it sees the same data. The price is that such a transaction cannot change a row that another transaction changed after its first statement ran; it fails instead, and must be tried again:</p>
-<div id="tbl-tx-serialization" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<div id="tbl-tx-serialization" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-serialization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.10: A Repeatable-Read Transaction Fails, and Is Tried Again
@@ -1435,7 +1435,7 @@ Table&nbsp;9.10: A Repeatable-Read Transaction Fails, and Is Tried Again
 </div>
 <p>In <a href="#tbl-tx-serialization" class="quarto-xref">Table&nbsp;<span>9.10</span></a>, A’s total is 58 both times (steps 2 and 4), although B’s shipment has committed in between. When A then ships SO-5012’s 4 carts from the same row, PostgreSQL refuses (step 5): A would be changing a row it has not seen in its current form. A tries again in a new transaction, which sees B’s change, and the stock ends at 18 − 12 − 4 = 2. A program that uses <code>REPEATABLE READ</code> or <code>SERIALIZABLE</code> must be written to retry a transaction that fails this way.</p>
 <p><code>REPEATABLE READ</code> refuses a change to a row that another transaction changed first. It does not stop two transactions that change <em>different</em> rows on the strength of what both read. Suppose that HG Industries keeps at least 30 GC-300 carts across its two warehouses: 18 in Fayetteville (stock level 3) and 40 in Tulsa (stock level 7). Two planners each check the total, 58, and each takes carts for a rush order. Planner A takes the 18 in Fayetteville, which leaves 40; planner B takes 25 in Tulsa, which leaves 33. Each change keeps the rule, and the two together do not:</p>
-<div id="tbl-tx-write-skew-rr" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<div id="tbl-tx-write-skew-rr" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-write-skew-rr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.11: Two Planners Take GC-300 Carts at Once, Repeatable Read
@@ -1513,7 +1513,7 @@ Table&nbsp;9.11: Two Planners Take GC-300 Carts at Once, Repeatable Read
 </figure>
 </div>
 <p>Both planners read 58 (steps 3 and 4), both changes succeed, and both transactions commit. The total is now 15, half of the 30 the rule requires. Neither transaction changed a row that the other changed, so <code>REPEATABLE READ</code> found nothing to refuse. This is a write skew, and preventing it is what <code>SERIALIZABLE</code> adds. At <code>SERIALIZABLE</code>, PostgreSQL also keeps track of what each transaction has read, and refuses a transaction whose commit would give a result that no order of running the transactions one at a time could give. The same schedule at <code>SERIALIZABLE</code>:</p>
-<div id="tbl-tx-write-skew-ser" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
+<div id="tbl-tx-write-skew-ser" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-write-skew-ser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.12: The Same Two Planners, Serializable
@@ -1611,7 +1611,7 @@ Table&nbsp;9.12: The Same Two Planners, Serializable
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">ROLE</span> hg_sales;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-as-sales" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;roles-sales&quot;,&quot;set-role-sales&quot;]">
+<div id="tbl-tx-as-sales" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;roles-sales&quot;,&quot;set-role-sales&quot;]" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-as-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.13: Orders Counted by a Session Acting as hg_sales
@@ -1655,7 +1655,7 @@ orders
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">USAGE</span> <span class="kw">ON</span> <span class="kw">SCHEMA</span> production <span class="kw">TO</span> hg_sales;</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">SELECT</span> <span class="kw">ON</span> production.part_catalog <span class="kw">TO</span> hg_sales;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-catalog" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p1" data-changes="[&quot;roles-sales&quot;,&quot;view-part-catalog&quot;,&quot;set-role-sales&quot;]">
+<div id="tbl-tx-catalog" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;roles-sales&quot;,&quot;view-part-catalog&quot;,&quot;set-role-sales&quot;]" data-stage="p1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-catalog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.14: The First Four Parts of the Catalog, Read as hg_sales
