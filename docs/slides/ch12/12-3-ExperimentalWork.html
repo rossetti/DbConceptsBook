@@ -3041,7 +3041,7 @@ window.QuartoSupport = function () {
         ]
       });
     </script>
-    <a href="../index.html" class="deck-index-link" title="Back to the slide index" aria-label="Back to the slide index">⌂ Index</a>
+    <nav class="deck-index-link"><a href="../index.html" title="Back to the slide index" aria-label="Back to the slide index">⌂ Index</a> · <a href="../../index.html" title="Back to the book" aria-label="Back to the book">The book</a></nav>
     <style>
 .deck-index-link {
 position: fixed;
@@ -3052,14 +3052,16 @@ font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 font-size: 15px;
 line-height: 1;
 color: #1D6A96;
-text-decoration: none;
 opacity: 0.5;
 transition: opacity 0.18s ease;
 -webkit-print-color-adjust: exact;
 print-color-adjust: exact;
 }
+.deck-index-link a { color: inherit; text-decoration: none; }
 .deck-index-link:hover,
-.deck-index-link:focus { opacity: 1; text-decoration: underline; }
+.deck-index-link:focus-within { opacity: 1; }
+.deck-index-link a:hover,
+.deck-index-link a:focus { text-decoration: underline; }
 </style>
     
     <script>

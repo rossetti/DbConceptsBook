@@ -907,7 +907,7 @@ DETAIL:  Failing row contains (9, C-1009, Rogers Farm Supply, Rogers, AR).</code
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stock_level_pk <span class="op">=</span> <span class="dv">3</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The four statements belong together. A shipment recorded without its stock decrease overstates the stock; a stock decrease without its shipment loses carts from the books. Suppose that the clerk, not noticing that SO-5011 has already shipped, runs the four statements again, as shipment SH-9013. The warehouse had 18 GC-300 carts and now has 6, so the last statement drives the quantity below zero, and the check of <code>stock_level</code> refuses it. Run one at a time, as the tools run statements by default, the first three have already taken effect:</p>
-<div id="tbl-tx-no-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="ship-so5011" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-no-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="ship-so5011" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-no-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.4: Shipping SO-5011 a Second Time, Statement by Statement
@@ -968,7 +968,7 @@ Table&nbsp;9.4: Shipping SO-5011 a Second Time, Statement by Statement
 </div>
 <p>The database of <a href="#tbl-tx-no-transaction" class="quarto-xref">Table&nbsp;<span>9.4</span></a> now contradicts itself. It records two shipments of SO-5011, and a second 30 hand trucks gone from Fayetteville (90 became 60), but the 12 carts of the second shipment never left the stock (6 remain). Someone must find and repair the damage by hand.</p>
 <p>A <strong>transaction</strong> is a sequence of statements that the database treats as one unit: either every change it makes takes effect, or none does. <code>BEGIN</code> (or the standard <code>START TRANSACTION</code>) opens a transaction; <code>COMMIT</code> ends it and makes its changes permanent; <code>ROLLBACK</code> ends it and discards them. In PostgreSQL, a statement that fails inside a transaction makes the whole transaction fail: the database refuses every later statement until the transaction ends, and a <code>COMMIT</code> then rolls it back. (The SQL standard, and several other systems, undo only the failed statement and let the transaction go on.) The same mistake, made inside a transaction, leaves no trace:</p>
-<div id="tbl-tx-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="ship-so5011" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-transaction" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="ship-so5011" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-transaction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.5: Shipping SO-5011 a Second Time, Inside a Transaction

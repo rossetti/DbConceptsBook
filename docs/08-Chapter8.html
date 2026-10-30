@@ -1213,7 +1213,7 @@ HINT:  Use DROP ... CASCADE to drop the dependent objects too.</code></pre>
 <span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-200'</span>), <span class="dv">10</span>, <span class="fl">139.00</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><em>The result.</em> After the three statements, a query joins the new rows back together:</p>
-<div id="tbl-ddl-so5018" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;ins-rogers&quot;,&quot;ins-so5018&quot;,&quot;ins-so5018-lines&quot;]" data-stage="d3">
+<div id="tbl-ddl-so5018" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;ins-rogers&quot;,&quot;ins-so5018&quot;,&quot;ins-so5018-lines&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-so5018-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;8.8: Order SO-5018 After the Three Inserts
@@ -1415,7 +1415,7 @@ GC-400
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> list_price <span class="op">=</span> <span class="fu">ROUND</span>(list_price <span class="op">*</span> <span class="fl">1.05</span>, <span class="dv">2</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="kw">LIKE</span> <span class="st">'GC-%'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-ddl-price-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="upd-cart-prices" data-stage="d3">
+<div id="tbl-ddl-price-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="upd-cart-prices">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-price-after-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;8.10: The Product List After the Price Increase
@@ -1554,7 +1554,7 @@ SO-5012
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> distribution.customer_order</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> order_number <span class="op">=</span> <span class="st">'SO-5012'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-ddl-after-delete" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="del-so5012" data-stage="d5">
+<div id="tbl-ddl-after-delete" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="del-so5012">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-after-delete-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;8.12: Order Lines Remaining After SO-5012 Is Deleted
@@ -1648,7 +1648,7 @@ C-1011,Riverbend Home and Garden,Conway,AR</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>\<span class="kw">copy</span> distribution.customer_staging <span class="kw">FROM</span> <span class="st">'data/new-customers-raw.csv'</span> <span class="kw">WITH</span> (FORMAT csv, <span class="kw">HEADER</span> <span class="kw">true</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>A <code>\copy</code> command is one line, however long, and ends without a semicolon. psql answers <code>COPY 23</code>: the file holds 23 rows, although the sales department signed 22 customers. The staged rows are now examined with queries. The first looks for customer numbers that appear more than once:</p>
-<div id="tbl-ddl-staged-duplicates" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]" data-stage="d3">
+<div id="tbl-ddl-staged-duplicates" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-staged-duplicates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;8.13: Customer Numbers That Appear More Than Once in the File
@@ -1694,7 +1694,7 @@ C-1015
 </figure>
 </div>
 <p>C-1015 appears twice, and both copies are the same, so one can be dropped. The second query looks for states that are not two capital letters, with the state shown between brackets so that a space is visible:</p>
-<div id="tbl-ddl-staged-states" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]" data-stage="d3">
+<div id="tbl-ddl-staged-states" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-staged-states-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;8.14: Staged Customers Whose State Is Not Two Capital Letters
@@ -1738,7 +1738,7 @@ Norman
 </figure>
 </div>
 <p>Norman’s state was typed as <code>ok</code> with a trailing space. The <code>CHAR(2)</code> column would not refuse it: PostgreSQL drops extra characters that are spaces, and would store <code>ok</code> in lower case, where a query grouping by state would count it apart from every <code>OK</code>. The third query looks for customers that the database already holds, which the alternate key would refuse:</p>
-<div id="tbl-ddl-staged-existing" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]" data-stage="d3">
+<div id="tbl-ddl-staged-existing" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-staged-existing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;8.15: Staged Customers Already in the Database
@@ -1780,7 +1780,7 @@ name
 <span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> distribution.customer_staging;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><em>The result.</em> The customers by state, after the load:</p>
-<div id="tbl-ddl-customers-loaded" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;,&quot;stage-insert&quot;]" data-stage="d3">
+<div id="tbl-ddl-customers-loaded" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;stage-create&quot;,&quot;stage-copy&quot;,&quot;stage-insert&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ddl-customers-loaded-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;8.16: Customers by State After the Load
