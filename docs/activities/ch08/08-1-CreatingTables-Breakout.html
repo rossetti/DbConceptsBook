@@ -2244,7 +2244,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Write each statement before you run it, and predict what the database will do with it.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage P3 by running <code>code/sql/load/through-p3.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes. The tables you create here go in the <code>production</code> schema; running the load script again removes them.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes. The tables you create here go in the <code>production</code> schema; running <code>through-q.sql</code> again removes them.</p>
 <section id="scrap-tickets" class="level2">
 <h2 class="anchored" data-anchor-id="scrap-tickets">Scrap tickets</h2>
 <p>HG Industries’ quality manager wants the plant floor to record scrap. The manager describes a scrap ticket:</p>

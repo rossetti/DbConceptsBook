@@ -2209,9 +2209,9 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Each question asks you to predict before you run a query; write the prediction down, then check it.</p>
-<p><strong>Setup.</strong> Stage K is stage Q of the book’s database with the KSL’s output schema added by the chapter’s simulation. Load <code>code/sql/load/through-q.sql</code> into a database of your own, name that database in <code>code/db.properties</code>, and run the simulation, <code>RunFrameLine.kt</code>, from the <code>code</code> folder, as the KSL setup appendix’s section on running your first program describes:</p>
+<p><strong>Setup.</strong> The activity reads the simulation’s results, the KSL’s output schema <code>ksl_db</code>, in your <code>dbconcepts</code> database. Run the simulation, <code>RunFrameLine.kt</code>, from the <code>code</code> folder, as the KSL setup appendix’s section on running your first program describes:</p>
 <pre class="text"><code>./gradlew run -PmainClass=dbconcepts.simulation.RunFrameLineKt</code></pre>
-<p>Or use the instructor’s copy. Connect to the database in DataGrip or DBeaver. The KSL’s tables and views are in the schema <code>ksl_db</code>.</p>
+<p>If you cannot run it, run <code>code/sql/load/add-k.sql</code> in DataGrip or DBeaver instead; it creates the same <code>ksl_db</code>. Then connect to <code>dbconcepts</code> and run <code>code/sql/setup/which-stage.sql</code>: it should report <code>through-q.sql</code>, no reset, and the simulation added and complete.</p>
 <section id="before-trusting-a-comparison" class="level2">
 <h2 class="anchored" data-anchor-id="before-trusting-a-comparison">1. Before trusting a comparison</h2>
 <ol type="a">

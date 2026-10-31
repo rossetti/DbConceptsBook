@@ -2244,7 +2244,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Each question asks you to predict the answer <em>before</em> you look it up or run the query; write the prediction down, then check it.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage D5 by running <code>code/sql/load/through-d5.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes, and connect to it.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes.</p>
 <section id="reading-a-table-in-the-tool" class="level2">
 <h2 class="anchored" data-anchor-id="reading-a-table-in-the-tool">1. Reading a table in the tool</h2>
 <p>In the tool’s tree, expand the <code>distribution</code> schema, then its tables, and open the <code>shipment</code> table.</p>
@@ -2267,7 +2267,7 @@ margin: 0 0 0.5em 0;
 <h2 class="anchored" data-anchor-id="the-catalog">3. The catalog</h2>
 <p>Run each query in the tool.</p>
 <ol type="a">
-<li><p>Predict how many rows this query returns, from the relational schema of stage D5, then run it:</p>
+<li><p>Predict how many rows this query returns, from the chapter’s relational schema of the distribution schema, then run it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> table_name, column_name</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.<span class="kw">columns</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">&#39;distribution&#39;</span></span>
@@ -2282,7 +2282,7 @@ margin: 0 0 0.5em 0;
 <ol type="a">
 <li><p>Using the tables, gather everything about order SO-5003: its number and date, its customer’s number, name, city, and state, and each line’s line number, product number, description, quantity, and unit price.</p></li>
 <li><p>Write SO-5003 by hand as one JSON document, in the form of the chapter’s order document, with the lines nested inside it.</p></li>
-<li><p>How many times does your document store the HT-100’s description, and how many times would the documents of all twelve orders of stage D5 store it? Where does the relational database store it?</p></li>
+<li><p>How many times does your document store the HT-100’s description, and how many times would the documents of all twelve orders in your database store it? Where does the relational database store it?</p></li>
 </ol>
 </section>
 

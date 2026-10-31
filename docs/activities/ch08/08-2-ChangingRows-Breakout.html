@@ -2209,7 +2209,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Write each statement before you run it, and predict what the database will do with it.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage P3 by running <code>code/sql/load/through-p3.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes. You will change its rows; running the load script again restores them. Keep each change you make: the later parts work on the rows the earlier parts leave.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes. You will change its rows; running <code>through-q.sql</code> again restores them. Keep each change you make: the later parts work on the rows the earlier parts leave.</p>
 <section id="a-new-wheel-assembly" class="level2">
 <h2 class="anchored" data-anchor-id="a-new-wheel-assembly">A new wheel assembly</h2>
 <p>Engineering adds an 8-inch wheel assembly, part WA-08, for a smaller hand truck. It is made like the 10-inch WA-10: same unit of measure (EA), a standard cost of $8.40, a lot size of 200, and the same routing as the WA-10’s.</p>

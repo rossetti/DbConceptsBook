@@ -2209,7 +2209,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Write each statement before you run it, and predict what it will do; count the rows at every step.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage S by running <code>code/sql/load/through-s.sql</code> in DataGrip or DBeaver. To start over, run <code>DROP SCHEMA IF EXISTS plant CASCADE;</code> and then the load script again. The load script rebuilds only the book’s four schemas, so on its own it restores the work orders but leaves your <code>plant</code> schema, and creating it again fails.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts_history</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-s.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-s.sql</code>, as the book’s PostgreSQL setup appendix describes. To start over, run <code>DROP SCHEMA IF EXISTS plant CASCADE;</code> and then <code>through-s.sql</code> again. The load script rebuilds only the book’s four schemas, so on its own it restores the work orders but leaves your <code>plant</code> schema, and creating it again fails.</p>
 <section id="a-small-production-warehouse" class="level2">
 <h2 class="anchored" data-anchor-id="a-small-production-warehouse">A small production warehouse</h2>
 <p>The plant manager’s warehouse of completed work orders has a fact table at the grain of one completed work order, a part dimension, and three dates, released, due, and completed, all referring to the date dimension the sales warehouse already has, <code>sales.date_dim</code>:</p>

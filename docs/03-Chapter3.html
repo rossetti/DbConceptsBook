@@ -618,7 +618,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The examples use stage D5 of the book’s database for the distribution tables, stage P3 for the production tables, and stage Q for the quality tables. <a href="15-AppSampleDatabases.html#sec-appsampledbs-loading" class="quarto-xref"><span>Section C.2</span></a> explains how to load a stage; loading <code>through-q.sql</code> gives you every table the chapter mentions.</p>
+<p>The examples run in your <code>dbconcepts</code> database, loaded with <code>through-q.sql</code> (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-bookdbs" class="quarto-xref"><span>Section A.5</span></a>), which holds every table the chapter mentions. If you are not sure what it holds, run <code>code/sql/setup/which-stage.sql</code>; it says whether a reset is needed (<a href="15-AppSampleDatabases.html#sec-appsampledbs-loading" class="quarto-xref"><span>Section C.2</span></a>).</p>
 </div>
 </div>
 <section id="sec-q-select" class="level2" data-number="3.1">
@@ -3458,7 +3458,7 @@ SO-5007
 <p><a href="#tbl-q-join-on" class="quarto-xref">Table&nbsp;<span>3.35</span></a> is the same as <a href="#tbl-q-join-comma" class="quarto-xref">Table&nbsp;<span>3.34</span></a>. The two forms mean the same thing, and the <code>JOIN</code> form is also called an <strong>inner join</strong>, written <code>INNER JOIN</code> in full. This book uses the <code>JOIN</code> form from here on, for two reasons. It keeps each join condition beside the table it joins, which makes a query of several tables easier to read, and the outer joins of <a href="#sec-q-outer-joins" class="quarto-xref"><span>Section 3.7</span></a> can be written no other way.</p>
 <p>A query may join any number of tables, one <code>JOIN</code> at a time. Each join adds a table and a condition that connects it to a table already joined, so a join of four tables needs three conditions. The following example illustrates a join of four tables, and a trap that comes with it.</p>
 <div id="exm-q-cart-customers" class="theorem example">
-<p><span class="theorem-title"><strong>Example 3.3 (Listing the customers who ordered the steel garden cart)</strong></span> <em>The system.</em> The distribution schema of stage D5 (<a href="02-Chapter2.html#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>): customers place orders, each order has lines, and each line is for a product.</p>
+<p><span class="theorem-title"><strong>Example 3.3 (Listing the customers who ordered the steel garden cart)</strong></span> <em>The system.</em> The distribution schema of stage D5 (<a href="02-Chapter2.html#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>): customers place orders, each order has lines, and each line is for a product.</p>
 <p><em>The request.</em> The sales manager asks which customers have ordered the GC-300 steel garden cart. This is the request of <a href="02-Chapter2.html#exm-rm-trace-request" class="quarto-xref">Example&nbsp;<span>2.2</span></a>, where we traced its path through the schema without writing any SQL.</p>
 <p>The path of <a href="02-Chapter2.html#tbl-rm-trace" class="quarto-xref">Table&nbsp;<span>2.7</span></a> runs from <code>product</code> through <code>order_line</code> and <code>customer_order</code> to <code>customer</code>, so the query joins those four tables, one foreign key at a time:</p>
 <div id="tbl-q-cart-lines" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5">

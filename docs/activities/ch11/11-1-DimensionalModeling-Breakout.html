@@ -2209,7 +2209,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Design on paper first; the queries at the end check the design against the data.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage S by running <code>code/sql/load/through-s.sql</code> in DataGrip or DBeaver. Stage S holds the production schema’s work orders beside the sales warehouse.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts_history</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-s.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-s.sql</code>, as the book’s PostgreSQL setup appendix describes. It holds the production schema’s work orders beside the sales warehouse.</p>
 <section id="on-time-production" class="level2">
 <h2 class="anchored" data-anchor-id="on-time-production">On-time production</h2>
 <p>HG Industries’ plant manager reviews production every month:</p>

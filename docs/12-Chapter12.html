@@ -604,7 +604,7 @@ div.csl-indent {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The simulation’s results are stage K of the book’s database: a copy of stage Q with the KSL’s output schema, <code>ksl_db</code>, added by simulating the frame line. To build it, load <code>code/sql/load/through-q.sql</code> into your database and run the companion program <code>dbconcepts.simulation.RunFrameLineKt</code> against it, as <a href="14-AppKSLSetup.html#sec-appkslsetup-first" class="quarto-xref"><span>Section B.4</span></a> describes. The KSL’s random number streams are fixed, so the statistics are the same on every build.</p>
+<p>The simulation’s results are stage K of the book’s database: stage Q with the KSL’s output schema, <code>ksl_db</code>, added by simulating the frame line. To add it to your <code>dbconcepts</code> database, run the companion program <code>dbconcepts.simulation.RunFrameLineKt</code> against it, as <a href="14-AppKSLSetup.html#sec-appkslsetup-first" class="quarto-xref"><span>Section B.4</span></a> describes. The KSL’s random number streams are fixed, so the statistics are the same on every build. If you cannot run the program, run <code>code/sql/load/add-k.sql</code> instead; it creates the same <code>ksl_db</code>.</p>
 </div>
 </div>
 <section id="sec-simdb-inputs" class="level2" data-number="12.1">

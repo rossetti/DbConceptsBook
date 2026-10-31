@@ -604,7 +604,7 @@ div.csl-indent {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The examples use stages D1 and D2 of the book’s database for the early sections and stage D5 for the whole distribution schema. <a href="15-AppSampleDatabases.html#sec-appsampledbs-loading" class="quarto-xref"><span>Section C.2</span></a> explains how to load a stage; loading <code>through-d5.sql</code> gives you every table the chapter mentions.</p>
+<p>The examples run in your <code>dbconcepts</code> database, created and loaded with <code>through-q.sql</code> as <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-bookdbs" class="quarto-xref"><span>Section A.5</span></a> describes. The chapter meets the distribution schema a table at a time, in the order of its stages D1 to D5 (<a href="15-AppSampleDatabases.html#sec-appsampledbs-loading" class="quarto-xref"><span>Section C.2</span></a>), and every row it shows is a row of your database. If you are not sure what your database holds, run <code>code/sql/setup/which-stage.sql</code>; it says whether a reset is needed.</p>
 </div>
 </div>
 <div class="callout callout-style-simple callout-note callout-titled" title="Reading the SQL in this chapter">
@@ -1459,14 +1459,14 @@ Listing&nbsp;2.2: The Complete Relational Schema of the Customer Order Table
 </div>
 <!-- end schema -->
 <p>The column lines of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a> confirm what <a href="#tbl-rm-orders" class="quarto-xref">Table&nbsp;<span>2.5</span></a> showed: <code>requested_ship_date</code> is the one column that may be NULL. The word <em>generated</em> on <code>customer_order_pk</code> says that the database generates its values, which is what makes it a surrogate key. The line that begins <code>customer_fk: on delete</code> records the response chosen for the foreign key, no action, which means refuse. The <code>check</code> line narrows the domain of <code>requested_ship_date</code>: a customer cannot ask for an order to ship before the order was placed. In other words, a complete relational schema holds everything needed to write the statements that create the tables, which <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> presents.</p>
-<p>The relational schema of stage D5, the whole distribution schema, is too long for one listing, so it is given in two. <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> gives the tables of orders and products, and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a> the tables of warehouses and shipments.</p>
-<!-- schema: d5 customer customer_order product order_line -->
-<div id="lst-rm-schema-d5-orders" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<p>The relational schema of the whole distribution schema, as your database holds it, is too long for one listing, so it is given in two. <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> gives the tables of orders and products, and <a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a> the tables of warehouses and shipments.</p>
+<!-- schema: q customer customer_order product order_line -->
+<div id="lst-rm-schema-orders" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-schema-d5-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Listing&nbsp;2.3: The Relational Schema of Stage D5: Orders and Products
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-schema-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2.3: The Relational Schema of the Distribution Schema: Orders and Products
 </figcaption>
-<div aria-describedby="lst-rm-schema-d5-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="lst-rm-schema-orders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <pre class="text"><code>customer (customer_pk, customer_number, name, city, state)
     primary key: customer_pk
     alternate key: customer_number
@@ -1479,9 +1479,11 @@ customer_order (customer_order_pk, order_number, order_date,
         must not be NULL
 
 product (product_pk, product_number, description,
-         list_price)
+         list_price, manufactured_part_fk)
     primary key: product_pk
     alternate key: product_number
+    manufactured_part_fk references part_fk in
+        production.manufactured_part, must not be NULL
 
 order_line (order_line_pk, customer_order_fk, line_number,
             product_fk, quantity, unit_price)
@@ -1495,13 +1497,13 @@ order_line (order_line_pk, customer_order_fk, line_number,
 </figure>
 </div>
 <!-- end schema -->
-<!-- schema: d5 warehouse stock_level shipment shipment_line -->
-<div id="lst-rm-schema-d5-shipping" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
+<!-- schema: q warehouse stock_level shipment shipment_line -->
+<div id="lst-rm-schema-shipping" class="text listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-schema-d5-shipping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Listing&nbsp;2.4: The Relational Schema of Stage D5: Warehouses and Shipments
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-rm-schema-shipping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2.4: The Relational Schema of the Distribution Schema: Warehouses and Shipments
 </figcaption>
-<div aria-describedby="lst-rm-schema-d5-shipping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="lst-rm-schema-shipping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <pre class="text"><code>warehouse (warehouse_pk, warehouse_code, city, state)
     primary key: warehouse_pk
     alternate key: warehouse_code
@@ -1536,11 +1538,11 @@ shipment_line (shipment_line_pk, shipment_fk, order_line_fk,
 </figure>
 </div>
 <!-- end schema -->
-<p>The foreign key lines of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a> sort the eight tables into three groups. Three tables have none, so they refer to nothing: <code>customer</code>, <code>product</code>, and <code>warehouse</code>. Four refer only to those three or to each other: an order refers to a customer, an order line to an order and a product, a stock level to a warehouse and a product, and a shipment to an order and a warehouse. The last, <code>shipment_line</code>, refers to a shipment and to the order line it ships. Notice also the three alternate keys written in parentheses. The first, in <code>order_line</code>, is the composite key of <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a>, an order and a line number. The second, in <code>stock_level</code>, says that a warehouse holds at most one stock level for each product. The third, in <code>shipment_line</code>, says that a shipment ships a given order line at most once.</p>
+<p>The foreign key lines of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a> sort the eight tables into three groups. Three tables refer to no other table of the distribution schema: <code>customer</code>, <code>product</code>, and <code>warehouse</code>. (A product does refer to a table of the <code>production</code> schema, <code>production.manufactured_part</code>, the part the plant makes and sells as that product; <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> shows why.) Four refer only to those three or to each other: an order refers to a customer, an order line to an order and a product, a stock level to a warehouse and a product, and a shipment to an order and a warehouse. The last, <code>shipment_line</code>, refers to a shipment and to the order line it ships. Notice also the three alternate keys written in parentheses. The first, in <code>order_line</code>, is the composite key of <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a>, an order and a line number. The second, in <code>stock_level</code>, says that a warehouse holds at most one stock level for each product. The third, in <code>shipment_line</code>, says that a shipment ships a given order line at most once.</p>
 <p>The tables of the book’s database also carry a schema name, the name of a group of tables within the database. The distribution tables belong to the schema <code>distribution</code>, so a query names the customer table <code>distribution.customer</code>, as the queries of this chapter have. The production and quality departments’ tables belong to schemas of their own, and <a href="15-AppSampleDatabases.html" class="quarto-xref"><span>Appendix C</span></a> shows all of them.</p>
 <p>The main use of a relational schema is to find where the answer to a question lives, before any query is written. The following example illustrates the process.</p>
 <div id="exm-rm-trace-request" class="theorem example">
-<p><span class="theorem-title"><strong>Example 2.2 (Tracing a request through the schema)</strong></span> <em>The system.</em> The distribution schema of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>.</p>
+<p><span class="theorem-title"><strong>Example 2.2 (Tracing a request through the schema)</strong></span> <em>The system.</em> The distribution schema of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>.</p>
 <p><em>The request.</em> The sales manager asks: which customers have ordered the GC-300 steel garden cart?</p>
 <p>The request names two things, customers and a product, so we begin by finding the tables that describe them: <code>customer</code> and <code>product</code>. Neither refers to the other, so we look for a path of foreign keys between them. The foreign keys of <code>order_line</code> refer to <code>product</code> and to <code>customer_order</code>, and the foreign key of <code>customer_order</code> refers to <code>customer</code>. Thus, the path runs from <code>product</code> to <code>order_line</code>, then to <code>customer_order</code>, and finally to <code>customer</code>. The columns along the path are the keys that connect each pair:</p>
 <div id="tbl-rm-trace" class="quarto-float quarto-figure quarto-figure-left anchored">
@@ -1574,7 +1576,7 @@ Table&nbsp;2.7: The Path from a Product to Its Customers
 </div>
 </figure>
 </div>
-<p><em>The check.</em> Every step of <a href="#tbl-rm-trace" class="quarto-xref">Table&nbsp;<span>2.7</span></a> is a foreign key line of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>, and every step matches a foreign key to the primary key it refers to, so each connection is guaranteed by referential integrity.</p>
+<p><em>The check.</em> Every step of <a href="#tbl-rm-trace" class="quarto-xref">Table&nbsp;<span>2.7</span></a> is a foreign key line of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>, and every step matches a foreign key to the primary key it refers to, so each connection is guaranteed by referential integrity.</p>
 <p><em>Interpretation.</em> Four tables answer the question. A query needs the product’s number from <code>product</code>, the customers’ names from <code>customer</code>, and the two tables between them only to make the connection.</p>
 <p><em>Where it breaks.</em> The path finds customers who <em>ordered</em> the cart. A manager who asks which customers <em>received</em> one needs a different path, through <code>shipment_line</code> and <code>shipment</code>, because an order line that has not shipped is still an order.</p>
 </div>
@@ -1585,7 +1587,7 @@ Table&nbsp;2.7: The Path from a Product to Its Customers
 <p>This section shows that a relational database stores the description of its own tables, and that the description is queried like any other data.</p>
 <p>Recall from <a href="01-Chapter1.html#sec-dbms" class="quarto-xref"><span>Section 1.3</span></a> that a DBMS keeps a <em>catalog</em> of <em>metadata</em>, the data about the data. The relational schemas of <a href="#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a> are metadata: they say what tables exist, what columns each has, and which keys and rules apply, without listing a single customer. A database that stores this description inside itself, where people and programs can read it, is called <strong>self-describing</strong>. Every relational database is self-describing, and it holds the description the relational way, in tables.</p>
 <p>Compare the sales office’s order log of <a href="01-Chapter1.html#tbl-intro-order-log" class="quarto-xref">Table&nbsp;<span>1.1</span></a>. Its only description is its heading row. The heading “Qty” names a column, but nothing in the spreadsheet records that a quantity must be a positive whole number or that an order number identifies one order. Those rules live in the heads of the people who keep the log, and they hold only as long as those people are careful. In a database, the same rules are part of the catalog, and the DBMS reads them on every change.</p>
-<p>The SQL standard defines a set of views of the catalog, called the <code>information_schema</code>, which every system that follows the standard provides. Its views are queried with the same SQL as the data. The following query asks the catalog of stage D5 which tables the distribution schema holds. Unlike the queries before it, it names the columns it wants after <code>SELECT</code>, keeps only the rows its <code>WHERE</code> allows, and sorts them with <code>ORDER BY</code>.</p>
+<p>The SQL standard defines a set of views of the catalog, called the <code>information_schema</code>, which every system that follows the standard provides. Its views are queried with the same SQL as the data. The following query asks the catalog which tables the distribution schema holds. Unlike the queries before it, it names the columns it wants after <code>SELECT</code>, keeps only the rows its <code>WHERE</code> allows, and sorts them with <code>ORDER BY</code>.</p>
 <div id="tbl-rm-catalog-tables" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-catalog-tables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1679,7 +1681,7 @@ BASE TABLE
 </div>
 </figure>
 </div>
-<p><a href="#tbl-rm-catalog-tables" class="quarto-xref">Table&nbsp;<span>2.8</span></a> lists the eight tables of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>. Each is a <code>BASE TABLE</code>, a table that stores rows; the catalog also lists views, which <a href="09-Chapter9.html#sec-tx-views" class="quarto-xref"><span>Section 9.1</span></a> presents. The next query asks the catalog about the columns of one table. Its <code>WHERE</code> keeps the rows that meet both conditions joined by <code>AND</code>, and <code>AS</code> gives the column <code>character_maximum_length</code> the shorter name <code>length</code> in the result.</p>
+<p><a href="#tbl-rm-catalog-tables" class="quarto-xref">Table&nbsp;<span>2.8</span></a> lists the eight tables of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>. Each is a <code>BASE TABLE</code>, a table that stores rows; the catalog also lists views, which <a href="09-Chapter9.html#sec-tx-views" class="quarto-xref"><span>Section 9.1</span></a> presents. The next query asks the catalog about the columns of one table. Its <code>WHERE</code> keeps the rows that meet both conditions joined by <code>AND</code>, and <code>AS</code> gives the column <code>character_maximum_length</code> the shorter name <code>length</code> in the result.</p>
 <div id="tbl-rm-catalog-columns" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-catalog-columns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1804,8 +1806,8 @@ LINE 1: SELECT order_no
 <section id="sec-rm-tools" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="sec-rm-tools"><span class="header-section-number">2.6</span> Exploring a database: DataGrip, DBeaver, psql, and pgAdmin</h2>
 <p>This section presents the tools you will use to connect to a PostgreSQL database and explore it. <a href="13-AppPostgreSQLSetup.html" class="quarto-xref"><span>Appendix A</span></a> explains how to install each of them and how to load the book’s database into your server.</p>
-<p>DataGrip and DBeaver are the tools this book uses. Both connect to many kinds of database, and both show a database the same way: a tree of the database’s schemas, each schema’s tables, and each table’s columns, keys, and constraints, beside an editor in which you write and run SQL. To connect to the book’s database, you create a data source (DataGrip) or a database connection (DBeaver) for PostgreSQL, giving the host <code>localhost</code>, the port <code>5432</code>, the database name <code>dbconcepts</code>, and your user name. Once connected, expand the <code>distribution</code> schema and then its tables, and you will find the columns and keys of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>. The tree is drawn from the catalog of <a href="#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a>, which is why it is the same for every database you connect to.</p>
-<p><a href="#fig-rm-tool-tree" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> shows the tree as DataGrip draws it, here inside IntelliJ IDEA, whose database tools are DataGrip’s. The connection to the server is at the top, the <code>dbconcepts</code> database below it, and its schemas below that. The <code>distribution</code> schema is open to its eight tables, and <code>customer_order</code> is open to its five columns, in the order of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. The icons mark <code>customer_order_pk</code> as the primary key and <code>customer_fk</code> as a foreign key. The folders below the columns count the table’s constraints: two keys (the primary key and the alternate key on <code>order_number</code>), one foreign key, and one check, which keeps the requested ship date from preceding the order date. PostgreSQL builds an index to enforce each key, which is why the tree also lists two indexes; this book does not cover indexes further.</p>
+<p>DataGrip and DBeaver are the tools this book uses. Both connect to many kinds of database, and both show a database the same way: a tree of the database’s schemas, each schema’s tables, and each table’s columns, keys, and constraints, beside an editor in which you write and run SQL. To connect to the book’s database, you create a data source (DataGrip) or a database connection (DBeaver) for PostgreSQL, giving the host <code>localhost</code>, the port <code>5432</code>, the database name <code>dbconcepts</code>, and your user name. Once connected, expand the <code>distribution</code> schema and then its tables, and you will find the columns and keys of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>. The tree is drawn from the catalog of <a href="#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a>, which is why it is the same for every database you connect to.</p>
+<p><a href="#fig-rm-tool-tree" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> shows the tree as DataGrip draws it, here inside IntelliJ IDEA, whose database tools are DataGrip’s. The connection to the server is at the top, the <code>dbconcepts</code> database below it, and its schemas below that. The <code>distribution</code> schema is open to its eight tables, and <code>customer_order</code> is open to its five columns, in the order of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. The icons mark <code>customer_order_pk</code> as the primary key and <code>customer_fk</code> as a foreign key. The folders below the columns count the table’s constraints: two keys (the primary key and the alternate key on <code>order_number</code>), one foreign key, and one check, which keeps the requested ship date from preceding the order date. PostgreSQL builds an index to enforce each key, which is why the tree also lists two indexes; this book does not cover indexes further.</p>
 <div id="fig-rm-tool-tree" class="quarto-float quarto-figure quarto-figure-left anchored" alt="DataGrip's database tree: the dbconcepts database, its distribution schema open to eight tables, and customer_order open to its five columns, with folders for its keys, foreign keys, indexes, and checks, followed by the schemas information_schema, pg_catalog, production, public, quality, and sales.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-rm-tool-tree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1816,30 +1818,36 @@ Figure&nbsp;2.1: The Database Tree of DataGrip, Open to the <code>customer_order
 </figcaption>
 </figure>
 </div>
-<p>Notice that <code>information_schema</code> and <code>pg_catalog</code> appear in <a href="#fig-rm-tool-tree" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> beside <code>distribution</code>, as schemas like any other. They are the catalog of <a href="#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a>, and the tool reads them to draw the tree. The <code>production</code>, <code>quality</code>, and <code>sales</code> schemas hold the other departments’ tables, which later chapters add. If your tree shows only some schemas, <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-datagrip" class="quarto-xref"><span>Section A.2</span></a> explains how to show them all. DBeaver’s tree, and the tree of a later version of DataGrip, may look a little different, but the outline is the same: a database, its schemas, their tables, and each table’s columns and constraints.</p>
-<p>Both tools will also draw a <strong>schema diagram</strong>, a picture of the tables you select and the foreign keys that connect them. <a href="#fig-rm-schema-d5" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> draws the tables of stage D5 the way these tools do. Each box is a table, with its key columns first, marked <code>PK</code> and <code>FK</code>, and its other columns below a line. Each column shows its SQL data type; <code>UNIQUE</code> marks an alternate key, <code>(optional)</code> marks a column that may be NULL, and a key of several columns is listed at the bottom as a <code>UNIQUE (...)</code> line. Each arrow is one foreign key, running from the table that holds it to the table it refers to and labeled with the foreign key column.</p>
-<div id="fig-rm-schema-d5" class="quarto-float quarto-figure quarto-figure-left anchored">
+<p>Notice that <code>information_schema</code> and <code>pg_catalog</code> appear in <a href="#fig-rm-tool-tree" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> beside <code>distribution</code>, as schemas like any other. They are the catalog of <a href="#sec-rm-catalog" class="quarto-xref"><span>Section 2.5</span></a>, and the tool reads them to draw the tree. The <code>production</code> and <code>quality</code> schemas hold the other departments’ tables, which later chapters use. The <code>sales</code> schema is the warehouse of <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a>, which your <code>dbconcepts_history</code> database holds; your <code>dbconcepts</code> has none. If your tree shows only some schemas, <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-datagrip" class="quarto-xref"><span>Section A.2</span></a> explains how to show them all. DBeaver’s tree, and the tree of a later version of DataGrip, may look a little different, but the outline is the same: a database, its schemas, their tables, and each table’s columns and constraints.</p>
+<p>Both tools will also draw a <strong>schema diagram</strong>, a picture of the tables you select and the foreign keys that connect them. <a href="#fig-rm-schema-distribution" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> draws the tables of the distribution schema the way these tools do. Each box is a table, with its key columns first, marked <code>PK</code> and <code>FK</code>, and its other columns below a line. Each column shows its SQL data type; <code>UNIQUE</code> marks an alternate key, <code>(optional)</code> marks a column that may be NULL, and a key of several columns is listed at the bottom as a <code>UNIQUE (...)</code> line. Each arrow is one foreign key, running from the table that holds it to the table it refers to and labeled with the foreign key column. The foreign key of <code>product</code> has no arrow, since the table it refers to is outside the schema drawn.</p>
+<div id="fig-rm-schema-distribution" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-rm-schema-d5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="figures/diagrams/schema-d5.svg" class="img-fluid figure-img">
+<div aria-describedby="fig-rm-schema-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/schema-q.svg" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rm-schema-d5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.2: The Schema of Stage D5, Drawn as a Database Tool Draws It
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rm-schema-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: The Distribution Schema, Drawn as a Database Tool Draws It
 </figcaption>
 </figure>
 </div>
-<p>A schema diagram shows at a glance what the relational schema says line by line. For example, the arrow from <code>customer_order</code> to <code>customer</code> in <a href="#fig-rm-schema-d5" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> is the line <code>customer_fk references customer_pk in customer</code> of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. For an unfamiliar database, you should ask a tool for its diagram before writing a query: reading it takes a few minutes and saves hours of guessing. Tools differ in how they draw a diagram, however, while a relational schema says the same things whichever tool produced it.</p>
-<p>PostgreSQL itself comes with two tools. <strong>psql</strong> is a command-line program that connects to a database and runs SQL typed at its prompt or read from a file. It is the quickest way to run a script, and it is available wherever PostgreSQL is installed. For example, this command loads stage D2 of the book’s database, from the <code>sql</code> folder of the companion code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-d2.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A schema diagram shows at a glance what the relational schema says line by line. For example, the arrow from <code>customer_order</code> to <code>customer</code> in <a href="#fig-rm-schema-distribution" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> is the line <code>customer_fk references customer_pk in customer</code> of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. For an unfamiliar database, you should ask a tool for its diagram before writing a query: reading it takes a few minutes and saves hours of guessing. Tools differ in how they draw a diagram, however, while a relational schema says the same things whichever tool produced it.</p>
+<p>PostgreSQL itself comes with two tools. <strong>psql</strong> is a command-line program that connects to a database and runs SQL typed at its prompt or read from a file. It is the quickest way to run a script, and it is available wherever PostgreSQL is installed. For example, this command loads the book’s database, from the <code>sql</code> folder of the companion code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-q.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>On Windows, add <code>-U postgres</code> and give the superuser’s password when psql asks; <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-psql-pgadmin" class="quarto-xref"><span>Section A.4</span></a> gives the form for each system.</p>
-<p>psql also has commands of its own, which begin with a backslash. The command <code>\dt distribution.*</code> lists the tables of the <code>distribution</code> schema, and at stage D2 it prints:</p>
+<p>psql also has commands of its own, which begin with a backslash. The command <code>\dt distribution.*</code> lists the tables of the <code>distribution</code> schema:</p>
 <pre class="text"><code>                  List of tables
     Schema    |      Name      | Type  |  Owner
 --------------+----------------+-------+----------
  distribution | customer       | table | rossetti
  distribution | customer_order | table | rossetti
-(2 rows)</code></pre>
-<p>The command <code>\d distribution.customer_order</code> describes one table: its columns, their types, and its constraints. The following output is what it prints at stage D2.</p>
+ distribution | order_line     | table | rossetti
+ distribution | product        | table | rossetti
+ distribution | shipment       | table | rossetti
+ distribution | shipment_line  | table | rossetti
+ distribution | stock_level    | table | rossetti
+ distribution | warehouse      | table | rossetti
+(8 rows)</code></pre>
+<p>The command <code>\d distribution.customer_order</code> describes one table: its columns, their types, and its constraints:</p>
 <pre class="text"><code>                                Table "distribution.customer_order"
        Column        |         Type          | Collation | Nullable |           Default
 ---------------------+-----------------------+-----------+----------+------------------------------
@@ -1854,8 +1862,11 @@ Indexes:
 Check constraints:
     "customer_order_check" CHECK (requested_ship_date &gt;= order_date)
 Foreign-key constraints:
-    "customer_order_customer_fk_fkey" FOREIGN KEY (customer_fk) REFERENCES distribution.customer(customer_pk)</code></pre>
-<p>Notice that the output holds what the complete relational schema of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a> says, in PostgreSQL’s words. psql reads it from PostgreSQL’s own catalog, the tables of the <code>pg_catalog</code> schema, over which the standard’s <code>information_schema</code> views are defined. The <code>Nullable</code> column marks the columns that may not be NULL; only <code>requested_ship_date</code> is blank, since it is optional. The primary key and the alternate key appear under <code>Indexes</code>, and the foreign key appears under <code>Foreign-key constraints</code>, with the table and column it refers to. Its response to a deletion is not printed, because it is the default, no action. The <code>Owner</code> column of the first listing, and the constraint names, will differ on your machine: the owner is whoever loaded the database, and PostgreSQL names a constraint that its creator did not name.</p>
+    "customer_order_customer_fk_fkey" FOREIGN KEY (customer_fk) REFERENCES distribution.customer(customer_pk)
+Referenced by:
+    TABLE "distribution.order_line" CONSTRAINT "order_line_customer_order_fk_fkey" FOREIGN KEY (customer_order_fk) REFERENCES distribution.customer_order(customer_order_pk) ON DELETE CASCADE
+    TABLE "distribution.shipment" CONSTRAINT "shipment_customer_order_fk_fkey" FOREIGN KEY (customer_order_fk) REFERENCES distribution.customer_order(customer_order_pk)</code></pre>
+<p>Notice that the output holds what the complete relational schema of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a> says, in PostgreSQL’s words. psql reads it from PostgreSQL’s own catalog, the tables of the <code>pg_catalog</code> schema, over which the standard’s <code>information_schema</code> views are defined. The <code>Nullable</code> column marks the columns that may not be NULL; only <code>requested_ship_date</code> is blank, since it is optional. The primary key and the alternate key appear under <code>Indexes</code>, and the foreign key appears under <code>Foreign-key constraints</code>, with the table and column it refers to. Its response to a deletion is not printed, because it is the default, no action. Under <code>Referenced by</code> are the foreign keys of other tables that refer to this one: an order line’s, whose deletion response is cascade (<a href="#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a>), and a shipment’s. The <code>Owner</code> column of the first listing, and the constraint names, will differ on your machine: the owner is whoever loaded the database, and PostgreSQL names a constraint that its creator did not name.</p>
 <p><strong>pgAdmin</strong> is PostgreSQL’s graphical tool, often installed with the server. It shows the same tree of schemas, tables, and columns as DataGrip and DBeaver, and it can run SQL. You may meet it on a machine where nothing else is installed; this book does not use it further.</p>
 </section>
 <section id="sec-rm-other-models" class="level2" data-number="2.7">
@@ -1902,7 +1913,7 @@ Listing&nbsp;2.5: Order SO-5001 as a JSON Document
 </figure>
 </div>
 <!-- end document -->
-<p>Compare <a href="#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a> with <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. The relational database holds this order in four tables connected by keys: one row of <code>customer_order</code>, one of <code>customer</code>, two of <code>order_line</code>, and two of <code>product</code>. The document holds it in one place, with the order’s lines nested inside it and copies of the customer’s and the products’ facts written in. A program that needs the whole order reads one document, without a join.</p>
+<p>Compare <a href="#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a> with <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. The relational database holds this order in four tables connected by keys: one row of <code>customer_order</code>, one of <code>customer</code>, two of <code>order_line</code>, and two of <code>product</code>. The document holds it in one place, with the order’s lines nested inside it and copies of the customer’s and the products’ facts written in. A program that needs the whole order reads one document, without a join.</p>
 <p>Notice two things about the document. First, every field carries its own name, so each document describes itself and no catalog is needed to read it. The cost is that nothing requires the next document to use the same names or the same structure; a misspelled field is simply a new field. Second, the description of the HT-100 is now stored in every order that includes one, which is the duplication of the order log of <a href="01-Chapter1.html#sec-files-to-databases" class="quarto-xref"><span>Section 1.1</span></a>. Changing a product’s description means finding and changing every document that copies it. Thus, a document database suits data that is written and read whole, such as an order or a test record, better than facts shared by many records. <a href="20-AppNoSQL.html" class="quarto-xref"><span>Appendix H</span></a> describes the four families of NoSQL databases, when each suits, and how PostgreSQL itself stores and queries JSON documents.</p>
 </section>
 <section id="sec-relationalmodel-summary" class="level2" data-number="2.8">
@@ -1970,7 +1981,7 @@ Listing&nbsp;2.5: Order SO-5001 as a JSON Document
 </ol>
 </div>
 <div id="exr-ch2-relation-properties" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 2.3</strong></span> A clerk at HG Industries keeps the stock of its two warehouses in the spreadsheet of <a href="#tbl-rm-stock-sheet" class="quarto-xref">Table&nbsp;<span>2.10</span></a>. Its quantities come from the <code>stock_level</code> table of stage D4 (<a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>); its bin locations are invented. The clerk knows that the first Quantity column is the quantity on hand and the second is the reorder point.</p>
+<p><span class="theorem-title"><strong>Exercise 2.3</strong></span> A clerk at HG Industries keeps the stock of its two warehouses in the spreadsheet of <a href="#tbl-rm-stock-sheet" class="quarto-xref">Table&nbsp;<span>2.10</span></a>. Its quantities come from the <code>stock_level</code> table of stage D4 (<a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>); its bin locations are invented. The clerk knows that the first Quantity column is the quantity on hand and the second is the reorder point.</p>
 <div id="tbl-rm-stock-sheet" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rm-stock-sheet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2052,7 +2063,7 @@ Table&nbsp;2.10: A Clerk’s Stock Sheet (Hypothetical)
 <p><span class="theorem-title"><strong>Exercise 2.4</strong></span> The <code>warehouse</code> table of stage D4 has the columns <code>warehouse_pk</code>, <code>warehouse_code</code>, <code>city</code>, and <code>state</code>, and holds two rows: W-FAY in Fayetteville, Arkansas, and W-TUL in Tulsa, Oklahoma. HG Industries assigns each warehouse a code that is never reused, and it could open a second warehouse in a city where it already has one. Identify every candidate key of the table, its primary key, and its alternate keys, and explain why <code>city</code> is not a candidate key even though the two rows have different cities.</p>
 </div>
 <div id="exr-ch2-order-line-keys" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 2.5</strong></span> Using <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>, answer these questions about the <code>order_line</code> table.</p>
+<p><span class="theorem-title"><strong>Exercise 2.5</strong></span> Using <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>, answer these questions about the <code>order_line</code> table.</p>
 <ol type="a">
 <li>Why is <code>line_number</code> alone not a candidate key?</li>
 <li>Name every candidate key of the table.</li>
@@ -2070,16 +2081,16 @@ Table&nbsp;2.10: A Clerk’s Stock Sheet (Hypothetical)
 </ol>
 </div>
 <div id="exr-ch2-ri-actions" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 2.7</strong></span> At stage D4, the <code>stock_level</code> table refers to the <code>warehouse</code> table through <code>warehouse_fk</code> (<a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>), and each of the two warehouses holds four stock levels.</p>
+<p><span class="theorem-title"><strong>Exercise 2.7</strong></span> At stage D4, the <code>stock_level</code> table refers to the <code>warehouse</code> table through <code>warehouse_fk</code> (<a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>), and each of the two warehouses holds four stock levels.</p>
 <ol type="a">
 <li>Build a table like <a href="#tbl-rm-ri-changes" class="quarto-xref">Table&nbsp;<span>2.6</span></a> for the <code>warehouse</code> and <code>stock_level</code> tables.</li>
 <li>HG Industries closes its Tulsa warehouse (W-TUL) and asks for it to be removed from the database. What does PostgreSQL do, and why?</li>
-<li>Suppose <code>warehouse_fk</code> had been declared to cascade deletions. What would removing W-TUL do at stage D4? Stage D5 adds the <code>shipment</code> table, whose <code>warehouse_fk</code> also refers to <code>warehouse</code> (<a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>). Why might the company regret the same choice on <code>shipment.warehouse_fk</code>?</li>
+<li>Suppose <code>warehouse_fk</code> had been declared to cascade deletions. What would removing W-TUL do at stage D4? Stage D5 adds the <code>shipment</code> table, whose <code>warehouse_fk</code> also refers to <code>warehouse</code> (<a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>). Why might the company regret the same choice on <code>shipment.warehouse_fk</code>?</li>
 <li>Suppose instead that <code>warehouse_fk</code> had been declared to set NULL. What would happen when W-TUL is removed, and why?</li>
 </ol>
 </div>
 <div id="exr-ch2-trace" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 2.8</strong></span> Using <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-d5-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>, list the tables, and the key columns that connect them, needed to answer each request. Do not write any SQL.</p>
+<p><span class="theorem-title"><strong>Exercise 2.8</strong></span> Using <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> and <a href="#lst-rm-schema-shipping" class="quarto-xref">Listing&nbsp;<span>2.4</span></a>, list the tables, and the key columns that connect them, needed to answer each request. Do not write any SQL.</p>
 <ol type="a">
 <li>Which warehouse shipped order SO-5004?</li>
 <li>How many units of the HT-100 hand truck have been ordered but not yet shipped?</li>
@@ -2087,7 +2098,7 @@ Table&nbsp;2.10: A Clerk’s Stock Sheet (Hypothetical)
 </ol>
 </div>
 <div id="exr-ch2-explore" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 2.9</strong></span> Connect to the book’s database with DataGrip or DBeaver, load stage D5, and find the <code>stock_level</code> table in the <code>distribution</code> schema. List its columns with their data types, its primary key, its foreign keys and the tables they refer to, and its other constraints. Then write the complete relational schema of <code>stock_level</code> in the form of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a>, and compare it with the <code>stock_level</code> box of <a href="#fig-rm-schema-d5" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>. What does the relational schema say that the box does not?</p>
+<p><span class="theorem-title"><strong>Exercise 2.9</strong></span> Connect to your <code>dbconcepts</code> database with DataGrip or DBeaver, and find the <code>stock_level</code> table in the <code>distribution</code> schema. List its columns with their data types, its primary key, its foreign keys and the tables they refer to, and its other constraints. Then write the complete relational schema of <code>stock_level</code> in the form of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a>, and compare it with the <code>stock_level</code> box of <a href="#fig-rm-schema-distribution" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>. What does the relational schema say that the box does not?</p>
 </div>
 <div id="exr-ch2-northwind-orders" class="theorem exercise">
 <p><span class="theorem-title"><strong>Exercise 2.10</strong></span> Open the <code>orders</code>, <code>order_details</code>, <code>products</code>, and <code>shippers</code> tables of the Northwind database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-public" class="quarto-xref"><span>Section C.11</span></a>, loaded with the book’s loader (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a>), in DataGrip or DBeaver, and read their definitions.</p>
@@ -2098,10 +2109,10 @@ Table&nbsp;2.10: A Clerk’s Stock Sheet (Hypothetical)
 </ol>
 </div>
 <div id="exr-ch2-catalog-columns" class="theorem exercise">
-<p><span class="theorem-title"><strong>Exercise 2.11</strong></span> The query of <a href="#tbl-rm-catalog-columns" class="quarto-xref">Table&nbsp;<span>2.9</span></a> lists the columns of <code>customer_order</code> at stage D5. Change it to list the columns of <code>order_line</code> instead, run it against stage D5, and compare the result with the <code>order_line</code> entry of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>.</p>
+<p><span class="theorem-title"><strong>Exercise 2.11</strong></span> The query of <a href="#tbl-rm-catalog-columns" class="quarto-xref">Table&nbsp;<span>2.9</span></a> lists the columns of <code>customer_order</code>. Change it to list the columns of <code>order_line</code> instead, run it in your <code>dbconcepts</code> database, and compare the result with the <code>order_line</code> entry of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>.</p>
 <ol type="a">
 <li>Which columns of <code>order_line</code> may be NULL?</li>
-<li>Name one thing the result tells you that the relational schema of <a href="#lst-rm-schema-d5-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> does not, and one thing the relational schema tells you that the result does not.</li>
+<li>Name one thing the result tells you that the relational schema of <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a> does not, and one thing the relational schema tells you that the result does not.</li>
 <li>The result gives no length for <code>unit_price</code>, which is declared <code>NUMERIC(10,2)</code>. Look through the columns of <code>information_schema.columns</code> in DataGrip or DBeaver, and name the two that record the 10 and the 2.</li>
 </ol>
 </div>

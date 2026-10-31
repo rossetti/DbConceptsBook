@@ -2244,7 +2244,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Each question asks you to predict the result <em>before</em> you run the query; write the prediction down, then check it.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage P3 by running <code>code/sql/load/through-p3.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes. Run these three queries and keep their results in front of you for parts 1 and 2:</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes. Run these three queries and keep their results in front of you for parts 1 and 2:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> operator_pk, employee_number, name</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> production.<span class="kw">operator</span>;</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>

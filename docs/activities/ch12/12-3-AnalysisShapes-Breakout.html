@@ -2209,7 +2209,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Each question asks you to predict before you run a query; write the prediction down, then check it.</p>
-<p><strong>Setup.</strong> Connect to stage K in DataGrip or DBeaver, built as the previous activity’s setup describes (load <code>code/sql/load/through-q.sql</code>, then run <code>RunFrameLine.kt</code> against it), or to the instructor’s copy. The queries read the KSL’s views <code>ksl_db.within_rep_view</code> and <code>ksl_db.pw_diff_within_rep_view</code>; use t = 2.045 for a 95 percent interval over 30 replications.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver, with the simulation’s results added as the previous activity’s setup describes (run <code>RunFrameLine.kt</code>, or <code>code/sql/load/add-k.sql</code>). Run <code>code/sql/setup/which-stage.sql</code>: it should report the simulation added and complete. The queries read the KSL’s views <code>ksl_db.within_rep_view</code> and <code>ksl_db.pw_diff_within_rep_view</code>; use t = 2.045 for a 95 percent interval over 30 replications.</p>
 <section id="where-the-wait-went" class="level2">
 <h2 class="anchored" data-anchor-id="where-the-wait-went">1. Where the wait went</h2>
 <p>The book showed that a third welder barely changes the time in shop. The wait must have gone somewhere.</p>

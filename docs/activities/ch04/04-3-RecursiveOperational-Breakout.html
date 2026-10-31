@@ -2244,7 +2244,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Each question asks you to predict the result <em>before</em> you run the query; write the prediction down, then check it.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage G by running <code>code/sql/load/through-g.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes. Stage G holds every schema’s base data and a year of history.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts_history</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-s.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-s.sql</code>, as the book’s PostgreSQL setup appendix describes. Stage G holds every schema’s base data and a year of history.</p>
 <section id="exploding-the-gc-400-by-hand" class="level2">
 <h2 class="anchored" data-anchor-id="exploding-the-gc-400-by-hand">1. Exploding the GC-400 by hand</h2>
 <p>Run this query, which lists the bill of materials of every assembly, and keep its result in front of you:</p>

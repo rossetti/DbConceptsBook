@@ -2244,7 +2244,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Each question asks you to predict before you run a query; write the prediction down, then check it.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage P3 by running <code>code/sql/load/through-p3.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes.</p>
 <section id="the-routing-sheet" class="level2">
 <h2 class="anchored" data-anchor-id="the-routing-sheet">The routing sheet</h2>
 <p>The routing sheet has one row per operation, with the columns <code>part_number</code>, <code>description</code>, <code>operation_number</code>, <code>operation</code>, <code>work_center_code</code>, <code>hourly_rate</code>, and <code>setup_minutes</code>. Its key is (<code>part_number</code>, <code>operation_number</code>), and its dependencies are:</p>
@@ -2253,7 +2253,7 @@ margin: 0 0 0.5em 0;
 <li><code>part_number, operation_number → operation, work_center_code, setup_minutes</code></li>
 <li><code>work_center_code → hourly_rate</code></li>
 </ul>
-<p>This query rebuilds it from the tables of stage P3:</p>
+<p>This query rebuilds it from the production tables of the book’s database:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> routing_sheet <span class="kw">AS</span> (</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> p.part_number, p.description,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>         o.operation_number,</span>
@@ -2275,7 +2275,7 @@ margin: 0 0 0.5em 0;
 <ol type="a">
 <li><p>Split the sheet on the dependency that breaks 2NF. Give the two tables and their keys, and say which normal forms each passes.</p></li>
 <li><p>Split again until every table is in BCNF. Write the tables in the book’s relational schema notation, with the foreign keys the splits leave behind.</p></li>
-<li><p>Compare your tables with the tables of stage P3 that hold the routings. Name two differences, and say whether either changes a dependency.</p></li>
+<li><p>Compare your tables with the book’s production tables that hold the routings. Name two differences, and say whether either changes a dependency.</p></li>
 </ol>
 </section>
 <section id="lossless-or-not" class="level2">
@@ -2337,9 +2337,9 @@ margin: 0 0 0.5em 0;
 <h2 class="anchored" data-anchor-id="fourth-normal-form">4. Fourth normal form</h2>
 <p>Each machine runs on one or more shifts: the MIG welder M-05 runs a day and a swing shift. The rule is that an operator certified on a machine may run it on every shift the machine runs. A planner keeps one table, <code>machine_roster (machine_number, operator, shift)</code>, with a row for each combination.</p>
 <ol type="a">
-<li><p>Look up the operators certified on M-05 at stage P3, and list the rows the roster holds for M-05. What is its key, and is it in BCNF?</p></li>
+<li><p>Look up the operators certified on M-05 in your database, and list the rows the roster holds for M-05. What is its key, and is it in BCNF?</p></li>
 <li><p>How many rows must be added for M-05 to run a night shift? To certify a third operator on M-05, after the night shift is added?</p></li>
-<li><p>State the multivalued dependencies, and decompose the table into 4NF. Which of your tables does stage P3 already hold?</p></li>
+<li><p>State the multivalued dependencies, and decompose the table into 4NF. Which of your tables does the book’s database already hold?</p></li>
 <li><p>Suppose instead that Aisha Patel is cleared to run M-05 on the day shift only. Should the roster still be decomposed as in part (c)? Use the counting test.</p></li>
 </ol>
 </section>

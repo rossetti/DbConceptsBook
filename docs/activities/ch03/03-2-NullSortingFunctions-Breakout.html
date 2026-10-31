@@ -2244,7 +2244,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Each question asks you to predict the result <em>before</em> you run the query; write the prediction down, then check it. This activity takes the whole session.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage P3 by running <code>code/sql/load/through-p3.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes. Most queries use the <code>production.work_order</code> table, whose open work orders have no completion date.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes. Most queries use the <code>production.work_order</code> table, whose open work orders have no completion date.</p>
 <section id="a-three-valued-ledger" class="level2">
 <h2 class="anchored" data-anchor-id="a-three-valued-ledger">1. A three-valued ledger</h2>
 <p>Run this query and keep its result in front of you:</p>

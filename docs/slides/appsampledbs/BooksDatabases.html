@@ -1070,7 +1070,7 @@ Manuel D. Rossetti, PhD P.E.
 <ul>
 <li>HG Industries, the company whose data the book uses</li>
 <li>One database, four schemas, built in stages</li>
-<li>Loading a stage, and the naming rules every table follows</li>
+<li>The two databases you work in, and the naming rules every table follows</li>
 <li>What each schema holds, and the situations its data was built to show</li>
 <li>Millbrook Transit, and the public sample databases for further practice</li>
 </ul>
@@ -1264,15 +1264,25 @@ sales
 </tbody>
 </table>
 </section>
-<section id="loading-a-stage" class="slide level2">
-<h2>Loading a stage</h2>
+<section id="two-databases-loaded-once" class="slide level2">
+<h2>Two databases, loaded once</h2>
 <ul>
-<li>Create an empty database once; the book calls it <code>dbconcepts</code></li>
-<li>Each load file, <code>sql/load/through-&lt;stage&gt;.sql</code>, <strong>deletes the four schemas and rebuilds them</strong> through its stage</li>
-<li>So one file is all you ever open, and running it again returns the database to a known state</li>
-<li>In DataGrip or DBeaver: open the file, choose the connection, run the whole script. From a terminal:</li>
+<li>Create two empty databases once: <code>dbconcepts</code> and <code>dbconcepts_history</code></li>
+<li>Load each once: <code>sql/load/through-q.sql</code> into <code>dbconcepts</code> (stages D1 to Q), <code>sql/load/through-s.sql</code> into <code>dbconcepts_history</code> (D1 to S, with the history)</li>
+<li>A chapter’s stage tells you which: D1 to Q and K in <code>dbconcepts</code>, G and S in <code>dbconcepts_history</code></li>
+<li>Chapter 12 adds <code>ksl_db</code> to <code>dbconcepts</code>: run the simulation, or <code>sql/load/add-k.sql</code></li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-s.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-q.sql</span>
+<span id="cb2-2"><a href></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts_history <span class="at">-f</span> sql/load/through-s.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="resetting-and-checking" class="slide level2">
+<h2>Resetting and checking</h2>
+<ul>
+<li>Each load file <strong>deletes the four schemas and rebuilds them</strong> through its stage, so running it again is a <strong>reset</strong> to a known state</li>
+<li>It touches no other schema: your own tables in <code>public</code>, and <code>ksl_db</code>, survive</li>
+<li><code>sql/setup/which-stage.sql</code> says what a database holds: the load file it matches, whether to reset, and each table that has changed</li>
+<li>Run it before an exercise, whose answer assumes a fresh load</li>
+</ul>
 <p>The stage scripts (<code>sql/distribution</code>, <code>sql/production</code>, …) are worth reading, but run them only through a load file: each refers to earlier rows by their key numbers.</p>
 </section>
 <section id="naming-and-keys" class="slide level2">
@@ -1434,7 +1444,7 @@ sales
 <h2>Summary</h2>
 <ul>
 <li><strong>One database, four schemas</strong>: distribution, production, and quality are the departments’ working data; sales is built from them for analysis</li>
-<li><strong>Built in stages</strong>, one idea at a time; one load file rebuilds the database through any stage</li>
+<li><strong>Built in stages</strong>, one idea at a time, and held in <strong>two databases</strong>: <code>dbconcepts</code> (D1 to Q) and <code>dbconcepts_history</code> (with the history and <code>sales</code>); a load file resets either</li>
 <li><strong>The same naming rules everywhere</strong>: singular tables, <code>_pk</code> surrogate keys, <code>UNIQUE</code> business identifiers, <code>_fk</code> foreign keys</li>
 <li><strong>The data was built to hold the hard cases</strong>: missing matches, NULLs, backorders, drift, and late work</li>
 <li>Millbrook Transit and four public databases give practice beyond HG</li>

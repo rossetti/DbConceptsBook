@@ -621,25 +621,67 @@ Table&nbsp;C.1: Schemas of the Book’s Database
 </section>
 <section id="sec-appsampledbs-loading" class="level2" data-number="C.2">
 <h2 data-number="C.2" class="anchored" data-anchor-id="sec-appsampledbs-loading"><span class="header-section-number">C.2</span> Loading the database</h2>
-<p>The database is built by SQL scripts that come with the book, in the <code>sql</code> folder of the companion code project (<a href="https://github.com/rossetti/DbConceptsBookCode" class="uri">https://github.com/rossetti/DbConceptsBookCode</a>) and as downloads from the book’s site. <a href="13-AppPostgreSQLSetup.html" class="quarto-xref"><span>Appendix A</span></a> explains how to install PostgreSQL and connect to it with DataGrip or DBeaver. You then create an empty database once; the book calls it <code>dbconcepts</code>.</p>
-<p>The scripts build the database in <strong>stages</strong>, each adding one idea’s tables and rows to the stages before it. <a href="#tbl-appsampledbs-stages" class="quarto-xref">Table&nbsp;<span>C.2</span></a> lists them in the order they load. The chapters say which stage their examples assume. For example, the single-table queries of <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a> need only stage D1, while the analytical queries of <a href="04-Chapter4.html" class="quarto-xref"><span>Chapter 4</span></a> need the year of history in stage G.</p>
+<p>The database is built by SQL scripts that come with the book, in the <code>sql</code> folder of the companion code project (<a href="https://github.com/rossetti/DbConceptsBookCode" class="uri">https://github.com/rossetti/DbConceptsBookCode</a>) and as downloads from the book’s site. <a href="13-AppPostgreSQLSetup.html" class="quarto-xref"><span>Appendix A</span></a> explains how to install PostgreSQL and connect to it with DataGrip or DBeaver, and <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-bookdbs" class="quarto-xref"><span>Section A.5</span></a> how to create the two databases you work in and load each one once. <a href="#tbl-appsampledbs-databases" class="quarto-xref">Table&nbsp;<span>C.2</span></a> lists them.</p>
+<div id="tbl-appsampledbs-databases" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-databases-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;C.2: The Two Databases You Work In
+</figcaption>
+<div aria-describedby="tbl-appsampledbs-databases-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 39%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Database</th>
+<th style="text-align: left;">Loaded with</th>
+<th style="text-align: left;">Holds</th>
+<th style="text-align: left;">Used by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>dbconcepts</code></td>
+<td style="text-align: left;"><code>through-q.sql</code></td>
+<td style="text-align: left;">The distribution, production, and quality schemas, with the base data of January to March 2026</td>
+<td style="text-align: left;">Most examples, activities, and exercises</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>dbconcepts_history</code></td>
+<td style="text-align: left;"><code>through-s.sql</code></td>
+<td style="text-align: left;">The same schemas with a year of history added, April 2026 to March 2027, and the <code>sales</code> schema</td>
+<td style="text-align: left;">The examples that need volume, in <a href="04-Chapter4.html" class="quarto-xref"><span>Chapter 4</span></a> and <a href="07-Chapter7.html" class="quarto-xref"><span>Chapter 7</span></a>, and <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><a href="12-Chapter12.html" class="quarto-xref"><span>Chapter 12</span></a> adds one more schema to <code>dbconcepts</code>: <code>ksl_db</code>, the output of a simulation, written by the companion program <code>RunFrameLineKt</code> or, if you cannot run it, by the script <code>sql/load/add-k.sql</code>.</p>
+<p>The scripts build the database in <strong>stages</strong>, each adding one idea’s tables and rows to the stages before it. The stages are the order in which the book designs the database, and the chapters name them as they introduce each idea. <a href="#tbl-appsampledbs-stages" class="quarto-xref">Table&nbsp;<span>C.3</span></a> lists them in the order they load, with the database that holds each. For example, the single-table queries of <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a> need only stage D1, and the analytical queries of <a href="04-Chapter4.html" class="quarto-xref"><span>Chapter 4</span></a> need the year of history in stage G. You need not load a stage to use it: <code>dbconcepts</code> holds every stage from D1 to Q, and <code>dbconcepts_history</code> every stage from D1 to S. Thus, a chapter’s example at stage P3 runs in <code>dbconcepts</code>, and one at stage G in <code>dbconcepts_history</code>.</p>
 <div id="tbl-appsampledbs-stages" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-stages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.2: Stages of the Book’s Database
+Table&nbsp;C.3: Stages of the Book’s Database
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-stages-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 6%">
-<col style="width: 46%">
-<col style="width: 46%">
+<col style="width: 5%">
+<col style="width: 43%">
+<col style="width: 43%">
+<col style="width: 7%">
 </colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: center;">Stage</th>
 <th style="text-align: left;">Adds</th>
 <th style="text-align: left;">The new idea</th>
+<th style="text-align: left;">In</th>
 </tr>
 </thead>
 <tbody>
@@ -647,65 +689,83 @@ Table&nbsp;C.2: Stages of the Book’s Database
 <td style="text-align: center;">D1</td>
 <td style="text-align: left;"><code>customer</code></td>
 <td style="text-align: left;">One table: rows, columns, and a key</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">D2</td>
 <td style="text-align: left;"><code>customer_order</code></td>
 <td style="text-align: left;">A one-to-many association and its foreign key</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">D3</td>
 <td style="text-align: left;"><code>product</code>, <code>order_line</code></td>
 <td style="text-align: left;">A many-to-many association resolved by a table with its own data</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">D4</td>
 <td style="text-align: left;"><code>warehouse</code>, <code>stock_level</code></td>
 <td style="text-align: left;">A second association class</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">D5</td>
 <td style="text-align: left;"><code>shipment</code>, <code>shipment_line</code></td>
 <td style="text-align: left;">Optional participation</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">P1</td>
 <td style="text-align: left;"><code>part</code>, <code>manufactured_part</code>, <code>purchased_part</code></td>
 <td style="text-align: left;">Generalization; connecting distribution to production</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">P2</td>
 <td style="text-align: left;"><code>bom_line</code></td>
 <td style="text-align: left;">A recursive association, the bill of materials</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">P3</td>
 <td style="text-align: left;"><code>work_center</code>, <code>machine</code>, <code>operator</code>, <code>certification</code>, <code>operation</code>, <code>work_order</code></td>
 <td style="text-align: left;">Qualified associations and aggregation</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Q</td>
 <td style="text-align: left;">the <code>quality</code> schema</td>
 <td style="text-align: left;">Measurements over time</td>
+<td style="text-align: left;">both</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">G</td>
 <td style="text-align: left;">a year of history</td>
 <td style="text-align: left;">Enough data to analyze</td>
+<td style="text-align: left;"><code>dbconcepts_history</code></td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">S</td>
 <td style="text-align: left;">the <code>sales</code> schema</td>
 <td style="text-align: left;">A star schema</td>
+<td style="text-align: left;"><code>dbconcepts_history</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">K</td>
+<td style="text-align: left;">the <code>ksl_db</code> schema</td>
+<td style="text-align: left;">A simulation’s output</td>
+<td style="text-align: left;"><code>dbconcepts</code></td>
 </tr>
 </tbody>
 </table>
 </div>
 </figure>
 </div>
-<p>Each load file, in the <code>sql/load</code> folder, is named for its stage (<code>through-d1.sql</code>, <code>through-d2.sql</code>, and so on to <code>through-s.sql</code>) and rebuilds the database as it stands at that stage. It first deletes the four schemas of <a href="#tbl-appsampledbs-schemas" class="quarto-xref">Table&nbsp;<span>C.1</span></a>, then runs every stage script up to its own. Thus, you can run a load file at any time to return the database to a known state, and one file is all you ever need to open. A load file touches no schema other than these four.</p>
-<p>In DataGrip or DBeaver, open the load file, choose the <code>dbconcepts</code> connection, and run the whole script. From a terminal, psql does the same:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-s.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each load file, in the <code>sql/load</code> folder, is named for its stage (<code>through-d1.sql</code>, <code>through-d2.sql</code>, and so on to <code>through-s.sql</code>) and rebuilds the database as it stands at that stage. It first deletes the four schemas of <a href="#tbl-appsampledbs-schemas" class="quarto-xref">Table&nbsp;<span>C.1</span></a>, then runs every stage script up to its own. A load file touches no schema other than these four, so a table you create in the <code>public</code> schema, or in a schema of your own, survives it, and so does <code>ksl_db</code>. Thus, a load file is a <strong>reset</strong>: running <code>through-q.sql</code> in <code>dbconcepts</code>, or <code>through-s.sql</code> in <code>dbconcepts_history</code>, returns the database to the state the book assumes, whatever you have done to it. The other load files show the database as it stood at an earlier stage; if you run one, run <code>through-q.sql</code> afterward.</p>
+<p>In DataGrip or DBeaver, open the load file, choose the connection to the database, and run the whole script. From a terminal, psql does the same:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span> <span class="at">-d</span> dbconcepts <span class="at">-f</span> sql/load/through-q.sql</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The results in this book, and the answers to its activities and homework, assume a database as its load file leaves it. A change you made in an earlier activity, or a transaction you did not roll back, can make a correct query give a different answer. Before an activity or a homework, run <code>sql/setup/which-stage.sql</code> in the database you will use. It reads every table of the four schemas, changes nothing, and returns one row: <code>loaded_with</code> names the load file the database matches, <code>reset</code> says whether to run it again, <code>changed</code> lists each table that differs from the load (changed, missing, or not in the load), and <code>simulation</code> says whether <code>ksl_db</code> is there and complete.</p>
 <p>The stage scripts themselves are in <code>sql/distribution</code>, <code>sql/production</code>, <code>sql/quality</code>, <code>sql/history</code>, and <code>sql/sales</code>, one file per stage. They are worth reading, since each is a short, complete example of defining and populating tables. Run them only through a load file, though. Each assumes the stages before it were loaded into a freshly reset database, because its rows refer to earlier rows by their key numbers.</p>
 </section>
 <section id="sec-appsampledbs-conventions" class="level2" data-number="C.3">
@@ -731,12 +791,12 @@ Figure&nbsp;C.1: Distribution Schema Class Model
 </figcaption>
 </figure>
 </div>
-<p><a href="#tbl-appsampledbs-distribution" class="quarto-xref">Table&nbsp;<span>C.3</span></a> lists the tables that implement the model. The foreign key from <code>product</code> to <code>production.manufactured_part</code> is added in stage P1, when the production schema exists to refer to.</p>
+<p><a href="#tbl-appsampledbs-distribution" class="quarto-xref">Table&nbsp;<span>C.4</span></a> lists the tables that implement the model. The foreign key from <code>product</code> to <code>production.manufactured_part</code> is added in stage P1, when the production schema exists to refer to.</p>
 <!-- generated: tbl-appsampledbs-distribution by scripts/build-appendix-tables.py; do not edit -->
 <div id="tbl-appsampledbs-distribution" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.3: Tables of the Distribution Schema
+Table&nbsp;C.4: Tables of the Distribution Schema
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -811,12 +871,12 @@ Figure&nbsp;C.2: Production Schema Class Model
 </figcaption>
 </figure>
 </div>
-<p><a href="#tbl-appsampledbs-production" class="quarto-xref">Table&nbsp;<span>C.4</span></a> lists the tables. Notice that <code>manufactured_part</code> and <code>purchased_part</code> have no surrogate key of their own: each row’s primary key, <code>part_fk</code>, is also its reference to the <code>part</code> it is.</p>
+<p><a href="#tbl-appsampledbs-production" class="quarto-xref">Table&nbsp;<span>C.5</span></a> lists the tables. Notice that <code>manufactured_part</code> and <code>purchased_part</code> have no surrogate key of their own: each row’s primary key, <code>part_fk</code>, is also its reference to the <code>part</code> it is.</p>
 <!-- generated: tbl-appsampledbs-production by scripts/build-appendix-tables.py; do not edit -->
 <div id="tbl-appsampledbs-production" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.4: Tables of the Production Schema
+Table&nbsp;C.5: Tables of the Production Schema
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-production-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -902,7 +962,7 @@ Figure&nbsp;C.3: Quality Schema Class Model
 <div id="tbl-appsampledbs-quality" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.5: Tables of the Quality Schema
+Table&nbsp;C.6: Tables of the Quality Schema
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -980,7 +1040,7 @@ Figure&nbsp;C.4: Sales Star Schema
 <div id="tbl-appsampledbs-sales" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.6: Tables of the Sales Schema
+Table&nbsp;C.7: Tables of the Sales Schema
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1021,12 +1081,12 @@ Table&nbsp;C.6: Tables of the Sales Schema
 </section>
 <section id="sec-appsampledbs-counts" class="level2" data-number="C.9">
 <h2 data-number="C.9" class="anchored" data-anchor-id="sec-appsampledbs-counts"><span class="header-section-number">C.9</span> Rows in each table</h2>
-<p><a href="#tbl-appsampledbs-counts" class="quarto-xref">Table&nbsp;<span>C.7</span></a> gives the number of rows in each table at the two sizes the book uses. Notice that the base data, through stage Q, keeps every table small enough to print, while the history adds its volume to five of the distribution tables and three of the quality tables. The production tables are the same at both sizes.</p>
+<p><a href="#tbl-appsampledbs-counts" class="quarto-xref">Table&nbsp;<span>C.8</span></a> gives the number of rows in each table at the two sizes the book uses. Notice that the base data, through stage Q, keeps every table small enough to print, while the history adds its volume to five of the distribution tables and three of the quality tables. The production tables are the same at both sizes.</p>
 <!-- generated: tbl-appsampledbs-counts by scripts/build-appendix-tables.py; do not edit -->
 <div id="tbl-appsampledbs-counts" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.7: Rows in Each Table
+Table&nbsp;C.8: Rows in Each Table
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1338,7 +1398,7 @@ payment (payment_pk, account_fk, paid_on, amount,
 <div id="tbl-appsampledbs-transit-counts" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-transit-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.8: Rows in Each Table of Millbrook Transit
+Table&nbsp;C.9: Rows in Each Table of Millbrook Transit
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-transit-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'route'</span> <span class="kw">AS</span> table_name, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> row_count</span>
@@ -1569,11 +1629,11 @@ payment
 <section id="sec-appsampledbs-public" class="level2" data-number="C.11">
 <h2 data-number="C.11" class="anchored" data-anchor-id="sec-appsampledbs-public"><span class="header-section-number">C.11</span> Public sample databases for further practice</h2>
 <p>HG Industries’ data is small so that every result can be checked. For practice at a larger scale, several public sample databases can be loaded into the same PostgreSQL server, each into a database of its own. They are not distributed with the book: <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-publicdbs" class="quarto-xref"><span>Section A.6</span></a> explains how to fetch each one from its source, where its license is stated.</p>
-<p><a href="#tbl-appsampledbs-public" class="quarto-xref">Table&nbsp;<span>C.9</span></a> lists the four the book’s exercises use. Each is openly licensed; the license travels with the data, not with this book, and you should read it before you reuse the data in work of your own.</p>
+<p><a href="#tbl-appsampledbs-public" class="quarto-xref">Table&nbsp;<span>C.10</span></a> lists the four the book’s exercises use. Each is openly licensed; the license travels with the data, not with this book, and you should read it before you reuse the data in work of your own.</p>
 <div id="tbl-appsampledbs-public" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appsampledbs-public-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;C.9: Public Sample Databases Used in the Exercises
+Table&nbsp;C.10: Public Sample Databases Used in the Exercises
 </figcaption>
 <div aria-describedby="tbl-appsampledbs-public-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">

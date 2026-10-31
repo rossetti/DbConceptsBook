@@ -2209,7 +2209,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three. Write each statement before you run it, and predict what the database will do with it. Count the rows at every step.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage P3 by running <code>code/sql/load/through-p3.sql</code> in DataGrip or DBeaver, as the book’s PostgreSQL setup appendix describes. Download the file <a href="data/new-purchased-parts-raw.csv">new-purchased-parts-raw.csv</a> and save it in the companion code’s <code>data</code> folder, beside the book’s own files. Keep each change you make: every part works on the rows the earlier parts leave.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes. Download the file <a href="data/new-purchased-parts-raw.csv">new-purchased-parts-raw.csv</a> and save it in the companion code’s <code>data</code> folder, beside the book’s own files. Keep each change you make: every part works on the rows the earlier parts leave. When you finish, run <code>through-q.sql</code> to restore the database.</p>
 <section id="new-purchased-parts" class="level2">
 <h2 class="anchored" data-anchor-id="new-purchased-parts">New purchased parts</h2>
 <p>Purchasing has approved a supplier for the parts of a smaller hand truck and a poly cart, and exported the supplier’s list to a CSV file: one part per line, with its number, description, unit of measure, standard cost, lead time in days, and the supplier’s minimum order quantity. Its first lines are:</p>

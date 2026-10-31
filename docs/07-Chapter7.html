@@ -604,7 +604,7 @@ div.csl-indent {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The running example is built from stage D3 of the book’s database, and the counts of repeated facts from stage G, the year of history.</p>
+<p>The running example is built from the orders of the book’s database, in your <code>dbconcepts</code> database, and the counts of repeated facts from the year of history, in your <code>dbconcepts_history</code> database.</p>
 </div>
 </div>
 <section id="sec-nf-procedure" class="level2" data-number="7.1">
@@ -2097,9 +2097,10 @@ operator (operator_pk, employee_number, name, hire_date)
 inspection (inspection_pk, part_fk, operator_fk,
             inspected_at, lot_number)
     primary key: inspection_pk
-    part_fk references part_pk in part, must not be NULL
-    operator_fk references operator_pk in operator,
+    part_fk references part_pk in production.part,
         must not be NULL
+    operator_fk references operator_pk in
+        production.operator, must not be NULL
 
 measurement (measurement_pk, inspection_fk,
              characteristic_fk, measured_value)

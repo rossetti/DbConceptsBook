@@ -2383,7 +2383,7 @@ margin: 0 0 0.5em 0;
 
 
 <p>Work in groups of two or three, at one computer. Each part starts from one of the book’s programs; copy it, change it as asked, and predict what it will print before you run it.</p>
-<p><strong>Setup.</strong> Load the book’s database through stage Q by running <code>code/sql/load/through-q.sql</code>, and open the companion code project, <code>code/</code>, in IntelliJ IDEA, with <code>db.properties</code> filled in. Put your programs in a new package, <code>dbconcepts.activity</code>.</p>
+<p><strong>Setup.</strong> Connect to your <code>dbconcepts</code> database in DataGrip or DBeaver and run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> and no reset; if it asks for one, run <code>code/sql/load/through-q.sql</code>, as the book’s PostgreSQL setup appendix describes. Open the companion code project, <code>code/</code>, in IntelliJ IDEA, with <code>db.properties</code> filled in. Put your programs in a new package, <code>dbconcepts.activity</code>.</p>
 <section id="looking-around-a-schema" class="level2">
 <h2 class="anchored" data-anchor-id="looking-around-a-schema">1. Looking around a schema</h2>
 <p>The book’s program <code>DefectTypes</code> looks around the quality schema:</p>
