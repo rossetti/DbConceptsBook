@@ -524,6 +524,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./21-AppAssistants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Connecting an AI Assistant to a Database</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -777,7 +783,7 @@ As a parameter
 <!-- end output -->
 <p>The first input is a real lot, and both functions count its two measurements. The second is an attack. Pasted into the SQL, it makes the condition <code>i.lot_number = 'L7005-03' OR '1'='1'</code>, which is true of every row, and the query counts all 34 measurements of stage Q: the input has changed what the query does. The third input is merely a lot number with a mistyped apostrophe, and pasted into the SQL it leaves a string unterminated; the message, from the PostgreSQL driver, shows the broken SQL the function built. The second function treats each input as what it is, a lot number, finds no such lot, and counts zero.</p>
 <p>Changing a query’s meaning through the values supplied to it is called <strong>SQL injection</strong>, and it is among the most exploited weaknesses of real software. It is not limited to reading: an input that ends one statement and begins another can delete or change rows, with the program’s privileges. The prepared statement prevents it by construction. The SQL, with its <code>?</code>, reaches the database first and is parsed; the values follow separately, and the database uses each as a value, never as SQL, whatever characters it contains. The same mechanism handles the ordinary case correctly: a customer named <code>Crowley's Ridge Hardware</code> needs no doubled quote (<a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>) when it is a parameter.</p>
-<p>The rule is simple and has no exceptions: <strong>a value that comes from outside the program goes into SQL only as a parameter.</strong> Build the SQL text from constants alone, and supply every value with <code>setString</code>, <code>setInt</code>, <code>setBigDecimal</code>, or <code>setObject</code>. A table or column name cannot be a parameter; if a program must choose one at run time, it chooses from a fixed list written in the program, never from its input. The next section organizes a program’s statements.</p>
+<p>The rule is simple and has no exceptions: <strong>a value that comes from outside the program goes into SQL only as a parameter.</strong> Build the SQL text from constants alone, and supply every value with <code>setString</code>, <code>setInt</code>, <code>setBigDecimal</code>, or <code>setObject</code>. A table or column name cannot be a parameter; if a program must choose one at run time, it chooses from a fixed list written in the program, never from its input. The rule fails in one case, where the whole statement, not a value in it, comes from outside: an AI assistant that writes SQL for a program to run. <a href="21-AppAssistants.html#sec-appassistants-risks" class="quarto-xref"><span>Section I.2</span></a> shows what that case requires instead. The next section organizes a program’s statements.</p>
 </section>
 <section id="sec-prog-crud" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="sec-prog-crud"><span class="header-section-number">10.3</span> CRUD and the data access object</h2>

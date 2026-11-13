@@ -495,6 +495,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./21-AppAssistants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Connecting an AI Assistant to a Database</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -617,7 +623,7 @@ sudo tee /etc/paths.d/postgresapp</code></pre>
 <p>with your own user name in place of the author’s. Now load the database: open <code>code/sql/load/through-q.sql</code>, from the book’s companion code (<a href="https://github.com/rossetti/DbConceptsBookCode" class="uri">https://github.com/rossetti/DbConceptsBookCode</a>), and run it as a script. It builds the distribution, production, and quality schemas in a few seconds.</p>
 <p>Make a second data source (DataGrip) or connection (DBeaver) in the same way, for <code>dbconcepts_history</code>, and in it run <code>code/sql/load/through-s.sql</code>, which adds the year of history and the <code>sales</code> schema. Finally, in each database, run <code>code/sql/setup/which-stage.sql</code>. It should report <code>through-q.sql</code> in <code>dbconcepts</code> and <code>through-s.sql</code> in <code>dbconcepts_history</code>, with no reset needed. <a href="15-AppSampleDatabases.html#sec-appsampledbs-loading" class="quarto-xref"><span>Section C.2</span></a> explains the stages, and how to use the load files to reset a database.</p>
 <p>If a load file does not finish, but runs on with no message, another console is holding a transaction open on the same database, usually one in which a <code>BEGIN</code> was never followed by <code>COMMIT</code> or <code>ROLLBACK</code>. The load file waits for that transaction to end. Find the console, roll it back (in DataGrip, the console’s <em>Rollback</em> button; in DBeaver, its <em>Rollback</em> toolbar button), or close it, and the load file finishes.</p>
-<p>Millbrook Transit, the exercise database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-transit" class="quarto-xref"><span>Section C.10</span></a>, goes in a database of its own: create <code>dbconcepts_transit</code> as above and run <code>code/sql/transit/t-schema.sql</code> and then <code>code/sql/transit/t-data.sql</code>. The public sample databases, next, have a loader of their own.</p>
+<p>Millbrook Transit, the exercise database of <a href="15-AppSampleDatabases.html#sec-appsampledbs-transit" class="quarto-xref"><span>Section C.10</span></a>, goes in a database of its own: create <code>dbconcepts_transit</code> as above and run <code>code/sql/transit/t-schema.sql</code> and then <code>code/sql/transit/t-data.sql</code>. The public sample databases, next, have a loader of their own. To let an AI assistant read the book’s databases, see <a href="21-AppAssistants.html" class="quarto-xref"><span>Appendix I</span></a>, which adds a login for it.</p>
 </section>
 <section id="sec-apppostgres-publicdbs" class="level2" data-number="A.6">
 <h2 data-number="A.6" class="anchored" data-anchor-id="sec-apppostgres-publicdbs"><span class="header-section-number">A.6</span> Loading public sample databases</h2>
