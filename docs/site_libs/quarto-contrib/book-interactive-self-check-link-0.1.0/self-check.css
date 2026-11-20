@@ -1,0 +1,282 @@
+/* Self-check questions. Colors come only from Bootstrap's main CSS variables (body,
+   primary, success, danger), mixed with transparency, so the widget follows whatever
+   light and dark themes the book uses. The *-bg-subtle and *-text-emphasis variables are
+   avoided: Quarto switches themes by stylesheet, and those stay at their light values. */
+
+.bisc-self-check {
+  border: 1px solid var(--bs-border-color);
+  border-left: 4px solid var(--bs-primary);
+  border-radius: var(--bs-border-radius, 0.375rem);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+}
+
+.bisc-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bisc-title {
+  font-weight: 600;
+}
+
+.bisc-clear-all {
+  color: var(--bs-body-color);
+  border: 1px solid currentColor;
+  background-color: transparent;
+}
+
+.bisc-clear-all:hover,
+.bisc-clear-all:focus {
+  background-color: color-mix(in srgb, var(--bs-body-color) 10%, transparent);
+}
+
+.bisc-question {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.bisc-title-row + .bisc-question {
+  border-top: none;
+}
+
+.bisc-stem > p:last-child {
+  margin-bottom: 0.5rem;
+}
+
+.bisc-options {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.bisc-option {
+  padding: 0.25rem 0.5rem;
+  margin: 0.125rem 0;
+  border-radius: var(--bs-border-radius-sm, 0.25rem);
+  border: 1px solid transparent;
+}
+
+.bisc-option > p {
+  margin: 0;
+}
+
+.bisc-option input {
+  margin-right: 0.5rem;
+}
+
+.bisc-option label {
+  display: inline;
+  cursor: pointer;
+}
+
+/* Code in a choice. A choice's label is not inside a <p> or <li>, so Quarto's
+   dark theme does not reach it, and the code keeps the light theme's pale
+   background behind the dark theme's white text, which hides the text. */
+.bisc-option label code {
+  background-color: color-mix(in srgb, var(--bs-body-color) 8%, transparent);
+}
+
+.bisc-option.bisc-right {
+  border-color: var(--bs-success);
+  background-color: color-mix(in srgb, var(--bs-success) 15%, transparent);
+}
+
+.bisc-option.bisc-wrong {
+  border-color: var(--bs-danger);
+  background-color: color-mix(in srgb, var(--bs-danger) 15%, transparent);
+}
+
+/* The verdict is also given in words, so it does not rely on color alone. */
+.bisc-mark {
+  margin-left: 0.5rem;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.bisc-right .bisc-mark {
+  color: var(--bs-success);
+}
+
+.bisc-wrong .bisc-mark {
+  color: var(--bs-danger);
+}
+
+.bisc-feedback {
+  margin: 0.25rem 0 0.25rem 1.75rem;
+  font-size: 0.95em;
+}
+
+.bisc-feedback > p:last-child {
+  margin-bottom: 0;
+}
+
+.bisc-actions {
+  margin-top: 0.5rem;
+}
+
+.bisc-result {
+  margin-top: 0.4rem;
+  font-weight: 600;
+  min-height: 1.5em;
+}
+
+.bisc-explanation {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background-color: color-mix(in srgb, var(--bs-body-color) 6%, transparent);
+  border-radius: var(--bs-border-radius-sm, 0.25rem);
+}
+
+.bisc-explanation > p:last-child {
+  margin-bottom: 0;
+}
+
+/* Secondary buttons in the body text color, so they read as active in dark themes too. */
+.bisc-actions .bisc-reveal,
+.bisc-actions .bisc-reset {
+  color: var(--bs-body-color);
+  border-color: currentColor;
+  background-color: transparent;
+}
+
+.bisc-actions .bisc-reveal:hover,
+.bisc-actions .bisc-reset:hover {
+  background-color: color-mix(in srgb, var(--bs-body-color) 10%, transparent);
+}
+
+/* The "Self-check" button that links from a chapter to its companion page. */
+.bisc-link {
+  margin: 1rem 0;
+}
+
+/* The link color, which themes keep readable on their own background; --bs-primary can
+   be too dark on a dark theme. */
+.bisc-link-button {
+  color: var(--bs-link-color);
+  border: 1px solid currentColor;
+  background-color: transparent;
+}
+
+.bisc-link-button:hover,
+.bisc-link-button:focus {
+  color: var(--bs-link-hover-color, var(--bs-link-color));
+  background-color: color-mix(in srgb, var(--bs-link-color) 12%, transparent);
+}
+
+/* A link to a group lands below a fixed navbar, not under it. */
+section[id],
+.bisc-self-check[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Buttons in concept explorers, in the link color so they read in light and dark themes. */
+.bisc-explorer-button {
+  color: var(--bs-link-color);
+  border-color: currentColor;
+  background-color: transparent;
+}
+
+.bisc-explorer-button:hover,
+.bisc-explorer-button:focus {
+  color: var(--bs-link-color);
+  background-color: color-mix(in srgb, var(--bs-link-color) 12%, transparent);
+}
+
+/* An explorer button and its run counter, on one line. */
+.bisc-explorer-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.bisc-run-counter {
+  font-size: 0.9em;
+  color: var(--bs-secondary-color, var(--bs-body-color));
+}
+
+/* Explorer layout: the controls stay in view beside the plots and tables they change.
+   Markup:  ::: {.bisc-explorer .column-page}
+              ::: {.bisc-explorer-controls}  (the control cells)  :::
+              ::: {.bisc-explorer-output}    (results, plots, short captions)  :::
+            :::
+   On wide screens the controls are a sticky column; on narrow screens the two stack. */
+.bisc-explorer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  margin: 1rem 0 1.5rem 0;
+}
+
+.bisc-explorer-controls {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius, 0.375rem);
+  font-size: 0.9rem;
+}
+
+.bisc-explorer-controls form {
+  max-width: 100%;
+}
+
+/* Observable Inputs lay a label and its input on one row with a fixed label width; in the
+   narrow column, put the label above the input and let the input take the full width. */
+.bisc-explorer-controls form {
+  flex-wrap: wrap !important;
+  width: 100% !important;
+  margin-bottom: 0.4rem;
+}
+
+.bisc-explorer-controls form > label {
+  width: 100% !important;
+  max-width: 100%;
+  margin-bottom: 0.15rem;
+}
+
+.bisc-explorer-controls form > div,
+.bisc-explorer-controls form input[type="range"] {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+.bisc-explorer-output > p:first-child {
+  margin-top: 0;
+}
+
+@media (min-width: 992px) {
+  .bisc-explorer {
+    grid-template-columns: 18rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .bisc-explorer-controls {
+    position: sticky;
+    top: 4.5rem;
+    max-height: calc(100vh - 5.5rem);
+    overflow-y: auto;
+  }
+}
+
+/* Keep a slider's number box small so the slider gets the room. */
+.bisc-explorer-controls form input[type="number"] {
+  width: 4.5rem !important;
+  flex: 0 0 4.5rem;
+}
+
+.bisc-explorer-controls form > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bisc-explorer-controls form input[type="range"] {
+  flex: 1 1 auto;
+  width: auto !important;
+}

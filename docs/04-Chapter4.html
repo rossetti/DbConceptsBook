@@ -85,6 +85,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -336,6 +337,7 @@ window.Quarto = {
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -1181,6 +1183,7 @@ HT-200
 <p>The query of <a href="#tbl-agg-year" class="quarto-xref">Table&nbsp;<span>4.7</span></a> groups by <code>product_number</code>, the alternate key, so each group is one product. Grouping by a column that is not a key is different: two products with the same description would fall into one group. When you group by a descriptive column such as a name, you should group by the key as well, <code>GROUP BY p.product_pk, p.description</code>, even when the key is not displayed.</p>
 <p>PostgreSQL relaxes the rule of the <code>SELECT</code> list in one case. When a query groups by a table’s primary key, it may select any other column of that table, since the key determines those columns’ values. The SQL standard allows this, but many databases do not, and this book groups by every column it selects.</p>
 <p>Recall from <a href="#sec-agg-shape" class="quarto-xref"><span>Section 4.1</span></a> that <code>GROUP BY</code> is step 3 of the order of evaluation, and that the <code>SELECT</code> list is computed at step 4, one row for each group. That order is the reason for the rule of the <code>SELECT</code> list: by step 4 each group is one row, and a column whose value differs within a group has no one value to show. The next section presents <code>HAVING</code>, the rest of step 3.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch04.html#grouping" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-agg-having" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="sec-agg-having"><span class="header-section-number">4.3</span> Filtering groups</h2>
@@ -1382,6 +1385,7 @@ orders
 </figure>
 </div>
 <p>The final query of <a href="#tbl-agg-busiest" class="quarto-xref">Table&nbsp;<span>4.10</span></a> keeps every month whose count equals the largest, so a tie for the busiest month would show both months, which <code>ORDER BY orders DESC LIMIT 1</code> would not (<a href="03-Chapter3.html#sec-q-orderby" class="quarto-xref"><span>Section 3.4</span></a>). The next section presents the expression that lets a query group rows by a classification that no column holds.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch04.html#having" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-agg-case" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="sec-agg-case"><span class="header-section-number">4.4</span> CASE expressions</h2>
@@ -2128,6 +2132,7 @@ all_carts
 <p><em>Where it breaks.</em> The quarters come from the order date, not the ship date, so they measure demand, which is what leveling production needs. A question about the load on the warehouse would group shipments by <code>shipped_on</code> instead. In addition, the first quarter of 2026 is left out, because stage G’s history begins in April and the three months before it hold only the small starting data of stage D5.</p>
 </div>
 <p>The SQL standard has a shorter way to write an aggregate over some of a group’s rows: <code>SUM(l.quantity) FILTER (WHERE p.product_number = 'GC-300')</code>. PostgreSQL supports it, but many databases do not, and the <code>CASE</code> form works everywhere. PostgreSQL also offers a <code>crosstab</code> function, in an extension named <code>tablefunc</code> that must be installed separately, which builds a cross tab from a query of rows. This book uses the <code>CASE</code> form, which shows in the query itself where each column comes from.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch04.html#case" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-agg-window" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="sec-agg-window"><span class="header-section-number">4.5</span> Window functions</h2>
@@ -4354,6 +4359,7 @@ moving_average
 <p><em>Where it breaks.</em> The moving average lags the process: after a tool change it mixes old-tool and new-tool measurements for four inspections, so it shows the drop gradually although the change was sudden. The threshold of <span class="math inline">\(-0.002\)</span> that detects a change was chosen by looking at the data; a larger day-to-day scatter would call for a larger threshold, or for recording tool changes in the database instead of inferring them.</p>
 </div>
 <p>Whenever a window function’s result looks wrong, you should write out the frame of a few rows by hand, as <a href="#tbl-agg-running-ledger" class="quarto-xref">Table&nbsp;<span>4.19</span></a> does, or shade them in a grid like <a href="#fig-agg-window-running" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>. The next section turns from rows related by a partition to rows related by a chain.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch04.html#windows" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-agg-recursive" class="level2" data-number="4.6">
@@ -4807,6 +4813,7 @@ HT-100/WA-10/TI-10
 </div>
 <p><a href="#tbl-agg-bom-tree" class="quarto-xref">Table&nbsp;<span>4.30</span></a> holds the same eleven parts as <a href="#tbl-agg-bom" class="quarto-xref">Table&nbsp;<span>4.29</span></a>, now in the order of <a href="#fig-agg-bom-tree" class="quarto-xref">Figure&nbsp;<span>4.9</span></a> read branch by branch: the frame and its tubing, the grip, the hardware kit, and the wheel assembly with its axle, bar stock, bearing, rim, and tire. The anchor starts each path with the top part’s number, and the recursive part appends the component’s number to its assembly’s path, so the path of the bar stock, <code>HT-100/WA-10/AX-10/BS-075</code>, spells its branch. A path sorts after its assembly’s path because it begins with it. The dots come from <code>REPEAT</code>, which writes its text as many times as the depth; <code>REPEAT</code> is a PostgreSQL function that most databases share, though it is not in the standard. Notice the <code>CAST</code> in both parts: the type of a recursive query’s column is set by the anchor, so the path is given a length long enough for the deepest branch.</p>
 <p><code>WITH RECURSIVE</code> is standard SQL, and PostgreSQL requires the keyword <code>RECURSIVE</code>; some databases, such as SQL Server, omit it. Recursive queries serve any data that refers to itself: an organization chart, a network of routes, a chain of work orders each waiting on another.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch04.html#recursive" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-agg-operational" class="level2" data-number="4.7">
 <h2 data-number="4.7" class="anchored" data-anchor-id="sec-agg-operational"><span class="header-section-number">4.7</span> Analytical queries on operational data</h2>
@@ -5430,6 +5437,7 @@ Robert Hayes
 <p><em>Where it breaks.</em> The comparison assumes that the two inspectors see similar frames. If one inspected mostly on days after a change to the paint line, the difference could be real coating, not measurement, and the query cannot tell the two apart. Grouping by inspector and month as well would show whether the difference holds throughout the year.</p>
 </div>
 <p>These questions share a shape: a measure defined with care (on time, days of supply, a control limit), computed with aggregates over groups or windows, and reported with the denominator and the cautions that its definition implies. That care, more than any function, is what makes a query an analysis.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch04.html#operational" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-sqlaggregation-summary" class="level2" data-number="4.8">
 <h2 data-number="4.8" class="anchored" data-anchor-id="sec-sqlaggregation-summary"><span class="header-section-number">4.8</span> Summary</h2>
@@ -5443,6 +5451,7 @@ Robert Hayes
 <p><strong>A recursive query follows a chain of rows to any depth.</strong> An anchor finds the starting rows, and a recursive part joins the rows of the previous step, the working table, to find the next, until a step finds none. It explodes a bill of materials, multiplying quantities down the chain, and it needs a bound on its depth if the data might hold a cycle.</p>
 <p><strong>An analysis is a measure defined with care, then aggregated.</strong> On-time shipment, days of supply, control limits, and percentiles are each an aggregate over carefully chosen rows. The definition decides the denominator, and the report must state it, with the cautions that the data implies.</p>
 <p>The queries of this chapter and <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a> read a database built by someone else. <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> turns to the question behind every one of them: why the tables are shaped as they are, and how to design tables of your own.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch04.html#review" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check for the whole chapter</a></p>
 </section>
 <section id="sec-sqlaggregation-exercises" class="level2" data-number="4.9">
 <h2 data-number="4.9" class="anchored" data-anchor-id="sec-sqlaggregation-exercises"><span class="header-section-number">4.9</span> Exercises</h2>

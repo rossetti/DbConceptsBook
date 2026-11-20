@@ -85,6 +85,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -307,6 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -570,6 +572,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>A tool on one desktop,</strong> a test that needs a fresh database each time it runs, or a device with no network.</li>
 </ul>
 <p>A client-server database suits data that is shared: many people or programs writing at once, users with different privileges (<a href="09-Chapter9.html#sec-tx-security" class="quarto-xref"><span>Section 9.4</span></a>), data that must be backed up and kept available by someone whose job it is. HG Industries’ order and production databases are shared, which is why the book runs them on PostgreSQL. A study that starts in an embedded file and becomes shared should move to a server; the SQL mostly moves with it.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appembedded.html#what-when" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-appembedded-sqlite" class="level2" data-number="G.3">
 <h2 data-number="G.3" class="anchored" data-anchor-id="sec-appembedded-sqlite"><span class="header-section-number">G.3</span> SQLite</h2>
@@ -652,6 +655,7 @@ stock_level_pk  warehouse_fk  product_number
 <li><strong>Limited <code>ALTER TABLE</code>.</strong> A table can be renamed and columns added, renamed, or dropped. Recent versions (3.53 and later; this book used 3.54) can also set or drop a column’s <code>NOT NULL</code> and add or drop a <code>CHECK</code> constraint, but a foreign key or a <code>UNIQUE</code> constraint still cannot be added to an existing table’s columns (a new column may carry a <code>REFERENCES</code> clause); the table is rebuilt instead.</li>
 <li><strong>No schemas.</strong> A file is one database with one set of tables. <code>ATTACH</code> opens a second file under a name, which serves where PostgreSQL would use a schema (<a href="08-Chapter8.html#sec-ddl-postgres" class="quarto-xref"><span>Section 8.1</span></a>).</li>
 </ul>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appembedded.html#sqlite" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-appembedded-duckdb" class="level2" data-number="G.4">
 <h2 data-number="G.4" class="anchored" data-anchor-id="sec-appembedded-duckdb"><span class="header-section-number">G.4</span> DuckDB</h2>
@@ -764,6 +768,7 @@ rep_id  LotsCompleted  TimeInShop  WorkInProcess
 2       85.0           28.981      4.094
 3       86.0           36.98       5.904</code></pre>
 <p><code>PIVOT</code> names the column whose values become columns (<code>ON stat_name</code>) and the aggregate that fills each cell (<code>USING MAX(rep_value)</code>), and the remaining column, <code>rep_id</code>, gives the rows. The result is <a href="12-Chapter12.html#tbl-simdb-wide-hand" class="quarto-xref">Table&nbsp;<span>12.15</span></a>, which <a href="12-Chapter12.html#sec-simdb-long-wide" class="quarto-xref"><span>Section 12.4.2</span></a> built by hand and then with one <code>FILTER</code> per response. Notice that <code>PIVOT</code> found the three columns in the data; the <code>FILTER</code> query listed them by hand. <code>PIVOT</code> is DuckDB’s own statement: neither PostgreSQL nor the SQL standard has it. DuckDB’s <code>UNPIVOT</code> goes the other way, and its <code>COPY</code> statement writes a result to a CSV file, or to a Parquet file (a column-store file format that many analysis tools read), for the next tool in a study.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appembedded.html#duckdb" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-appembedded-ksl" class="level2" data-number="G.5">
@@ -911,6 +916,7 @@ Table&nbsp;G.1: PostgreSQL, SQLite, and DuckDB Compared
 </figure>
 </div>
 <p>Choose PostgreSQL, or another server, for data that is shared. Choose SQLite for data that belongs to one program, one study, or one person, and declare its tables <code>STRICT</code> and its connections’ foreign keys on. Choose DuckDB to analyze data that has already been recorded, a study’s results or a set of exported files, where its column storage and its SQL make the summaries quick to write and to run.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appembedded.html#ksl-choosing" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-appembedded-exercises" class="level2" data-number="G.7">
 <h2 data-number="G.7" class="anchored" data-anchor-id="sec-appembedded-exercises"><span class="header-section-number">G.7</span> Exercises</h2>

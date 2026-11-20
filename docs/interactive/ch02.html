@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Chapter 2 Self-Checks – Database Concepts Companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7fd429508c10e9aeb0f6cc37510b69d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.js"></script>
+<link href="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="site_libs/quarto-contrib/quarto-project/book-interactive/self-check.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Database Concepts Companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Index</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../index.html"> 
+<span class="menu-text">Back to the book</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#tables" id="toc-tables" class="nav-link active" data-scroll-target="#tables">Tables, Rows, and Domains</a></li>
+  <li><a href="#keys" id="toc-keys" class="nav-link" data-scroll-target="#keys">Keys</a></li>
+  <li><a href="#integrity" id="toc-integrity" class="nav-link" data-scroll-target="#integrity">Integrity Rules</a></li>
+  <li><a href="#schema" id="toc-schema" class="nav-link" data-scroll-target="#schema">Writing Down a Schema</a></li>
+  <li><a href="#catalog" id="toc-catalog" class="nav-link" data-scroll-target="#catalog">The Catalog and the Tools That Read It</a></li>
+  <li><a href="#other-models" id="toc-other-models" class="nav-link" data-scroll-target="#other-models">Other Ways to Organize Data</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review of the Whole Chapter</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chapter 2 Self-Checks</h1>
+<p class="subtitle lead">The Relational Model</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>These questions follow the order of <a href="../02-Chapter2.html">Chapter 2</a>. Each of the first six groups checks one or two sections of the chapter, and the last group reviews the whole chapter. The “Self-check” buttons in the chapter lead to these groups. Nothing you answer is recorded.</p>
+<section id="tables" class="level2">
+<h2 class="anchored" data-anchor-id="tables">Tables, Rows, and Domains</h2>
+<p><a href="../02-Chapter2.html#sec-rm-tables">Read the section</a></p>
+<div id="sc-ch02-tables" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-1" class="bisc-question" data-multiple="false">
+<div id="bisc-q-1-stem" class="bisc-stem">
+<p><strong>1.</strong> A designer stores each part’s dimensions in one text column, as values such as <code>24 x 18 x 10</code> (length, width, and depth in inches). Planners regularly ask which parts fit on a shelf 20 inches deep. Is the dimensions value atomic?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-1-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o1" name="bisc-q-1"><label for="bisc-q-1-o1">Yes, because each cell holds one string</label>
+<div class="bisc-feedback" hidden="">
+<p>Holding one string is not the test. “Fayetteville, AR” is one string too.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-1-o2" name="bisc-q-1"><label for="bisc-q-1-o2">No, because a query needs the depth on its own, and the text gives the database no way to pick it out or check it</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The test is a question about use: does any query, rule, or sort need part of the value on its own, in a way its domain does not supply? Here one does, so the three measures belong in separate columns.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o3" name="bisc-q-1"><label for="bisc-q-1-o3">Yes, because the value is short</label>
+<div class="bisc-feedback" hidden="">
+<p>Length does not settle it. A two-character state code is atomic and a long description may be too, depending on how each is used.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o4" name="bisc-q-1"><label for="bisc-q-1-o4">No, because it contains spaces</label>
+<div class="bisc-feedback" hidden="">
+<p>“Fort Smith” contains a space and is atomic. How a value looks does not settle the question.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-2" class="bisc-question" data-multiple="false">
+<div id="bisc-q-2-stem" class="bisc-stem">
+<p><strong>2.</strong> Which of these changes alters the <code>customer</code> table’s <em>schema</em> rather than its <em>state</em>?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-2-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-2-o1" name="bisc-q-2"><label for="bisc-q-2-o1">Adding a column for each customer’s sales region</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The schema is the table’s name, columns, and domains, and it changes when the database is redesigned.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o2" name="bisc-q-2"><label for="bisc-q-2-o2">Adding a ninth customer</label>
+<div class="bisc-feedback" hidden="">
+<p>A new row changes the rows the table holds now, which is its state.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o3" name="bisc-q-2"><label for="bisc-q-2-o3">Changing a customer’s city after it moves</label>
+<div class="bisc-feedback" hidden="">
+<p>Changing a value in a row changes the state.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o4" name="bisc-q-2"><label for="bisc-q-2-o4">Removing a customer that has no orders</label>
+<div class="bisc-feedback" hidden="">
+<p>Removing a row changes the state. The table can still hold exactly what it could hold before.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+<div class="bisc-explanation" hidden="">
+<p>The schema is what the database <em>can</em> hold, and the state is what it holds <em>now</em>.</p>
+</div>
+</div>
+<div id="bisc-q-3" class="bisc-question" data-multiple="false">
+<div id="bisc-q-3-stem" class="bisc-stem">
+<p><strong>3.</strong> A designer gives an order table the columns <code>product1</code>, <code>product2</code>, and <code>product3</code>, one product number in each. What is wrong with this design?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-3-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o1" name="bisc-q-3"><label for="bisc-q-3-o1">Nothing; each cell holds one atomic value</label>
+<div class="bisc-feedback" hidden="">
+<p>Each cell does hold one value, but the three columns hold the same attribute, told apart only by position.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-3-o2" name="bisc-q-3"><label for="bisc-q-3-o2">The three columns are a repeating group; an order with a fourth product needs a new column, and a search for one product must look in all three</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The relational model forbids repeating groups and records such facts as rows of a table of their own, one row per product on the order.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o3" name="bisc-q-3"><label for="bisc-q-3-o3">The columns break the third property, since their names are too similar</label>
+<div class="bisc-feedback" hidden="">
+<p>The three names are different, so the third property holds. The trouble is what the columns hold, not what they are called.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o4" name="bisc-q-3"><label for="bisc-q-3-o4">Only the order of the columns is wrong; <code>product1</code> should come last</label>
+<div class="bisc-feedback" hidden="">
+<p>The order of the columns carries no meaning. Reordering them changes nothing about the design.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-4" class="bisc-question" data-multiple="false">
+<div id="bisc-q-4-stem" class="bisc-stem">
+<p><strong>4.</strong> A script adds rows to a table with <code>INSERT</code> statements that list values but do not name the columns. Later the table is rebuilt with the same columns declared in another order. What happens when the script runs again?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-4-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o1" name="bisc-q-4"><label for="bisc-q-4-o1">Nothing changes, since the columns of a relation have no order</label>
+<div class="bisc-feedback" hidden="">
+<p>That is the model. A SQL table keeps the order in which its columns were declared, and such a statement depends on it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-4-o2" name="bisc-q-4"><label for="bisc-q-4-o2">Its values go into the wrong columns, or the statement is refused</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A statement that adds a row without naming its columns matches values to columns by position. A statement that adds a row should always name its columns.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o3" name="bisc-q-4"><label for="bisc-q-4-o3">PostgreSQL matches each value to the column with the same data type</label>
+<div class="bisc-feedback" hidden="">
+<p>The database does not guess. It matches values to columns by position when no columns are named.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o4" name="bisc-q-4"><label for="bisc-q-4-o4">The rows are added in a different order, but correctly</label>
+<div class="bisc-feedback" hidden="">
+<p>The statement adds the same rows as before. The trouble is which column receives which value.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="keys" class="level2">
+<h2 class="anchored" data-anchor-id="keys">Keys</h2>
+<p><a href="../02-Chapter2.html#sec-rm-keys">Read the section</a></p>
+<div id="sc-ch02-keys" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-5" class="bisc-question" data-multiple="false">
+<div id="bisc-q-5-stem" class="bisc-stem">
+<p><strong>1.</strong> <code>customer_number</code> is a candidate key because HG Industries assigns each customer one number and never reuses it. Suppose the company began giving a closed customer’s number to a new customer. What follows?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-5-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-5-o1" name="bisc-q-5"><label for="bisc-q-5-o1"><code>customer_number</code> stops being a key, and every report that assumed it was one would silently merge two customers’ histories</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A candidate key is a fact about the business, so it holds only as long as the business’s rule does.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o2" name="bisc-q-5"><label for="bisc-q-5-o2"><code>customer_pk</code> stops being a key as well</label>
+<div class="bisc-feedback" hidden="">
+<p><code>customer_pk</code> is generated by the database. How the business numbers its customers does not affect it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o3" name="bisc-q-5"><label for="bisc-q-5-o3">Nothing, as long as the tables are not redesigned</label>
+<div class="bisc-feedback" hidden="">
+<p>The key rests on the business’s promise. When the promise changes, the key goes with it, whatever the tables say.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o4" name="bisc-q-5"><label for="bisc-q-5-o4"><code>customer_number</code> becomes a surrogate key</label>
+<div class="bisc-feedback" hidden="">
+<p>A surrogate key is a value the database generates, meaning nothing outside it. A customer number is business data either way.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-6" class="bisc-question" data-multiple="false">
+<div id="bisc-q-6-stem" class="bisc-stem">
+<p><strong>2.</strong> Is the pair (<code>customer_number</code>, <code>city</code>) a candidate key of the <code>customer</code> table?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-6-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o1" name="bisc-q-6"><label for="bisc-q-6-o1">Yes, because no two customers share both values</label>
+<div class="bisc-feedback" hidden="">
+<p>That makes the pair a superkey. A candidate key must also be minimal.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-6-o2" name="bisc-q-6"><label for="bisc-q-6-o2">No, because <code>customer_number</code> alone already identifies a customer, so the pair is a superkey but not a smallest one</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A column can be removed from the pair without losing the property, so the pair breaks the second condition.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o3" name="bisc-q-6"><label for="bisc-q-6-o3">No, because a candidate key may have only one column</label>
+<div class="bisc-feedback" hidden="">
+<p>A key of several columns, a composite key, is a candidate key when no smaller set of its columns would do.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o4" name="bisc-q-6"><label for="bisc-q-6-o4">Yes, because adding a column to a key makes it safer</label>
+<div class="bisc-feedback" hidden="">
+<p>An extra column makes the set larger, not safer. It is still a superkey, but not a candidate key.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-7" class="bisc-question" data-multiple="false">
+<div id="bisc-q-7-stem" class="bisc-stem">
+<p><strong>3.</strong> The <code>stock_level</code> table has the alternate key (<code>warehouse_fk</code>, <code>product_fk</code>). A clerk receives 50 more units of a product that a warehouse already stocks and tries to record them by adding a new <code>stock_level</code> row for that warehouse and product. What happens, and what should the clerk do?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-7-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o1" name="bisc-q-7"><label for="bisc-q-7-o1">The row is added, and the two rows together give the warehouse’s stock</label>
+<div class="bisc-feedback" hidden="">
+<p>The alternate key forbids two rows with the same warehouse and product, so the database never holds the second row.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-7-o2" name="bisc-q-7"><label for="bisc-q-7-o2">The database refuses the row, since the warehouse already has a stock level for the product; the clerk should change that row’s quantity on hand instead</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The key says that a warehouse holds at most one stock level for each product. Neither column alone is a key: a warehouse stocks many products, and a product is stocked in more than one warehouse.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o3" name="bisc-q-7"><label for="bisc-q-7-o3">The row is refused, because a foreign key column cannot be part of a key</label>
+<div class="bisc-feedback" hidden="">
+<p>Both columns are foreign keys, and together they are a key. A column may play both roles.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o4" name="bisc-q-7"><label for="bisc-q-7-o4">The row is added, since <code>stock_level_pk</code> gives it a new primary key value</label>
+<div class="bisc-feedback" hidden="">
+<p>A new surrogate key does not excuse a row from the alternate key. The database enforces every candidate key.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-8" class="bisc-question" data-multiple="true">
+<div id="bisc-q-8-stem" class="bisc-stem">
+<p><strong>4.</strong> At stage D2, customer 1 appears three times in the <code>customer_fk</code> column of <code>customer_order</code>, and customer 8 does not appear at all. What does that pattern show? Select every statement it supports.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-8-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-8-o1" name="bisc-q-8"><label for="bisc-q-8-o1">A customer may place many orders</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Each of customer 1’s orders holds the same <code>customer_fk</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-8-o2" name="bisc-q-8"><label for="bisc-q-8-o2">A customer may be recorded with no orders</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Nothing requires a customer to be referred to by any order.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-8-o3" name="bisc-q-8"><label for="bisc-q-8-o3"><code>customer_fk</code> cannot be a foreign key, since its values repeat</label>
+<div class="bisc-feedback" hidden="">
+<p>A foreign key’s values may repeat. It is the key it refers to, <code>customer_pk</code>, whose values may not.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-8-o4" name="bisc-q-8"><label for="bisc-q-8-o4">Customer 8’s row breaks referential integrity</label>
+<div class="bisc-feedback" hidden="">
+<p>The rule concerns the values of a foreign key. A customer that no order refers to breaks nothing.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="integrity" class="level2">
+<h2 class="anchored" data-anchor-id="integrity">Integrity Rules</h2>
+<p><a href="../02-Chapter2.html#sec-rm-integrity">Read the section</a></p>
+<div id="sc-ch02-integrity" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-9" class="bisc-question" data-multiple="false">
+<div id="bisc-q-9-stem" class="bisc-stem">
+<p><strong>1.</strong> A designer declares a foreign key’s response to deleting the row it refers to as <code>SET DEFAULT</code>. What must be true for a deletion to succeed under that response?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-9-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o1" name="bisc-q-9"><label for="bisc-q-9-o1">The column’s default must be NULL</label>
+<div class="bisc-feedback" hidden="">
+<p>A response that leaves the rows referring to nothing is <code>SET NULL</code>, a different response.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-9-o2" name="bisc-q-9"><label for="bisc-q-9-o2">The column’s default value must itself match a row that exists in the table referred to</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The rows that referred to the deleted row are given the default, and referential integrity still applies to it: a default that matches no row would leave them pointing at nothing.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o3" name="bisc-q-9"><label for="bisc-q-9-o3">Nothing; a default is never checked against the other table</label>
+<div class="bisc-feedback" hidden="">
+<p>The new value is a foreign key value like any other, and the rule applies to it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o4" name="bisc-q-9"><label for="bisc-q-9-o4">The row being deleted must not be referred to by any row</label>
+<div class="bisc-feedback" hidden="">
+<p>A row that nothing refers to is deleted without any response at all. The response matters only for rows that are referred to.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-10" class="bisc-question" data-multiple="false">
+<div id="bisc-q-10-stem" class="bisc-stem">
+<p><strong>2.</strong> A query lists each order beside the name of the customer who placed it, by matching <code>customer_fk</code> to <code>customer_pk</code>. Can an order’s <code>customer_fk</code> hold a value that matches no customer?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-10-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-10-o1" name="bisc-q-10"><label for="bisc-q-10-o1">No; every value of a foreign key that is not NULL has a matching row in the table it refers to, and a query can rely on that</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A foreign key is a promise the database keeps on every change, so the query never has to check for orphans itself.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o2" name="bisc-q-10"><label for="bisc-q-10-o2">Yes, whenever a customer has been removed since its orders were placed</label>
+<div class="bisc-feedback" hidden="">
+<p>Whatever response the designer declared, the database never leaves an order pointing at a customer that does not exist.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o3" name="bisc-q-10"><label for="bisc-q-10-o3">Yes, because the database checks foreign keys only when a query reads them</label>
+<div class="bisc-feedback" hidden="">
+<p>The database checks a foreign key when a row is added or changed, before the change is kept.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o4" name="bisc-q-10"><label for="bisc-q-10-o4">It depends on how the query is written</label>
+<div class="bisc-feedback" hidden="">
+<p>How a query is written cannot change the rows a table holds.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="schema" class="level2">
+<h2 class="anchored" data-anchor-id="schema">Writing Down a Schema</h2>
+<p><a href="../02-Chapter2.html#sec-rm-schema-notation">Read the section</a></p>
+<div id="sc-ch02-schema" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-11" class="bisc-question" data-multiple="false">
+<div id="bisc-q-11-stem" class="bisc-stem">
+<p><strong>1.</strong> The complete relational schema of <code>customer_order</code> includes the line <code>check: requested_ship_date &gt;= order_date</code>. What does it say?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-11-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-11-o1" name="bisc-q-11"><label for="bisc-q-11-o1">A customer cannot ask for an order to ship before the order was placed, and the database refuses a row that would break the rule</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A <code>CHECK</code> constraint narrows the domain of a column, here by comparing it with another column of the same row.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o2" name="bisc-q-11"><label for="bisc-q-11-o2">Every order must have a requested ship date</label>
+<div class="bisc-feedback" hidden="">
+<p>Whether a column may be NULL is said on its own column line, and <code>requested_ship_date</code> may be NULL.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o3" name="bisc-q-11"><label for="bisc-q-11-o3">Every order ships on or after the date it was placed</label>
+<div class="bisc-feedback" hidden="">
+<p>The check compares two columns of the order itself. Shipments and their dates are recorded in another table.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o4" name="bisc-q-11"><label for="bisc-q-11-o4">It is a note for readers that the database does not enforce</label>
+<div class="bisc-feedback" hidden="">
+<p>A <code>CHECK</code> constraint is part of the schema, and the database enforces it on every change.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-12" class="bisc-question" data-multiple="true">
+<div id="bisc-q-12-stem" class="bisc-stem">
+<p><strong>2.</strong> The foreign key lines of the distribution schema sort its tables into groups. Which of its tables refer to no other table of the distribution schema? Select every one that does not.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-12-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-12-o1" name="bisc-q-12"><label for="bisc-q-12-o1"><code>customer</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. It has no foreign key.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-12-o2" name="bisc-q-12"><label for="bisc-q-12-o2"><code>warehouse</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. It has no foreign key.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-12-o3" name="bisc-q-12"><label for="bisc-q-12-o3"><code>product</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Its one foreign key refers to <code>production.manufactured_part</code>, a table of another schema.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-12-o4" name="bisc-q-12"><label for="bisc-q-12-o4"><code>customer_order</code></label>
+<div class="bisc-feedback" hidden="">
+<p>An order refers to the customer who placed it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-12-o5" name="bisc-q-12"><label for="bisc-q-12-o5"><code>stock_level</code></label>
+<div class="bisc-feedback" hidden="">
+<p>A stock level refers to a warehouse and to a product.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-13" class="bisc-question" data-multiple="false">
+<div id="bisc-q-13-stem" class="bisc-stem">
+<p><strong>3.</strong> A bill of materials line has the columns <code>assembly_fk</code> and <code>component_fk</code>. What do the book’s naming rules tell you about them?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-13-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o1" name="bisc-q-13"><label for="bisc-q-13-o1">They are primary keys, one for each kind of part</label>
+<div class="bisc-feedback" hidden="">
+<p>A primary key column ends in <code>_pk</code>. A table has one primary key, and these columns end in <code>_fk</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-13-o2" name="bisc-q-13"><label for="bisc-q-13-o2">Both are foreign keys, each named for the role that the referenced row plays rather than for the table it refers to</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A line names an assembly and one of its components, both parts, so naming each column after its table would not say which is which.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o3" name="bisc-q-13"><label for="bisc-q-13-o3">They refer to two tables named <code>assembly</code> and <code>component</code></label>
+<div class="bisc-feedback" hidden="">
+<p>A foreign key is usually named for the table it refers to, but these are named for roles, since the rows they refer to are all parts.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o4" name="bisc-q-13"><label for="bisc-q-13-o4">The names alone settle every key, so the relational schema need not list them</label>
+<div class="bisc-feedback" hidden="">
+<p>The relational schema states the keys anyway: a key of several columns, an alternate key, and a database named by someone else’s rules all need saying.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="catalog" class="level2">
+<h2 class="anchored" data-anchor-id="catalog">The Catalog and the Tools That Read It</h2>
+<p><a href="../02-Chapter2.html#sec-rm-catalog">Read the sections</a></p>
+<div id="sc-ch02-catalog" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-14" class="bisc-question" data-multiple="false">
+<div id="bisc-q-14-stem" class="bisc-stem">
+<p><strong>1.</strong> A query names the column <code>order_no</code>, but the column of <code>customer_order</code> is named <code>order_number</code>. When does PostgreSQL find the mistake?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-14-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o1" name="bisc-q-14"><label for="bisc-q-14-o1">After it has read every row, when none has an <code>order_no</code></label>
+<div class="bisc-feedback" hidden="">
+<p>The DBMS never gets that far. It checks every table and column a query names first.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-14-o2" name="bisc-q-14"><label for="bisc-q-14-o2">Before it reads a single row, by looking the column up in the catalog</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The DBMS reads the catalog more than anyone, and it refuses a query that names a column the table does not have.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o3" name="bisc-q-14"><label for="bisc-q-14-o3">Only when the result is shown, as an empty column</label>
+<div class="bisc-feedback" hidden="">
+<p>A query that names a missing column produces no result at all, empty or otherwise.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o4" name="bisc-q-14"><label for="bisc-q-14-o4">Never; it returns <code>order_number</code>, the nearest name</label>
+<div class="bisc-feedback" hidden="">
+<p>The database does not guess at names. It refuses the query and says which column does not exist.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-15" class="bisc-question" data-multiple="true">
+<div id="bisc-q-15-stem" class="bisc-stem">
+<p><strong>2.</strong> Which of these changes alter the catalog? Select every one that does.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-15-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-15-o1" name="bisc-q-15"><label for="bisc-q-15-o1">Creating a table of machine maintenance records</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Creating a table adds rows to the catalog, which describes the table and its columns.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-15-o2" name="bisc-q-15"><label for="bisc-q-15-o2">Adding a column for each customer’s sales region</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A new column is a change to the schema, and the catalog holds the schema.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-15-o3" name="bisc-q-15"><label for="bisc-q-15-o3">Adding a ninth customer</label>
+<div class="bisc-feedback" hidden="">
+<p>A new row changes the state of the <code>customer</code> table, not its description.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-15-o4" name="bisc-q-15"><label for="bisc-q-15-o4">Changing a warehouse’s quantity on hand of a product</label>
+<div class="bisc-feedback" hidden="">
+<p>Changing a value changes the state. The catalog changes only when the database is redesigned.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-16" class="bisc-question" data-multiple="false">
+<div id="bisc-q-16-stem" class="bisc-stem">
+<p><strong>3.</strong> Why does the database tree of DataGrip or DBeaver have the same outline for any PostgreSQL database you connect to, even one you have never seen?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-16-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o1" name="bisc-q-16"><label for="bisc-q-16-o1">Because every database uses the schemas <code>distribution</code>, <code>production</code>, and <code>quality</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Those are HG Industries’ schemas. Another database has schemas of its own, and the tree shows them just the same.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-16-o2" name="bisc-q-16"><label for="bisc-q-16-o2">Because the tool draws the tree from the database’s own catalog, which every relational database holds</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A relational database is self-describing, so you can always ask it what it holds. psql’s <code>\d</code> command reads the same catalog.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o3" name="bisc-q-16"><label for="bisc-q-16-o3">Because the tool stores a copy of each database’s schema when it is installed</label>
+<div class="bisc-feedback" hidden="">
+<p>The tool reads the schema from the database each time it connects. It brings no copy with it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o4" name="bisc-q-16"><label for="bisc-q-16-o4">Because the tree shows only the tables, which all databases share</label>
+<div class="bisc-feedback" hidden="">
+<p>The tree shows each database’s own schemas, tables, columns, keys, and constraints.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="other-models" class="level2">
+<h2 class="anchored" data-anchor-id="other-models">Other Ways to Organize Data</h2>
+<p><a href="../02-Chapter2.html#sec-rm-other-models">Read the section</a></p>
+<div id="sc-ch02-other-models" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-17" class="bisc-question" data-multiple="false">
+<div id="bisc-q-17-stem" class="bisc-stem">
+<p><strong>1.</strong> Which statement separates the relational model from the hierarchical and network databases that came before it?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-17-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o1" name="bisc-q-17"><label for="bisc-q-17-o1">Relational databases store data on disk, and the older ones kept it in memory</label>
+<div class="bisc-feedback" hidden="">
+<p>Where the data is kept is not the difference the chapter draws.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-17-o2" name="bisc-q-17"><label for="bisc-q-17-o2">A relational database connects records by matching values, while the older ones connected them by stored links that a program followed</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Because tables connect by values, any question can be asked in a query; in the older databases, an unplanned question meant a new program to walk the links.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o3" name="bisc-q-17"><label for="bisc-q-17-o3">The older databases could not represent a bill of materials</label>
+<div class="bisc-feedback" hidden="">
+<p>A bill of materials is a tree, which suited a hierarchical database well.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o4" name="bisc-q-17"><label for="bisc-q-17-o4">Relational databases are no longer used where the older ones once ran</label>
+<div class="bisc-feedback" hidden="">
+<p>The relational model replaced them for most uses, but IMS still runs in some banks and manufacturers.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-18" class="bisc-question" data-multiple="false">
+<div id="bisc-q-18-stem" class="bisc-stem">
+<p><strong>2.</strong> A document database stores order SO-5001 as one JSON document, with the order’s lines nested inside it. What does a program gain from that arrangement?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-18-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-18-o1" name="bisc-q-18"><label for="bisc-q-18-o1">A program that needs the whole order reads one document, without a join</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A document database suits data that is written and read whole, such as an order or a test record.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o2" name="bisc-q-18"><label for="bisc-q-18-o2">The document must follow a structure declared for every order</label>
+<div class="bisc-feedback" hidden="">
+<p>Each document describes itself, and no catalog is needed to read it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o3" name="bisc-q-18"><label for="bisc-q-18-o3">The order’s lines are kept in a table of their own, referred to by key</label>
+<div class="bisc-feedback" hidden="">
+<p>The lines are nested inside the order’s document, as a list.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o4" name="bisc-q-18"><label for="bisc-q-18-o4">Every field of the document must hold text</label>
+<div class="bisc-feedback" hidden="">
+<p>A field may hold a number, a list, or another document.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review of the Whole Chapter</h2>
+<p><a href="../02-Chapter2.html#sec-relationalmodel-summary">Read the chapter summary</a></p>
+<div id="sc-ch02-review" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-19" class="bisc-question" data-multiple="false">
+<div id="bisc-q-19-stem" class="bisc-stem">
+<p><strong>1.</strong> Why does a SQL table need a key to keep the property that no two of its rows are identical?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-19-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-19-o1" name="bisc-q-19"><label for="bisc-q-19-o1">Because a key sorts the rows, and identical rows would sort together</label>
+<div class="bisc-feedback" hidden="">
+<p>A key identifies rows. It has nothing to do with sorting them.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-19-o2" name="bisc-q-19"><label for="bisc-q-19-o2">Because SQL does not require a table to be a true set, so a table with no key can hold two identical rows, which a relation never can</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Every table in the book’s database has a key, and the database rejects any row that would repeat a key value.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-19-o3" name="bisc-q-19"><label for="bisc-q-19-o3">Because without a key PostgreSQL refuses to create the table</label>
+<div class="bisc-feedback" hidden="">
+<p>PostgreSQL will create a table with no key. That is why the key must be declared.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-19-o4" name="bisc-q-19"><label for="bisc-q-19-o4">Because identical rows are allowed only in query results</label>
+<div class="bisc-feedback" hidden="">
+<p>A query result may repeat a row, but so may a table with no key. The key is what prevents it in the table.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-20" class="bisc-question" data-multiple="false">
+<div id="bisc-q-20-stem" class="bisc-stem">
+<p><strong>2.</strong> What was the appeal of an object database, which stores a program’s objects directly?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-20-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o1" name="bisc-q-20"><label for="bisc-q-20-o1">It connects records by matching values, as a relational database does</label>
+<div class="bisc-feedback" hidden="">
+<p>An object database connects objects by references, as the objects of a running program are connected.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-20-o2" name="bisc-q-20"><label for="bisc-q-20-o2">The program’s classes and the database’s structure are the same thing, so nothing is translated between them</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Object databases never displaced relational ones; relational systems took on some of their features, and libraries now do the translation.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o3" name="bisc-q-20"><label for="bisc-q-20-o3">It needs no description of its data, since every record names its own fields</label>
+<div class="bisc-feedback" hidden="">
+<p>That describes a document database, whose documents describe themselves.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o4" name="bisc-q-20"><label for="bisc-q-20-o4">It replaced relational databases in engineering design</label>
+<div class="bisc-feedback" hidden="">
+<p>It found uses there, but it never displaced relational databases.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-21" class="bisc-question" data-multiple="true">
+<div id="bisc-q-21-stem" class="bisc-stem">
+<p><strong>3.</strong> You are handed a connection to an unfamiliar database and asked which customers received a given product. What should you do before writing a query? Select every step the chapter recommends.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-21-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-21-o1" name="bisc-q-21"><label for="bisc-q-21-o1">Ask a tool for the schema diagram, or read the relational schema</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Reading the map takes a few minutes and saves hours of guessing.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-21-o2" name="bisc-q-21"><label for="bisc-q-21-o2">Find the tables that describe the things the request names, and trace a path of foreign keys between them</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. That path is the reasoning behind a join, and it shows which tables the query needs.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-21-o3" name="bisc-q-21"><label for="bisc-q-21-o3">Guess the column names and let the refused queries correct you</label>
+<div class="bisc-feedback" hidden="">
+<p>The catalog already holds every name. Ask for it instead of guessing.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-21-o4" name="bisc-q-21"><label for="bisc-q-21-o4">Copy the tables into a spreadsheet to look at them</label>
+<div class="bisc-feedback" hidden="">
+<p>The database describes itself, and the tools read that description directly.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -85,6 +85,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -307,6 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -601,7 +603,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> l.product_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The view is queried as a table is. A user who wants the lines of SO-5004 no longer writes the joins:</p>
-<div id="tbl-tx-view-so5004" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="view-order-report" data-stage="d3">
+<div id="tbl-tx-view-so5004" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="view-order-report">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-view-so5004-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.1: The Lines of SO-5004, from the Order Report View
@@ -709,7 +711,7 @@ Two-wheel hand truck
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> description <span class="op">=</span> <span class="st">'Two-wheel steel hand truck'</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-100'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-view-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;view-order-report&quot;,&quot;upd-ht100-description&quot;]" data-stage="d3">
+<div id="tbl-tx-view-after" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d3" data-changes="[&quot;view-order-report&quot;,&quot;upd-ht100-description&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-view-after-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.2: The Lines of SO-5004 After the Description Changes
@@ -799,7 +801,7 @@ Two-wheel steel hand truck
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> p.product_pk <span class="op">=</span> s.product_fk</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> s.quantity_on_hand <span class="op">&lt;</span> s.reorder_point;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-reorder" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="view-stock-to-reorder" data-stage="d4">
+<div id="tbl-tx-reorder" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d4" data-changes="view-stock-to-reorder">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-reorder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.3: Stock Levels Below Their Reorder Points, Stage D4
@@ -884,6 +886,7 @@ HINT:  To enable deleting from the view, provide an INSTEAD OF DELETE trigger or
 DETAIL:  Failing row contains (9, C-1009, Rogers Farm Supply, Rogers, AR).</code></pre>
 </div>
 <p>A view stores no rows: its query runs, as part of the query that uses it, every time it is used, which is what keeps it current. A query of a view therefore costs about what the same query would cost written out with the view’s joins: PostgreSQL merges the view’s query into the query that uses it, so that a condition such as <code>order_number = 'SO-5004'</code> is applied inside the joins. PostgreSQL also offers a <strong>materialized view</strong>, which stores its result and is brought up to date only when told to (<code>REFRESH MATERIALIZED VIEW</code>); it trades currency for speed, as the summary tables of <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a> do. The next section turns from naming queries to grouping changes.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch09.html#views" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-tx-acid" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="sec-tx-acid"><span class="header-section-number">9.2</span> Transactions and the ACID properties</h2>
@@ -1073,13 +1076,14 @@ Table&nbsp;9.5: Shipping SO-5011 a Second Time, Inside a Transaction
 <p>The first three properties can be seen in a schedule. Durability is the one you trust: PostgreSQL writes every change first to a <strong>write-ahead log</strong>, a file of changes in the order they were made, and, under its default settings, does not report a commit until the log records it, so that after a crash it can replay the log and recover every committed transaction. Durability does not protect against a mistaken <code>DELETE</code> that was committed, a failed disk, or a lost machine. For those you need a <strong>backup</strong>, a copy of the database made on purpose and kept elsewhere. PostgreSQL’s <code>pg_dump</code> program writes a database to a single file, and <code>pg_restore</code> (or psql, for a plain SQL dump) rebuilds it, into a new database if need be; a backup that has never been restored should not be trusted.</p>
 <p>A transaction also changes when some constraints are checked. Recall from <a href="02-Chapter2.html#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a> that PostgreSQL’s <code>NO ACTION</code> and <code>RESTRICT</code> both refuse a deletion that would leave a foreign key pointing nowhere. The SQL standard has <code>RESTRICT</code> check at once and <code>NO ACTION</code> at the end of the statement. In PostgreSQL the difference that matters is another. A <code>NO ACTION</code> foreign key can be declared <code>DEFERRABLE INITIALLY DEFERRED</code>, and its check then waits until <code>COMMIT</code>, which lets a transaction pass through an inconsistent state on its way to a consistent one. A <code>RESTRICT</code> check is never deferred.</p>
 <p>Two practical points follow. First, DataGrip and DBeaver run each statement in its own transaction, committed at once (<em>auto-commit</em>). Both tools can switch a console to manual transactions, but this book keeps the consoles in auto-commit and types <code>BEGIN</code> where it wants a transaction. A <code>DELETE</code> typed in a console is therefore permanent the moment it runs; to experiment safely, type <code>BEGIN</code> first, and end with <code>ROLLBACK</code>. Second, the three inserts that recorded a new customer’s order in <a href="08-Chapter8.html#exm-ddl-new-order" class="quarto-xref">Example&nbsp;<span>8.2</span></a> belong in one transaction, between <code>BEGIN</code> and <code>COMMIT</code>, for the reason this section has shown. The next section considers transactions that run at the same time.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch09.html#acid" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-tx-isolation" class="level2" data-number="9.3">
 <h2 data-number="9.3" class="anchored" data-anchor-id="sec-tx-isolation"><span class="header-section-number">9.3</span> Concurrency and isolation levels</h2>
 <p>This section considers transactions that run at the same time, and the isolation that keeps them from spoiling each other’s work.</p>
 <p>A database serves many sessions at once, and their transactions interleave: one clerk’s statements run between another’s. Most of the time they touch different rows and nothing goes wrong. Trouble comes when two transactions read and change the same rows, and the classic case is the <strong>lost update</strong>: two transactions read a value, each computes a new value from what it read, and the second to write overwrites the first, whose change is lost.</p>
 <p>At stage D5 the Fayetteville warehouse holds 18 GC-300 carts (stock level 3). Clerk A ships the 12 carts of SO-5011, and at the same moment clerk B ships 10 carts for another order. Each reads the quantity on hand, subtracts, and writes the result back:</p>
-<div id="tbl-tx-lost-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-lost-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-lost-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.6: Two Clerks Ship GC-300 Carts at Once, Reading Before Writing
@@ -1164,7 +1168,7 @@ Table&nbsp;9.6: Two Clerks Ship GC-300 Carts at Once, Reading Before Writing
 </div>
 <p>Both clerks read 18 (steps 3 and 4). Clerk A writes 6, which is 18 − 12. Clerk B’s write must wait (step 6), because A’s uncommitted change locks the row; when A commits, B’s write goes ahead and sets 8, which is 18 − 10. The books now say 8 carts remain, after 22 carts were shipped from 18. A’s update is lost, and nothing refused anything: each statement was legal on its own.</p>
 <p>Notice step 6. A transaction that changes a row holds a <strong>lock</strong> on it until the transaction ends, and another transaction that wants to change the same row waits. The lock did not prevent the lost update, because B’s mistake was made earlier, when it read 18 and decided on 8. The repair is to let the database do the arithmetic, in a single statement that reads and writes the row while holding its lock, and to state the condition under which the change is allowed:</p>
-<div id="tbl-tx-safe-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-safe-update" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-safe-update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.7: The Same Two Shipments, Letting the Database Subtract
@@ -1302,7 +1306,7 @@ Table&nbsp;9.8: The Standard’s Isolation Levels and the Anomalies Each Allows
 </figure>
 </div>
 <p>PostgreSQL’s default, and that of most systems, is <code>READ COMMITTED</code>: each statement sees the data as committed when the statement began. It is a sensible default for short transactions, and it allows the nonrepeatable read. Suppose that the production planner runs a report inside one transaction, totaling the GC-300 carts in both warehouses, while a shipment commits:</p>
-<div id="tbl-tx-nonrepeatable" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-nonrepeatable" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-nonrepeatable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.9: A Report’s Total Changes Within One Transaction, Read Committed
@@ -1356,7 +1360,7 @@ Table&nbsp;9.9: A Report’s Total Changes Within One Transaction, Read Committe
 </figure>
 </div>
 <p>The planner’s two totals disagree, 58 and then 46, within one transaction. A report whose parts are computed by several queries, a total on one page and a breakdown on the next, can then fail to add up. Under <code>REPEATABLE READ</code>, the transaction sees the database as it was when its first statement ran, and every query in it sees the same data. The price is that such a transaction cannot change a row that another transaction changed after its first statement ran; it fails instead, and must be tried again:</p>
-<div id="tbl-tx-serialization" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-serialization" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-serialization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.10: A Repeatable-Read Transaction Fails, and Is Tried Again
@@ -1441,7 +1445,7 @@ Table&nbsp;9.10: A Repeatable-Read Transaction Fails, and Is Tried Again
 </div>
 <p>In <a href="#tbl-tx-serialization" class="quarto-xref">Table&nbsp;<span>9.10</span></a>, A’s total is 58 both times (steps 2 and 4), although B’s shipment has committed in between. When A then ships SO-5012’s 4 carts from the same row, PostgreSQL refuses (step 5): A would be changing a row it has not seen in its current form. A tries again in a new transaction, which sees B’s change, and the stock ends at 18 − 12 − 4 = 2. A program that uses <code>REPEATABLE READ</code> or <code>SERIALIZABLE</code> must be written to retry a transaction that fails this way.</p>
 <p><code>REPEATABLE READ</code> refuses a change to a row that another transaction changed first. It does not stop two transactions that change <em>different</em> rows on the strength of what both read. Suppose that HG Industries keeps at least 30 GC-300 carts across its two warehouses: 18 in Fayetteville (stock level 3) and 40 in Tulsa (stock level 7). Two planners each check the total, 58, and each takes carts for a rush order. Planner A takes the 18 in Fayetteville, which leaves 40; planner B takes 25 in Tulsa, which leaves 33. Each change keeps the rule, and the two together do not:</p>
-<div id="tbl-tx-write-skew-rr" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-write-skew-rr" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-write-skew-rr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.11: Two Planners Take GC-300 Carts at Once, Repeatable Read
@@ -1519,7 +1523,7 @@ Table&nbsp;9.11: Two Planners Take GC-300 Carts at Once, Repeatable Read
 </figure>
 </div>
 <p>Both planners read 58 (steps 3 and 4), both changes succeed, and both transactions commit. The total is now 15, half of the 30 the rule requires. Neither transaction changed a row that the other changed, so <code>REPEATABLE READ</code> found nothing to refuse. This is a write skew, and preventing it is what <code>SERIALIZABLE</code> adds. At <code>SERIALIZABLE</code>, PostgreSQL also keeps track of what each transaction has read, and refuses a transaction whose commit would give a result that no order of running the transactions one at a time could give. The same schedule at <code>SERIALIZABLE</code>:</p>
-<div id="tbl-tx-write-skew-ser" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-schedule="true" data-stage="d5">
+<div id="tbl-tx-write-skew-ser" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-schedule="true">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-write-skew-ser-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.12: The Same Two Planners, Serializable
@@ -1599,6 +1603,7 @@ Table&nbsp;9.12: The Same Two Planners, Serializable
 <p>In <a href="#tbl-tx-write-skew-ser" class="quarto-xref">Table&nbsp;<span>9.12</span></a>, planner A commits (step 7), and planner B’s <code>COMMIT</code> fails (step 8): run after A’s, B’s transaction would have read 40, not 58. The total stays at 40. Planner B’s program tries again, reads 40, and finds that taking 25 would break the rule. The price is the one <code>REPEATABLE READ</code> charges, a transaction that fails and must be retried, and PostgreSQL may refuse, to be safe, a transaction that would have done no harm. Thus, <code>SERIALIZABLE</code> is the level for a transaction that checks a rule spanning several rows before it changes one of them.</p>
 <p>Two more facts complete the picture. First, PostgreSQL keeps several versions of a changed row, so that a reader sees the version its snapshot calls for; as a result, an ordinary read never waits for a write, and a write never waits for an ordinary read. A read that locks, such as <code>SELECT ... FOR UPDATE</code>, can wait. Two transactions that change the same row wait for each other, as B did in <a href="#tbl-tx-lost-update" class="quarto-xref">Table&nbsp;<span>9.6</span></a>, and so do two that insert the same value of a <code>UNIQUE</code> column: the second waits until the first ends, then fails if the first committed and goes ahead if it rolled back. Second, two transactions can wait for each other at once: A has changed row 1 and wants row 3, while B has changed row 3 and wants row 1. Neither can proceed, a situation called a <strong>deadlock</strong>. PostgreSQL detects it after a second or so and cancels one transaction with an error, which the program must retry. Programs that change several rows avoid most deadlocks by changing them in the same order, for example by key.</p>
 <p>For an engineer who writes reports and programs against a shared database, three habits follow. Keep transactions short, since a transaction holds its locks until it ends. Let the database compute changes (<code>SET q = q - 12</code>) rather than writing back values computed elsewhere. And run a report that must add up within one transaction at <code>REPEATABLE READ</code>, and a transaction that checks a rule across several rows before it changes one at <code>SERIALIZABLE</code>. The next section turns from sessions that interfere by accident to users who are kept apart on purpose.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch09.html#isolation" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-tx-security" class="level2" data-number="9.4">
 <h2 data-number="9.4" class="anchored" data-anchor-id="sec-tx-security"><span class="header-section-number">9.4</span> Security and privileges</h2>
@@ -1617,7 +1622,7 @@ Table&nbsp;9.12: The Same Two Planners, Serializable
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> <span class="kw">ROLE</span> hg_sales;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-as-sales" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;roles-sales&quot;,&quot;set-role-sales&quot;]" data-stage="d5">
+<div id="tbl-tx-as-sales" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="d5" data-changes="[&quot;roles-sales&quot;,&quot;set-role-sales&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-as-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.13: Orders Counted by a Session Acting as hg_sales
@@ -1661,7 +1666,7 @@ orders
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">USAGE</span> <span class="kw">ON</span> <span class="kw">SCHEMA</span> production <span class="kw">TO</span> hg_sales;</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GRANT</span> <span class="kw">SELECT</span> <span class="kw">ON</span> production.part_catalog <span class="kw">TO</span> hg_sales;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-tx-catalog" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;roles-sales&quot;,&quot;view-part-catalog&quot;,&quot;set-role-sales&quot;]" data-stage="p1">
+<div id="tbl-tx-catalog" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p1" data-changes="[&quot;roles-sales&quot;,&quot;view-part-catalog&quot;,&quot;set-role-sales&quot;]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tx-catalog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;9.14: The First Four Parts of the Catalog, Read as hg_sales
@@ -1744,6 +1749,7 @@ EA
 </div>
 <p>PostgreSQL can go further, and restrict the <em>rows</em> a role may see or change with row-level security, so that, say, each warehouse’s clerks see only their warehouse’s stock. This book does not use it.</p>
 <p>The same care applies to programs. A program that reads the database for a report should connect as a role that may only read; a program that records inspections, as <a href="10-Chapter10.html" class="quarto-xref"><span>Chapter 10</span></a> will write, as a role that may insert inspections and measurements and nothing more. No program should connect as the database’s owner or as a superuser, and no password belongs in a script or in code kept under version control: the book’s companion code reads its password from <code>db.properties</code>, a file that is never committed. An AI assistant that runs SQL is a program in this sense, and <a href="21-AppAssistants.html#sec-appassistants-login" class="quarto-xref"><span>Section I.3</span></a> builds a login for one that may read and nothing more.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch09.html#security" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-transactions-summary" class="level2" data-number="9.5">
 <h2 data-number="9.5" class="anchored" data-anchor-id="sec-transactions-summary"><span class="header-section-number">9.5</span> Summary</h2>
@@ -1751,6 +1757,7 @@ EA
 <p><strong>A transaction makes several statements succeed or fail as one.</strong> <code>BEGIN</code> opens it, <code>COMMIT</code> makes its changes permanent, and <code>ROLLBACK</code> discards them. In PostgreSQL a failed statement fails the whole transaction, and only <code>ROLLBACK</code>, or <code>ROLLBACK TO SAVEPOINT</code>, lets work go on. Its guarantees are atomicity, consistency, isolation, and durability, and durability is not a backup.</p>
 <p><strong>Concurrent transactions can spoil each other’s work, and isolation limits the damage.</strong> Two transactions that read a value, compute, and write it back lose an update; letting the database compute the change, under a condition, prevents it. The isolation level decides which read anomalies a transaction can meet: <code>READ COMMITTED</code>, the default, allows nonrepeatable reads, and <code>REPEATABLE READ</code> prevents them at the price of transactions that fail and must be retried. <code>SERIALIZABLE</code> also prevents write skew, two transactions that each change a different row on the strength of what both read.</p>
 <p><strong>Privileges decide who may do what.</strong> A role is a user or a group; <code>GRANT</code> and <code>REVOKE</code> give and take privileges on schemas, tables, views, and columns. Grant each role only what its job needs, and use a view to show some columns or rows of a table without granting the table.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch09.html#review" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check for the whole chapter</a></p>
 </section>
 <section id="sec-transactions-exercises" class="level2" data-number="9.6">
 <h2 data-number="9.6" class="anchored" data-anchor-id="sec-transactions-exercises"><span class="header-section-number">9.6</span> Exercises</h2>

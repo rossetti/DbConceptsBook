@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Chapter 3 Self-Checks – Database Concepts Companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7fd429508c10e9aeb0f6cc37510b69d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.js"></script>
+<link href="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="site_libs/quarto-contrib/quarto-project/book-interactive/self-check.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Database Concepts Companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Index</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../index.html"> 
+<span class="menu-text">Back to the book</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#basics" id="toc-basics" class="nav-link active" data-scroll-target="#basics">The SELECT Statement and Filtering Rows</a></li>
+  <li><a href="#null" id="toc-null" class="nav-link" data-scroll-target="#null">NULL and Three-Valued Logic</a></li>
+  <li><a href="#sort-expr" id="toc-sort-expr" class="nav-link" data-scroll-target="#sort-expr">Sorting, Limiting, and Expressions</a></li>
+  <li><a href="#inner" id="toc-inner" class="nav-link" data-scroll-target="#inner">Inner Joins</a></li>
+  <li><a href="#outer" id="toc-outer" class="nav-link" data-scroll-target="#outer">Outer Joins</a></li>
+  <li><a href="#subqueries" id="toc-subqueries" class="nav-link" data-scroll-target="#subqueries">Subqueries</a></li>
+  <li><a href="#set-cte" id="toc-set-cte" class="nav-link" data-scroll-target="#set-cte">Set Operations and Common Table Expressions</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review of the Whole Chapter</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chapter 3 Self-Checks</h1>
+<p class="subtitle lead">Querying Tables</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>These questions follow the order of <a href="../03-Chapter3.html">Chapter 3</a>. Each of the first seven groups checks one or two sections of the chapter, and the last group reviews the whole chapter. The “Self-check” buttons in the chapter lead to these groups. Nothing you answer is recorded.</p>
+<section id="basics" class="level2">
+<h2 class="anchored" data-anchor-id="basics">The SELECT Statement and Filtering Rows</h2>
+<p><a href="../03-Chapter3.html#sec-q-select">Read the sections</a></p>
+<div id="sc-ch03-basics" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-1" class="bisc-question" data-multiple="false">
+<div id="bisc-q-1-stem" class="bisc-stem">
+<p><strong>1.</strong> A query looks up a customer with the condition <code>WHERE customer_number = "C-1001"</code>. What happens?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-1-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o1" name="bisc-q-1"><label for="bisc-q-1-o1">It finds Riverside Hardware, since single and double quotes mean the same thing</label>
+<div class="bisc-feedback" hidden="">
+<p>They do not. A text value is written in single quotes, and double quotes mark a name.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-1-o2" name="bisc-q-1"><label for="bisc-q-1-o2">PostgreSQL refuses it, since double quotes mark a name, so the condition asks for a column named C-1001</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Written <code>'C-1001'</code>, in single quotes, the value is text, and the query finds the customer.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o3" name="bisc-q-1"><label for="bisc-q-1-o3">It returns no rows, since no customer number contains quotation marks</label>
+<div class="bisc-feedback" hidden="">
+<p>The double quotes are not read as part of a value at all. They make <code>C-1001</code> the name of a column.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o4" name="bisc-q-1"><label for="bisc-q-1-o4">It finds Riverside Hardware, since <code>customer_number</code> is an alternate key</label>
+<div class="bisc-feedback" hidden="">
+<p>Being a key does not change how a value must be written in a condition.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-2" class="bisc-question" data-multiple="false">
+<div id="bisc-q-2-stem" class="bisc-stem">
+<p><strong>2.</strong> A query names only <code>product_number</code> and <code>description</code> after <code>SELECT</code>, and its condition is <code>WHERE list_price &lt; 125</code>. What does it return?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-2-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o1" name="bisc-q-2"><label for="bisc-q-2-o1">Nothing; PostgreSQL refuses a condition on a column that the <code>SELECT</code> list does not name</label>
+<div class="bisc-feedback" hidden="">
+<p>The condition is allowed. The <code>WHERE</code> clause sees every column of the table.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-2-o2" name="bisc-q-2"><label for="bisc-q-2-o2">The number and description of each product priced under $125</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The condition is evaluated on the whole row, whether or not the <code>SELECT</code> list names the column it tests.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o3" name="bisc-q-2"><label for="bisc-q-2-o3">The number, description, and list price of each product priced under $125</label>
+<div class="bisc-feedback" hidden="">
+<p>The result has only the columns the <code>SELECT</code> list names. Testing a column does not add it to the result.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o4" name="bisc-q-2"><label for="bisc-q-2-o4">Every product, since the condition’s column is not shown</label>
+<div class="bisc-feedback" hidden="">
+<p>Showing a column and testing it are separate. The rows are still filtered by price.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-3" class="bisc-question" data-multiple="true">
+<div id="bisc-q-3-stem" class="bisc-stem">
+<p><strong>3.</strong> Which product numbers does the condition <code>product_number LIKE 'GC-_00'</code> match? Select every one it does.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-3-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-3-o1" name="bisc-q-3"><label for="bisc-q-3-o1">GC-300</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The <code>_</code> stands for exactly one character, here the 3.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-3-o2" name="bisc-q-3"><label for="bisc-q-3-o2">GC-400</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Any one character may stand where the <code>_</code> is.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-3-o3" name="bisc-q-3"><label for="bisc-q-3-o3">GC-3000</label>
+<div class="bisc-feedback" hidden="">
+<p>The pattern has exactly six characters, and the <code>_</code> matches one character only. This number has seven.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-3-o4" name="bisc-q-3"><label for="bisc-q-3-o4">HT-100</label>
+<div class="bisc-feedback" hidden="">
+<p>The pattern begins with <code>GC-</code>, which must match exactly.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="null" class="level2">
+<h2 class="anchored" data-anchor-id="null">NULL and Three-Valued Logic</h2>
+<p><a href="../03-Chapter3.html#sec-q-null">Read the section</a></p>
+<div id="sc-ch03-null" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-4" class="bisc-question" data-multiple="false">
+<div id="bisc-q-4-stem" class="bisc-stem">
+<p><strong>1.</strong> A work order is still in process, so its <code>completed_on</code> is NULL. Its <code>due_on</code> is a date in the past. What is the value of the condition <code>completed_on &gt; due_on</code> for this work order?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-4-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o1" name="bisc-q-4"><label for="bisc-q-4-o1">True, because the work order is overdue</label>
+<div class="bisc-feedback" hidden="">
+<p>The work order is overdue, but this condition compares the completion date, which is unknown.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o2" name="bisc-q-4"><label for="bisc-q-4-o2">False, because a NULL counts as no date at all</label>
+<div class="bisc-feedback" hidden="">
+<p>NULL is not treated as zero or as an empty value. A comparison with NULL has a third value.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-4-o3" name="bisc-q-4"><label for="bisc-q-4-o3">Unknown</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A comparison in which either side is NULL is neither true nor false; it is unknown. A <code>WHERE</code> clause discards the row, just as it would discard a false one.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o4" name="bisc-q-4"><label for="bisc-q-4-o4">The query stops with an error</label>
+<div class="bisc-feedback" hidden="">
+<p>Comparing with NULL is allowed. It gives an answer, just not true or false.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-5" class="bisc-question" data-multiple="false">
+<div id="bisc-q-5-stem" class="bisc-stem">
+<p><strong>2.</strong> Work order WO-7008 is open, so its <code>completed_on</code> is NULL, and it was due on March 13, 2026. What is the value of <code>completed_on &gt; due_on OR due_on &lt; DATE '2026-03-20'</code> for it?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-5-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-5-o1" name="bisc-q-5"><label for="bisc-q-5-o1">True</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The first part is unknown and the second is true, and true <code>OR</code> anything is true, whatever the unknown turns out to be.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o2" name="bisc-q-5"><label for="bisc-q-5-o2">Unknown, since one part of the condition is unknown</label>
+<div class="bisc-feedback" hidden="">
+<p>An unknown part makes an <code>OR</code> unknown only when the other part is not true. Here the other part is true.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o3" name="bisc-q-5"><label for="bisc-q-5-o3">False, since the work order has no completion date</label>
+<div class="bisc-feedback" hidden="">
+<p>A missing completion date makes the first comparison unknown, not false, and the second part is true anyway.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o4" name="bisc-q-5"><label for="bisc-q-5-o4">The query stops with an error</label>
+<div class="bisc-feedback" hidden="">
+<p>Combining unknown with <code>OR</code> is allowed, and the truth table of <code>OR</code> gives its value.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-6" class="bisc-question" data-multiple="false">
+<div id="bisc-q-6-stem" class="bisc-stem">
+<p><strong>3.</strong> The query for the work orders that are late as of March 20, 2026 writes the date <code>DATE '2026-03-20'</code> into its condition. What should change if the plant manager wants the same list every morning?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-6-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o1" name="bisc-q-6"><label for="bisc-q-6-o1">Nothing; the query finds the late work orders whenever it runs</label>
+<div class="bisc-feedback" hidden="">
+<p>With the date written in, the query answers the question as of March 20 only.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-6-o2" name="bisc-q-6"><label for="bisc-q-6-o2">Replace the written date with <code>CURRENT_DATE</code>, the date on which the query runs</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The open work orders due before today are late today, so the comparison must move with the day.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o3" name="bisc-q-6"><label for="bisc-q-6-o3">Remove the date, and keep only <code>completed_on &gt; due_on</code></label>
+<div class="bisc-feedback" hidden="">
+<p>That condition misses every open work order, since it is unknown whenever <code>completed_on</code> is NULL.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o4" name="bisc-q-6"><label for="bisc-q-6-o4">Add <code>ORDER BY due_on</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Sorting changes the order of the rows, not which rows count as late.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="sort-expr" class="level2">
+<h2 class="anchored" data-anchor-id="sort-expr">Sorting, Limiting, and Expressions</h2>
+<p><a href="../03-Chapter3.html#sec-q-orderby">Read the sections</a></p>
+<div id="sc-ch03-sort-expr" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-7" class="bisc-question" data-multiple="false">
+<div id="bisc-q-7-stem" class="bisc-stem">
+<p><strong>1.</strong> A query ends with <code>ORDER BY warehouse_fk, quantity_on_hand DESC</code>. In what order does it list the stock levels?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-7-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o1" name="bisc-q-7"><label for="bisc-q-7-o1">Both columns from largest to smallest</label>
+<div class="bisc-feedback" hidden="">
+<p><code>DESC</code> applies only to the column it follows. Each column is sorted on its own terms.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-7-o2" name="bisc-q-7"><label for="bisc-q-7-o2">By warehouse from smallest to largest, and within each warehouse from the largest quantity on hand to the smallest</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The first column sorts the rows, the second breaks the ties within it, and only the second is descending.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o3" name="bisc-q-7"><label for="bisc-q-7-o3">By quantity on hand from largest to smallest, and then by warehouse</label>
+<div class="bisc-feedback" hidden="">
+<p>The columns sort in the order they are named, so the warehouse comes first.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o4" name="bisc-q-7"><label for="bisc-q-7-o4">By warehouse, with the quantities in no particular order</label>
+<div class="bisc-feedback" hidden="">
+<p>The second column breaks the ties of the first, so the quantities within each warehouse are sorted.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-8" class="bisc-question" data-multiple="false">
+<div id="bisc-q-8-stem" class="bisc-stem">
+<p><strong>2.</strong> For a work order still in process, <code>completed_on</code> is NULL. What does the expression <code>completed_on - released_on</code> give for it, and what does <code>COALESCE(completed_on, DATE '2026-03-20') - released_on</code> give?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-8-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o1" name="bisc-q-8"><label for="bisc-q-8-o1">Zero, and the days from release to March 20</label>
+<div class="bisc-feedback" hidden="">
+<p>NULL is not zero, so the first expression is not zero.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-8-o2" name="bisc-q-8"><label for="bisc-q-8-o2">NULL, and the days from release to March 20</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Any arithmetic with a NULL operand gives NULL. <code>COALESCE</code> returns the first of its arguments that is not NULL, so it substitutes March 20 for the missing date.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o3" name="bisc-q-8"><label for="bisc-q-8-o3">An error, and the days from release to March 20</label>
+<div class="bisc-feedback" hidden="">
+<p>Arithmetic with NULL is allowed; it gives NULL.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o4" name="bisc-q-8"><label for="bisc-q-8-o4">NULL, and NULL</label>
+<div class="bisc-feedback" hidden="">
+<p><code>COALESCE</code> replaces the NULL before the subtraction, so the second expression has a value.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-9" class="bisc-question" data-multiple="false">
+<div id="bisc-q-9-stem" class="bisc-stem">
+<p><strong>3.</strong> Two orders have no requested ship date. A query ends with <code>ORDER BY requested_ship_date</code>. Where does PostgreSQL put those two orders?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-9-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o1" name="bisc-q-9"><label for="bisc-q-9-o1">First, since NULL is smaller than any date</label>
+<div class="bisc-feedback" hidden="">
+<p>PostgreSQL does the opposite in ascending order.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-9-o2" name="bisc-q-9"><label for="bisc-q-9-o2">Last, since PostgreSQL sorts NULL as if it were larger than every value</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. They come last in ascending order and first in descending order. The SQL standard leaves the choice to each database, so writing <code>NULLS FIRST</code> or <code>NULLS LAST</code> makes the query’s meaning plain anywhere.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o3" name="bisc-q-9"><label for="bisc-q-9-o3">Nowhere: rows with a NULL in the <code>ORDER BY</code> column are left out</label>
+<div class="bisc-feedback" hidden="">
+<p>Sorting never removes rows. Only <code>WHERE</code>, a join condition, or <code>LIMIT</code> can do that.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o4" name="bisc-q-9"><label for="bisc-q-9-o4">In whatever order they happen to be stored</label>
+<div class="bisc-feedback" hidden="">
+<p>The two orders do move as a block to one end; only their order relative to each other is left to any further <code>ORDER BY</code> columns.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="inner" class="level2">
+<h2 class="anchored" data-anchor-id="inner">Inner Joins</h2>
+<p><a href="../03-Chapter3.html#sec-q-inner-joins">Read the section</a></p>
+<div id="sc-ch03-inner" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-10" class="bisc-question" data-multiple="false">
+<div id="bisc-q-10-stem" class="bisc-stem">
+<p><strong>1.</strong> We evaluate a join by hand on three customers and the four orders that two of them placed. How many pairs does the cross product hold, before the join condition is applied?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-10-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o1" name="bisc-q-10"><label for="bisc-q-10-o1">4</label>
+<div class="bisc-feedback" hidden="">
+<p>Four is the number of pairs the join condition keeps, one for each order. The cross product comes first.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o2" name="bisc-q-10"><label for="bisc-q-10-o2">7</label>
+<div class="bisc-feedback" hidden="">
+<p>The cross product multiplies the row counts; it does not add them.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-10-o3" name="bisc-q-10"><label for="bisc-q-10-o3">12</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Every one of the 3 customers is paired with every one of the 4 orders, <span class="math inline">\(3 \times 4 = 12\)</span>, and the join condition then keeps the pairs whose keys match.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o4" name="bisc-q-10"><label for="bisc-q-10-o4">3</label>
+<div class="bisc-feedback" hidden="">
+<p>Every customer appears in the cross product, but each is paired with every order.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-11" class="bisc-question" data-multiple="false">
+<div id="bisc-q-11-stem" class="bisc-stem">
+<p><strong>2.</strong> A query joins <code>product</code>, <code>order_line</code>, <code>customer_order</code>, and <code>customer</code>, one <code>JOIN</code> at a time. How many join conditions does it need?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-11-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o1" name="bisc-q-11"><label for="bisc-q-11-o1">One, naming all four tables</label>
+<div class="bisc-feedback" hidden="">
+<p>Each <code>JOIN</code> adds one table and the condition that connects it to a table already joined.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-11-o2" name="bisc-q-11"><label for="bisc-q-11-o2">Three</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A join of four tables needs three conditions, one for each foreign key along the path from <code>product</code> to <code>customer</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o3" name="bisc-q-11"><label for="bisc-q-11-o3">Four, one for each table</label>
+<div class="bisc-feedback" hidden="">
+<p>The first table needs no condition; each table joined after it needs one.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o4" name="bisc-q-11"><label for="bisc-q-11-o4">Six, one for each pair of tables</label>
+<div class="bisc-feedback" hidden="">
+<p>Only tables connected by a foreign key are matched. Each condition follows one foreign key line of the schema.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-12" class="bisc-question" data-multiple="true">
+<div id="bisc-q-12-stem" class="bisc-stem">
+<p><strong>3.</strong> A join can be written with both tables in <code>FROM</code>, separated by a comma, and the join condition in <code>WHERE</code>, or with <code>JOIN</code> and <code>ON</code>. Why does the book use the <code>JOIN</code> form? Select every reason it gives.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-12-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-12-o1" name="bisc-q-12"><label for="bisc-q-12-o1">It keeps each join condition beside the table it joins, which makes a query of several tables easier to read</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The conditions that connect tables stand apart from the conditions that filter rows.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-12-o2" name="bisc-q-12"><label for="bisc-q-12-o2">The outer joins can be written no other way</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A left join needs <code>ON</code> to say what counts as a match.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-12-o3" name="bisc-q-12"><label for="bisc-q-12-o3">It returns different rows from the comma form</label>
+<div class="bisc-feedback" hidden="">
+<p>The two forms mean the same thing and return the same rows.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-12-o4" name="bisc-q-12"><label for="bisc-q-12-o4">It makes the database build the cross product first</label>
+<div class="bisc-feedback" hidden="">
+<p>The database never actually builds the cross product, in either form. The cross product is how to think about a join.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="outer" class="level2">
+<h2 class="anchored" data-anchor-id="outer">Outer Joins</h2>
+<p><a href="../03-Chapter3.html#sec-q-outer-joins">Read the section</a></p>
+<div id="sc-ch03-outer" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-13" class="bisc-question" data-multiple="false">
+<div id="bisc-q-13-stem" class="bisc-stem">
+<p><strong>1.</strong> A warehouse takes a physical count of its stock and wants to compare it with the stock levels on record. Either list may hold products that the other lacks. Which join suits the comparison?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-13-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o1" name="bisc-q-13"><label for="bisc-q-13-o1">An inner join</label>
+<div class="bisc-feedback" hidden="">
+<p>An inner join keeps only the products in both lists, which hides exactly the differences the comparison is for.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o2" name="bisc-q-13"><label for="bisc-q-13-o2">A left join from the count to the stock levels</label>
+<div class="bisc-feedback" hidden="">
+<p>This keeps every counted product, but a stock level that the count missed is left out.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-13-o3" name="bisc-q-13"><label for="bisc-q-13-o3">A full join</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A <code>FULL JOIN</code> keeps the unmatched rows of both tables, padded with NULL, so a product missing from either list appears.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o4" name="bisc-q-13"><label for="bisc-q-13-o4">A right join from the count to the stock levels</label>
+<div class="bisc-feedback" hidden="">
+<p>A right join keeps every row of the table named after it, so it misses the counted products with no stock level on record.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-14" class="bisc-question" data-multiple="false">
+<div id="bisc-q-14-stem" class="bisc-stem">
+<p><strong>2.</strong> Customer 8, Northgate Hardware, has placed no orders. In the result of <code>customer AS c LEFT JOIN customer_order AS o ON o.customer_fk = c.customer_pk</code>, what does Northgate Hardware’s row hold?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-14-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o1" name="bisc-q-14"><label for="bisc-q-14-o1">Nothing: the customer has no row, since it matched no order</label>
+<div class="bisc-feedback" hidden="">
+<p>That is what an inner join does. A left join adds back the unmatched rows of its left-hand table.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-14-o2" name="bisc-q-14"><label for="bisc-q-14-o2">The customer’s own columns, and NULL in every column that would have come from <code>customer_order</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The outer join supplies the NULLs; the customer’s own data comes from its table as before. Testing one of those NULL columns is how a left join finds the customers with no orders.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o3" name="bisc-q-14"><label for="bisc-q-14-o3">The customer’s columns, and the values of the most recent order of any customer</label>
+<div class="bisc-feedback" hidden="">
+<p>The left join pairs a row only with rows that satisfy the join condition, and none does.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o4" name="bisc-q-14"><label for="bisc-q-14-o4">One row for each order in the table, each marked as not matching</label>
+<div class="bisc-feedback" hidden="">
+<p>Rows that do not match are not paired at all; the customer appears once, padded with NULL.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-15" class="bisc-question" data-multiple="true">
+<div id="bisc-q-15-stem" class="bisc-stem">
+<p><strong>3.</strong> A report must list every warehouse, with its stock levels where it has any. Which <code>FROM</code> clauses keep a warehouse that has no stock levels?</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-15-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-15-o1" name="bisc-q-15"><label for="bisc-q-15-o1"><code>warehouse AS w LEFT JOIN stock_level AS s ON s.warehouse_fk = w.warehouse_pk</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The table named before <code>LEFT JOIN</code> is the one whose rows are all kept.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-15-o2" name="bisc-q-15"><label for="bisc-q-15-o2"><code>stock_level AS s LEFT JOIN warehouse AS w ON s.warehouse_fk = w.warehouse_pk</code></label>
+<div class="bisc-feedback" hidden="">
+<p>This keeps every stock level, but a warehouse with none matches no stock level and is left out.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-15-o3" name="bisc-q-15"><label for="bisc-q-15-o3"><code>warehouse AS w JOIN stock_level AS s ON s.warehouse_fk = w.warehouse_pk</code></label>
+<div class="bisc-feedback" hidden="">
+<p>An inner join returns only matched rows.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-15-o4" name="bisc-q-15"><label for="bisc-q-15-o4"><code>stock_level AS s RIGHT JOIN warehouse AS w ON w.warehouse_pk = s.warehouse_fk</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A right join keeps every row of the table named after it, here <code>warehouse</code>, so it is the left join above written the other way round. The book writes every outer join as a left join, which reads in the order of the request.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="subqueries" class="level2">
+<h2 class="anchored" data-anchor-id="subqueries">Subqueries</h2>
+<p><a href="../03-Chapter3.html#sec-q-subqueries">Read the section</a></p>
+<div id="sc-ch03-subqueries" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-16" class="bisc-question" data-multiple="true">
+<div id="bisc-q-16-stem" class="bisc-stem">
+<p><strong>1.</strong> A query keeps the products for which <code>EXISTS (SELECT * FROM distribution.stock_level AS s WHERE s.product_fk = p.product_pk AND s.quantity_on_hand &lt;= s.reorder_point)</code> holds. Which statements about the <code>EXISTS</code> test are true? Select every one that is.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-16-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-16-o1" name="bisc-q-16"><label for="bisc-q-16-o1">It is true for a product when the subquery returns at least one row, and false when it returns none</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. <code>EXISTS</code> tests only whether a row exists, so it is never unknown.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-16-o2" name="bisc-q-16"><label for="bisc-q-16-o2">Writing <code>SELECT 1</code> or <code>SELECT s.warehouse_fk</code> in place of <code>SELECT *</code> would not change the result</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The select list of an <code>EXISTS</code> subquery does not matter; <code>SELECT *</code> is only the convention.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-16-o3" name="bisc-q-16"><label for="bisc-q-16-o3">The subquery is run once for the whole query, not for each product</label>
+<div class="bisc-feedback" hidden="">
+<p>It refers to <code>p.product_pk</code>, the outer row, so it is read as being run once for each product.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-16-o4" name="bisc-q-16"><label for="bisc-q-16-o4">A product short in both warehouses appears twice</label>
+<div class="bisc-feedback" hidden="">
+<p>The outer query reads the <code>product</code> table, and the test is true or false once for each product, so each appears at most once.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-17" class="bisc-question" data-multiple="false">
+<div id="bisc-q-17-stem" class="bisc-stem">
+<p><strong>2.</strong> In a subquery, a column is named without its table’s alias, and the subquery’s own table has no column of that name, though the outer query’s table does. What happens?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-17-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o1" name="bisc-q-17"><label for="bisc-q-17-o1">PostgreSQL refuses the query</label>
+<div class="bisc-feedback" hidden="">
+<p>It would refuse a qualified name, such as <code>o.customer_pk</code>. An unqualified name is looked up further out.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-17-o2" name="bisc-q-17"><label for="bisc-q-17-o2">The name refers to the outer query’s table, and the subquery becomes correlated by accident</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The query runs and gives a wrong answer rather than a message. That is why every column in a subquery should be named with its table’s alias.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o3" name="bisc-q-17"><label for="bisc-q-17-o3">The column is treated as NULL</label>
+<div class="bisc-feedback" hidden="">
+<p>The name is resolved to a real column, just not the one intended.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o4" name="bisc-q-17"><label for="bisc-q-17-o4">The subquery returns no rows</label>
+<div class="bisc-feedback" hidden="">
+<p>It returns rows, from the outer row’s own column.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-18" class="bisc-question" data-multiple="false">
+<div id="bisc-q-18-stem" class="bisc-stem">
+<p><strong>3.</strong> A query keeps the products priced above one product’s price, looked up by a subquery:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> list_price <span class="op">&gt;</span> (<span class="kw">SELECT</span> list_price</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">FROM</span> distribution.product</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">'HT-900'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>No product has the number HT-900. What does the query return?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-18-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o1" name="bisc-q-18"><label for="bisc-q-18-o1">Every product, since there is no price to exceed</label>
+<div class="bisc-feedback" hidden="">
+<p>The subquery does have a value; it is just not a price.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-18-o2" name="bisc-q-18"><label for="bisc-q-18-o2">No rows, since the subquery’s value is NULL and every comparison with it is unknown</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A subquery used as a single value returns NULL when it finds no row. Had it found several rows, PostgreSQL would have stopped with an error instead. Looking the product up by its alternate key guarantees at most one row.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o3" name="bisc-q-18"><label for="bisc-q-18-o3">An error, since the subquery returns no rows</label>
+<div class="bisc-feedback" hidden="">
+<p>PostgreSQL stops with an error only when such a subquery returns more than one row.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o4" name="bisc-q-18"><label for="bisc-q-18-o4">The most expensive product</label>
+<div class="bisc-feedback" hidden="">
+<p>Nothing in the query compares the products with one another.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="set-cte" class="level2">
+<h2 class="anchored" data-anchor-id="set-cte">Set Operations and Common Table Expressions</h2>
+<p><a href="../03-Chapter3.html#sec-q-set">Read the sections</a></p>
+<div id="sc-ch03-set-cte" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-19" class="bisc-question" data-multiple="false">
+<div id="bisc-q-19-stem" class="bisc-stem">
+<p><strong>1.</strong> A <code>UNION</code> of the customers’ cities and states and the warehouses’ cities and states ends with <code>ORDER BY state, city</code>. What does the <code>ORDER BY</code> sort?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-19-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-19-o1" name="bisc-q-19"><label for="bisc-q-19-o1">Only the rows of the second query, the warehouses</label>
+<div class="bisc-feedback" hidden="">
+<p>The <code>ORDER BY</code> follows the second query, but it does not belong to it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-19-o2" name="bisc-q-19"><label for="bisc-q-19-o2">The combined result of both queries</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. An <code>ORDER BY</code> at the end of a set operation sorts the result that the operation produces.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-19-o3" name="bisc-q-19"><label for="bisc-q-19-o3">Each query’s rows separately, the customers’ and then the warehouses’</label>
+<div class="bisc-feedback" hidden="">
+<p>The union is one result, and it is sorted as one.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-19-o4" name="bisc-q-19"><label for="bisc-q-19-o4">Nothing, since a set operation cannot be sorted</label>
+<div class="bisc-feedback" hidden="">
+<p>A union is a result like any other, and an <code>ORDER BY</code> sorts it.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-20" class="bisc-question" data-multiple="false">
+<div id="bisc-q-20-stem" class="bisc-stem">
+<p><strong>2.</strong> Which statement about a common table expression that does not refer to itself is true?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-20-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o1" name="bisc-q-20"><label for="bisc-q-20-o1">It stores its result in the database for later queries</label>
+<div class="bisc-feedback" hidden="">
+<p>A CTE exists only while its statement runs.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o2" name="bisc-q-20"><label for="bisc-q-20-o2">It can answer requests that no subquery can</label>
+<div class="bisc-feedback" hidden="">
+<p>It could be written as a subquery in the <code>FROM</code> clause instead.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-20-o3" name="bisc-q-20"><label for="bisc-q-20-o3">It names a step of a long query, which the rest of the statement uses like a table</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. What it adds is readability: each step can be named for what it means, and run and checked on its own.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o4" name="bisc-q-20"><label for="bisc-q-20-o4">It must be the last part of the statement</label>
+<div class="bisc-feedback" hidden="">
+<p>A CTE comes first, introduced by <code>WITH</code>; the statement that uses it follows.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review of the Whole Chapter</h2>
+<p><a href="../03-Chapter3.html#sec-sqlqueries-summary">Read the chapter summary</a></p>
+<div id="sc-ch03-review" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-21" class="bisc-question" data-multiple="false">
+<div id="bisc-q-21-stem" class="bisc-stem">
+<p><strong>1.</strong> A request reads “the number, description, and list price of each product under $125, cheapest first”. Which clauses does its query need besides <code>SELECT</code> and <code>FROM</code>?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-21-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-21-o1" name="bisc-q-21"><label for="bisc-q-21-o1"><code>WHERE</code> only</label>
+<div class="bisc-feedback" hidden="">
+<p>“Cheapest first” says in what order, which is a clause of its own.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-21-o2" name="bisc-q-21"><label for="bisc-q-21-o2"><code>WHERE</code> and <code>ORDER BY</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. “Under $125” says which rows, and “cheapest first” says in what order. Reading a request clause by clause tells you which clauses its query needs before you write any of them.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-21-o3" name="bisc-q-21"><label for="bisc-q-21-o3"><code>ORDER BY</code> and <code>LIMIT</code></label>
+<div class="bisc-feedback" hidden="">
+<p>“Under $125” is a condition on each row, not a count of rows.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-21-o4" name="bisc-q-21"><label for="bisc-q-21-o4"><code>GROUP BY</code> and <code>HAVING</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Nothing in the request divides the products into groups.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-22" class="bisc-question" data-multiple="false">
+<div id="bisc-q-22-stem" class="bisc-stem">
+<p><strong>2.</strong> A query finds the products that have never been ordered by joining <code>product AS p LEFT JOIN order_line AS l ON l.product_fk = p.product_pk</code> and keeping the rows where a column is NULL. Which test should it use?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-22-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-22-o1" name="bisc-q-22"><label for="bisc-q-22-o1"><code>l.order_line_pk IS NULL</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A real order line always has a primary key, so a NULL there can come only from the left join’s padding.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-22-o2" name="bisc-q-22"><label for="bisc-q-22-o2"><code>p.product_pk IS NULL</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Every row’s product columns come from the <code>product</code> table itself, and its key is never NULL, so this keeps no rows.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-22-o3" name="bisc-q-22"><label for="bisc-q-22-o3"><code>l.order_line_pk IS NOT NULL</code></label>
+<div class="bisc-feedback" hidden="">
+<p>This keeps the products that matched an order line: those that have been ordered.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-22-o4" name="bisc-q-22"><label for="bisc-q-22-o4"><code>p.list_price IS NULL</code></label>
+<div class="bisc-feedback" hidden="">
+<p>A product’s own columns say nothing about whether it matched an order line.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+<div class="bisc-explanation" hidden="">
+<p>The test must use a column that cannot be NULL in a matched row. Otherwise a product that was ordered could look unordered.</p>
+</div>
+</div>
+<div id="bisc-q-23" class="bisc-question" data-multiple="false">
+<div id="bisc-q-23-stem" class="bisc-stem">
+<p><strong>3.</strong> Before running a new query, why evaluate it by hand on a few rows?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-23-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-23-o1" name="bisc-q-23"><label for="bisc-q-23-o1">The database needs the predicted rows to check its own answer</label>
+<div class="bisc-feedback" hidden="">
+<p>The database knows nothing of our prediction.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-23-o2" name="bisc-q-23"><label for="bisc-q-23-o2">The prediction, compared with the result, catches a wrong condition, a lost NULL, or fan-out before the result reaches a report</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Write down what each step produces, then run the query; its result must match. The habit also builds the understanding that makes a long query readable.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-23-o3" name="bisc-q-23"><label for="bisc-q-23-o3">Hand evaluation is faster than running the query</label>
+<div class="bisc-feedback" hidden="">
+<p>It is slower. Its value is the check it gives, not speed.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-23-o4" name="bisc-q-23"><label for="bisc-q-23-o4">Only queries with joins need it</label>
+<div class="bisc-feedback" hidden="">
+<p>Conditions with NULL, <code>AND</code> and <code>OR</code>, and <code>LIMIT</code> with ties all reward the same check.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

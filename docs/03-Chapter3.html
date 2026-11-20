@@ -85,6 +85,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -336,6 +337,7 @@ window.Quarto = {
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -1519,6 +1521,7 @@ Cart frame
 </figure>
 </div>
 <p><code>LOWER</code> is a function, one of those <a href="#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a> presents. PostgreSQL also offers <code>ILIKE</code>, a <code>LIKE</code> that ignores case, but <code>ILIKE</code> is not standard SQL, and <code>LOWER</code> works in every database. The next section takes up the one kind of value for which none of these conditions behaves as expected: NULL.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#basics" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-q-null" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="sec-q-null"><span class="header-section-number">3.3</span> NULL and three-valued logic</h2>
@@ -1956,6 +1959,7 @@ NULL
 <p><em>Where it breaks.</em> The date March 20 is written into the query, so the query answers the question as of that day only. A query run every day would use <code>CURRENT_DATE</code>, the date on which it runs. In addition, the query trusts <code>completed_on</code>: a work order that was finished but never recorded as finished looks open, and the query would call it late.</p>
 </div>
 <p>NULL affects arithmetic as well as conditions: any arithmetic with a NULL operand produces NULL. <a href="#sec-q-functions" class="quarto-xref"><span>Section 3.5</span></a> shows the consequence, and a function that replaces a NULL with a value of your choosing.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#null" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-q-orderby" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="sec-q-orderby"><span class="header-section-number">3.4</span> Sorting and limiting results</h2>
@@ -3076,6 +3080,7 @@ GC-400 POLY GARDEN CART
 <p>The <code>family</code> column of <a href="#tbl-q-text" class="quarto-xref">Table&nbsp;<span>3.30</span></a> separates the hand trucks (HT) from the garden carts (GC), a grouping that <a href="04-Chapter4.html" class="quarto-xref"><span>Chapter 4</span></a> will summarize. Notice also what the <code>label</code> column does: it builds, for display, a value that the table rightly stores as two columns. Recall from <a href="02-Chapter2.html#sec-rm-tables" class="quarto-xref"><span>Section 2.1</span></a> that a value such as “Fayetteville, AR” would break the rule that every stored value is atomic. A query may combine values freely, because its result is for reading, not for storing.</p>
 <p>These functions are a small sample, chosen because industrial data needs them often. PostgreSQL provides hundreds more, described in its documentation, and <a href="18-AppSQLReference.html" class="quarto-xref"><span>Appendix F</span></a> lists the ones this book uses. One more kind of expression, the <code>CASE</code> expression, chooses a value by conditions; it appears in <a href="04-Chapter4.html#sec-agg-case" class="quarto-xref"><span>Section 4.4</span></a>, where it is most useful.</p>
 <p>Every query in this chapter so far has read one table. The questions of <a href="02-Chapter2.html#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a>, however, cross several: which customers ordered a product, which warehouse shipped an order. The next section combines tables.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#sort-expr" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-q-inner-joins" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="sec-q-inner-joins"><span class="header-section-number">3.6</span> Inner joins</h2>
@@ -3740,6 +3745,7 @@ second_product
 </figure>
 </div>
 <p>The join condition of <a href="#tbl-q-self-join" class="quarto-xref">Table&nbsp;<span>3.38</span></a> has two parts. The first pairs two lines of the same order; the second keeps each pair once, in one order, and drops the pairing of a line with itself. Without <code>b.product_fk &gt; a.product_fk</code>, the result would hold every pair twice, as (1, 3) and (3, 1), and every product paired with itself. The result says that every pair of the three products that have been ordered has appeared together on at least one order. The next section takes up the customers, and the products, that a join leaves out.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#inner" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-q-outer-joins" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="sec-q-outer-joins"><span class="header-section-number">3.7</span> Outer joins</h2>
@@ -4101,6 +4107,7 @@ Poly garden cart
 <p><em>Where it breaks.</em> The test must use a column that cannot be NULL in a matched row. A column that may be NULL in a real order line would make an ordered product look unordered whenever that column happened to be NULL.</p>
 </div>
 <p>A query that keeps the rows of one table that have no match in another is called an <strong>anti-join</strong>. The left join with <code>IS NULL</code> is one way to write it; the next section shows another, and <a href="#sec-q-set" class="quarto-xref"><span>Section 3.9</span></a> a third.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#outer" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-q-subqueries" class="level2" data-number="3.8">
 <h2 data-number="3.8" class="anchored" data-anchor-id="sec-q-subqueries"><span class="header-section-number">3.8</span> Subqueries</h2>
@@ -4697,6 +4704,7 @@ Saw
 </figure>
 </div>
 <p>The Saw, Machining, and Paint work centers each have at least one certification on every machine. Welding does not appear, so some machine of Welding has no certified operator; <a href="#exr-ch3-every-welder" class="quarto-xref">Exercise&nbsp;<span>3.16</span></a> asks which. Assembly qualifies too, since it has no machines at all; as in <a href="#exm-q-every-machine" class="quarto-xref">Example&nbsp;<span>3.5</span></a>, the double negative is true of an empty set, and the supervisor should read that row as “nothing to staff”, not as “fully staffed”.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#subqueries" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-q-set" class="level2" data-number="3.9">
 <h2 data-number="3.9" class="anchored" data-anchor-id="sec-q-set"><span class="header-section-number">3.9</span> Set operations</h2>
@@ -5197,6 +5205,7 @@ Tri-County Farm and Home
 </div>
 <p>The first CTE of <a href="#tbl-q-cte-steps" class="quarto-xref">Table&nbsp;<span>3.57</span></a> finds the short products, the GC-300 and GC-400 of <a href="#exm-q-reorder" class="quarto-xref">Example&nbsp;<span>3.1</span></a>. The second finds the customers who have ordered one of them, and it may refer to the first, since a CTE may use any CTE defined before it. The final query adds the customers’ names. Each step can be run and checked on its own, by replacing the final query with <code>SELECT * FROM</code> the step, which is the same habit of checking each step that this chapter began with. The result is the six customers of <a href="#tbl-q-cart-customers" class="quarto-xref">Table&nbsp;<span>3.37</span></a>, since nobody has ordered the GC-400.</p>
 <p>A CTE does not store anything; it exists only while its statement runs. A CTE that does not refer to itself also adds no power that subqueries lack, since it could be written as a subquery in the <code>FROM</code> clause. What it adds is readability, which in a long query is what decides whether the next person, or you in six months, can check it. A CTE can also refer to itself, which lets a query follow a chain of rows of unknown length, such as the components of an assembly; <a href="04-Chapter4.html#sec-agg-recursive" class="quarto-xref"><span>Section 4.6</span></a> presents those recursive queries.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#set-cte" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-sqlqueries-summary" class="level2" data-number="3.11">
 <h2 data-number="3.11" class="anchored" data-anchor-id="sec-sqlqueries-summary"><span class="header-section-number">3.11</span> Summary</h2>
@@ -5211,6 +5220,7 @@ Tri-County Farm and Home
 <p><strong>Set operations combine whole results.</strong> <code>UNION</code>, <code>INTERSECT</code>, and <code>EXCEPT</code> combine the rows of two queries with matching columns, removing duplicates unless <code>ALL</code> is written. Together with the left join and <code>NOT EXISTS</code>, <code>EXCEPT</code> is one of three ways to find the rows with no match.</p>
 <p><strong>A common table expression names a step.</strong> <code>WITH</code> gives a query a name that the rest of the statement uses as a table, so that a long query is built, read, and checked one named step at a time.</p>
 <p>With these tools, you can answer most questions that a single database can answer one row at a time. <a href="04-Chapter4.html" class="quarto-xref"><span>Chapter 4</span></a> takes up the questions that summarize many rows into one: totals, averages, and counts, by group and over time.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch03.html#review" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check for the whole chapter</a></p>
 </section>
 <section id="sec-sqlqueries-exercises" class="level2" data-number="3.12">
 <h2 data-number="3.12" class="anchored" data-anchor-id="sec-sqlqueries-exercises"><span class="header-section-number">3.12</span> Exercises</h2>

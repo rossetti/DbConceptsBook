@@ -104,6 +104,7 @@ div.csl-indent {
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -326,6 +327,7 @@ div.csl-indent {
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -975,6 +977,7 @@ Table&nbsp;2.3: A Spreadsheet Version of the Customer List (Hypothetical)
 </ul>
 <p>Undoing each break gives back the <code>customer</code> table. Splitting Location into a City column and a State column makes every value atomic. Moving the telephone numbers to a table of their own removes the repeating group, and the <code>customer</code> table of stage D1 holds no telephone numbers at all. Deleting the second Riverside Hardware row leaves each customer once. Finally, deleting the heading row and writing MO in the State cell of each Missouri customer puts the meaning of the heading into values. What remains has the columns of <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> except <code>customer_pk</code>, the internal key that <a href="#sec-rm-keys" class="quarto-xref"><span>Section 2.2</span></a> explains.</p>
 <p>Taken together, the six properties say one thing: a table’s meaning lives in its values and its names, never in the position of a row or a column or in the layout of a sheet. That is what lets a query say what it wants (the customers whose <code>state</code> is MO) without saying how to walk through the rows to find them. It is also why a new column leaves a query that names its columns unaffected, and why the database is free to return rows in whatever order is quickest without changing an answer. One property takes more than care to keep: a table holds no identical rows only if it has a way to tell its rows apart, and that is the subject of keys.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch02.html#tables" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-rm-keys" class="level2" data-number="2.2">
@@ -1300,6 +1303,7 @@ SO-5012
 </div>
 <p><a href="#tbl-rm-orders" class="quarto-xref">Table&nbsp;<span>2.5</span></a> shows the twelve orders placed in January through March 2026. Notice the last column, <code>customer_fk</code>. Its value in each row is the <code>customer_pk</code> of the customer who placed the order, so it is a foreign key that refers to the <code>customer</code> table. For example, order SO-5001 has <code>customer_fk</code> 1, and the customer whose <code>customer_pk</code> is 1 in <a href="#tbl-rm-customer" class="quarto-xref">Table&nbsp;<span>2.1</span></a> is Riverside Hardware. Notice also that orders SO-5003 and SO-5008 have NULL for their requested ship dates: those customers did not ask for a date.</p>
 <p>Customer 1 appears three times in the <code>customer_fk</code> column, and customer 8 (Northgate Hardware) does not appear at all. That pattern, one customer with many orders and some customers with none, is what a foreign key records. The next section presents the rules that keep such references sound.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch02.html#keys" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-rm-integrity" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="sec-rm-integrity"><span class="header-section-number">2.3</span> Integrity rules</h2>
@@ -1406,6 +1410,7 @@ Table&nbsp;2.6: Changes That Can Break Referential Integrity
 DETAIL:  Column "customer_pk" is an identity column defined as GENERATED ALWAYS.</code></pre>
 </div>
 <p>Notice that the message allows one change: the column may be set to <code>DEFAULT</code>, which draws a new generated value. Nothing about a customer ever requires that, because the value means nothing outside the database. Thus, a surrogate key is not meant to change, and a reference to one never needs to follow a change. That is one reason for surrogate keys, which <a href="06-Chapter6.html#sec-map-keys" class="quarto-xref"><span>Section 6.6</span></a> takes up, and <a href="08-Chapter8.html" class="quarto-xref"><span>Chapter 8</span></a> shows how to declare each response. For reading a database, the lesson is that a foreign key is a promise the database keeps. When you query a table with a foreign key, every value in it that is not NULL has a matching row in the table it refers to, and a query can rely on that.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch02.html#integrity" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-rm-schema-notation" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="sec-rm-schema-notation"><span class="header-section-number">2.4</span> Writing down a schema</h2>
@@ -1587,6 +1592,7 @@ Table&nbsp;2.7: The Path from a Product to Its Customers
 <p><em>Where it breaks.</em> The path finds customers who <em>ordered</em> the cart. A manager who asks which customers <em>received</em> one needs a different path, through <code>shipment_line</code> and <code>shipment</code>, because an order line that has not shipped is still an order.</p>
 </div>
 <p>Tracing a path of keys through a schema is the reasoning behind a join, the operation <a href="03-Chapter3.html#sec-q-inner-joins" class="quarto-xref"><span>Section 3.6</span></a> presents. So far the schema has been given to us as a listing. The next section shows that the database holds the same description itself, where anyone can ask for it.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch02.html#schema" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-rm-catalog" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="sec-rm-catalog"><span class="header-section-number">2.5</span> A database describes itself</h2>
@@ -1874,6 +1880,7 @@ Referenced by:
     TABLE "distribution.shipment" CONSTRAINT "shipment_customer_order_fk_fkey" FOREIGN KEY (customer_order_fk) REFERENCES distribution.customer_order(customer_order_pk)</code></pre>
 <p>Notice that the output holds what the complete relational schema of <a href="#lst-rm-order-complete" class="quarto-xref">Listing&nbsp;<span>2.2</span></a> says, in PostgreSQL’s words. psql reads it from PostgreSQL’s own catalog, the tables of the <code>pg_catalog</code> schema, over which the standard’s <code>information_schema</code> views are defined. The <code>Nullable</code> column marks the columns that may not be NULL; only <code>requested_ship_date</code> is blank, since it is optional. The primary key and the alternate key appear under <code>Indexes</code>, and the foreign key appears under <code>Foreign-key constraints</code>, with the table and column it refers to. Its response to a deletion is not printed, because it is the default, no action. Under <code>Referenced by</code> are the foreign keys of other tables that refer to this one: an order line’s, whose deletion response is cascade (<a href="#sec-rm-integrity" class="quarto-xref"><span>Section 2.3</span></a>), and a shipment’s. The <code>Owner</code> column of the first listing, and the constraint names, will differ on your machine: the owner is whoever loaded the database, and PostgreSQL names a constraint that its creator did not name.</p>
 <p><strong>pgAdmin</strong> is PostgreSQL’s graphical tool, often installed with the server. It shows the same tree of schemas, tables, and columns as DataGrip and DBeaver, and it can run SQL. You may meet it on a machine where nothing else is installed; this book does not use it further.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch02.html#catalog" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-rm-other-models" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="sec-rm-other-models"><span class="header-section-number">2.7</span> Other ways to organize data</h2>
@@ -1921,6 +1928,7 @@ Listing&nbsp;2.5: Order SO-5001 as a JSON Document
 <!-- end document -->
 <p>Compare <a href="#lst-rm-order-document" class="quarto-xref">Listing&nbsp;<span>2.5</span></a> with <a href="#lst-rm-schema-orders" class="quarto-xref">Listing&nbsp;<span>2.3</span></a>. The relational database holds this order in four tables connected by keys: one row of <code>customer_order</code>, one of <code>customer</code>, two of <code>order_line</code>, and two of <code>product</code>. The document holds it in one place, with the order’s lines nested inside it and copies of the customer’s and the products’ facts written in. A program that needs the whole order reads one document, without a join.</p>
 <p>Notice two things about the document. First, every field carries its own name, so each document describes itself and no catalog is needed to read it. The cost is that nothing requires the next document to use the same names or the same structure; a misspelled field is simply a new field. Second, the description of the HT-100 is now stored in every order that includes one, which is the duplication of the order log of <a href="01-Chapter1.html#sec-files-to-databases" class="quarto-xref"><span>Section 1.1</span></a>. Changing a product’s description means finding and changing every document that copies it. Thus, a document database suits data that is written and read whole, such as an order or a test record, better than facts shared by many records. <a href="20-AppNoSQL.html" class="quarto-xref"><span>Appendix H</span></a> describes the four families of NoSQL databases, when each suits, and how PostgreSQL itself stores and queries JSON documents.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch02.html#other-models" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-relationalmodel-summary" class="level2" data-number="2.8">
 <h2 data-number="2.8" class="anchored" data-anchor-id="sec-relationalmodel-summary"><span class="header-section-number">2.8</span> Summary</h2>
@@ -1932,6 +1940,7 @@ Listing&nbsp;2.5: Order SO-5001 as a JSON Document
 <p><strong>A relational database is self-describing.</strong> Its catalog of metadata (the tables, columns, keys, and rules) is stored in the database and queried with SQL through the standard <code>information_schema</code>. The DBMS reads it to check every query, and every tool and program that explores a database reads it too. The catalog records structure; the meaning of the data belongs in the design’s data dictionary.</p>
 <p><strong>Other databases organize data in other ways.</strong> Hierarchical and network databases connected records by stored links that programs followed. Object databases store a program’s objects as they are. Document databases store each record whole, with its own field names, nesting what a relational database spreads over several tables and copying what it stores once.</p>
 <p>With a database connected and its schema in hand, you are ready to ask it questions. <a href="03-Chapter3.html" class="quarto-xref"><span>Chapter 3</span></a> presents the SQL <code>SELECT</code> statement, beginning with a single table and building to queries that follow the paths of this chapter across many.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch02.html#review" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check for the whole chapter</a></p>
 </section>
 <section id="sec-relationalmodel-exercises" class="level2" data-number="2.9">
 <h2 data-number="2.9" class="anchored" data-anchor-id="sec-relationalmodel-exercises"><span class="header-section-number">2.9</span> Exercises</h2>

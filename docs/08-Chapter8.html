@@ -104,6 +104,7 @@ div.csl-indent {
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -326,6 +327,7 @@ div.csl-indent {
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -664,6 +666,7 @@ Table&nbsp;8.1: The Steps of Building a Database and Where They Are Illustrated
 </div>
 <p>A table in the schema is then named with the schema in front, <code>distribution.customer</code>, which is how the book has written table names in every query. PostgreSQL also keeps a <em>search path</em>, a list of schemas it looks in for a table named without one, so that <code>SET search_path TO distribution;</code> lets a session write <code>customer</code> alone. The book’s scripts always qualify the name, so that they work whatever the search path holds.</p>
 <p>DataGrip and DBeaver can create schemas and tables through dialogs, without a statement being typed. The dialog is a convenience, not a different mechanism: it writes a <code>CREATE</code> statement and sends it to the server. Both tools will show the statement, and will also <em>generate</em> the DDL of any existing table (DataGrip’s <em>SQL Scripts, Generate DDL to Query Console</em>; DBeaver’s <em>Generate SQL, DDL</em>), which is how you capture a database that someone built by hand as a script. The rest of this chapter writes the statements directly, since a statement can be read, kept, and run again, and a sequence of clicks cannot.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch08.html#design" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-ddl-types" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="sec-ddl-types"><span class="header-section-number">8.2</span> Data types</h2>
@@ -952,6 +955,7 @@ Table&nbsp;8.6: Choosing a Data Type
 </figure>
 </div>
 <p>Every “not” of <a href="#tbl-ddl-type-guide" class="quarto-xref">Table&nbsp;<span>8.6</span></a> is a type that accepts the value and then misbehaves: a date stored as text sorts <code>'10/2/2026'</code> before <code>'9/2/2026'</code>, and a price stored as text cannot be summed. The next section writes the types into tables.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch08.html#types" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-ddl-create" class="level2" data-number="8.3">
 <h2 data-number="8.3" class="anchored" data-anchor-id="sec-ddl-create"><span class="header-section-number">8.3</span> Creating tables and constraints</h2>
@@ -1143,6 +1147,7 @@ DETAIL:  constraint customer_order_customer_fk_fkey on table distribution.custom
 HINT:  Use DROP ... CASCADE to drop the dependent objects too.</code></pre>
 </div>
 <p>As the message’s hint says, <code>DROP TABLE distribution.customer CASCADE</code> would remove the foreign key constraints that depend on <code>customer</code> and then the table; the tables that referred to it would remain, without their foreign keys. <code>DROP SCHEMA distribution CASCADE</code>, which <code>code/sql/reset.sql</code> runs, removes the schema with every table in it. Once kept, neither can be undone, and you should keep them in scripts that rebuild what they remove. (A change can be tried without being kept, inside a transaction, as <a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a> shows.) The tables now exist, and the next section changes their rows.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch08.html#create" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-ddl-dml" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="sec-ddl-dml"><span class="header-section-number">8.4</span> Inserting, updating, and deleting rows</h2>
@@ -1620,6 +1625,7 @@ HINT:  Truncate table "order_line" at the same time, or use TRUNCATE ... CASCADE
 </div>
 <p>Neither statement removes the table; <code>DROP TABLE</code> does (<a href="#sec-ddl-create" class="quarto-xref"><span>Section 8.3</span></a>). The three are easy to confuse, and they differ in what remains: rows and table, table only, or nothing.</p>
 <p>Under auto-commit, each statement of this section changes the database as soon as it runs, and each is complete in itself; inside a <code>BEGIN</code> and <code>ROLLBACK</code>, as in the callout of <a href="#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>, its change is not kept. <a href="09-Chapter9.html" class="quarto-xref"><span>Chapter 9</span></a> shows how several statements, such as the three inserts of <a href="#exm-ddl-new-order" class="quarto-xref">Example&nbsp;<span>8.2</span></a>, can be made to succeed or fail together. The next section adds rows in bulk, from files.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch08.html#dml" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-ddl-loading" class="level2" data-number="8.5">
 <h2 data-number="8.5" class="anchored" data-anchor-id="sec-ddl-loading"><span class="header-section-number">8.5</span> Loading data from files</h2>
@@ -1860,6 +1866,7 @@ TX
 <p><em>Where it breaks.</em> <code>DISTINCT</code> removes only rows that are identical in every column. Had the two copies of C-1015 differed, say in the spelling of the city, <code>DISTINCT</code> would have kept both, and the alternate key would have refused the whole <code>INSERT</code>, naming C-1015. The <code>different_versions</code> column of <a href="#tbl-ddl-staged-duplicates" class="quarto-xref">Table&nbsp;<span>8.13</span></a> checks for this case before the move, and a duplicate with two versions needs a person to decide which is right.</p>
 </div>
 <p>The staging pattern of <a href="#exm-ddl-load-customers" class="quarto-xref">Example&nbsp;<span>8.3</span></a> is the heart of every load: land the data where nothing can refuse it, look at it with queries, and move it with a query that repairs what the looking found. <a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a> builds on it, as extract, transform, and load. Two problems that files commonly carry did not occur in this one. A code written with digits loses its leading zeros if the file passed through a spreadsheet that took the code for a number (<a href="#tbl-ddl-leading-zero" class="quarto-xref">Table&nbsp;<span>8.5</span></a>), and nothing in the database can restore them. Dates arrive in more than one form: <code>2026-04-13</code> and <code>4/13/2026</code> are the same day, and a staging query must find which form each row uses before converting it, as <a href="#exr-ch8-load-orders" class="quarto-xref">Exercise&nbsp;<span>8.8</span></a> asks. The next section changes the tables themselves.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch08.html#loading" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-ddl-alter" class="level2" data-number="8.6">
 <h2 data-number="8.6" class="anchored" data-anchor-id="sec-ddl-alter"><span class="header-section-number">8.6</span> Changing a table’s definition</h2>
@@ -2051,6 +2058,7 @@ HT-200
 </div>
 <p>Each product of <a href="#tbl-ddl-product-part" class="quarto-xref">Table&nbsp;<span>8.18</span></a> has found the part with its own number, so the update matched all four. Had one product had no part of the same number, its column would have stayed NULL, and the third step would have been refused, as the ship-date change was: the order of the three steps turns a silent gap into a refusal. The same pattern, create bare, fill, then constrain, is how a large load is often done: the tables are created without their keys, loaded, and the keys added with <code>ALTER TABLE ... ADD CONSTRAINT</code>, so that each constraint checks all the rows once.</p>
 <p>A change made with <code>ALTER TABLE</code> must also be made to the scripts that build the database, or the next rebuild will lose it. The book’s database does this by adding each change as a stage script that runs after the scripts before it, as <code>p1-part.sql</code> runs after the distribution stages. You should keep your own databases the same way: the scripts, not the running database, are the definition.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch08.html#alter" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-sqlddl-summary" class="level2" data-number="8.7">
 <h2 data-number="8.7" class="anchored" data-anchor-id="sec-sqlddl-summary"><span class="header-section-number">8.7</span> Summary</h2>
@@ -2060,6 +2068,7 @@ HT-200
 <p><strong>INSERT, UPDATE, and DELETE change rows, and the constraints judge every change.</strong> Write the column list of every <code>INSERT</code>, look up a generated key by its business number with a subquery, and preview every <code>UPDATE</code> and <code>DELETE</code> with a query that selects the same rows. A foreign key decides what a deletion does to the rows that refer to it: <code>ON DELETE CASCADE</code> deletes them with it, and the default refuses the deletion.</p>
 <p><strong>A file is loaded into a staging table, examined, and then moved.</strong> Load it with psql’s <code>\copy</code> or a tool’s import wizard into a table of text columns with no constraints; find duplicates, malformed values, and existing keys with queries; and move the rows with an <code>INSERT ... SELECT</code> that repairs what the queries found. Count the rows at each step.</p>
 <p><strong>ALTER TABLE changes a table that holds rows, and the rows must satisfy the change.</strong> A new required column is added in three steps: add it allowing NULL, fill it with an <code>UPDATE</code>, and then require it. Every change to a running database belongs in the scripts that rebuild it.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch08.html#review" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check for the whole chapter</a></p>
 </section>
 <section id="sec-sqlddl-exercises" class="level2" data-number="8.8">
 <h2 data-number="8.8" class="anchored" data-anchor-id="sec-sqlddl-exercises"><span class="header-section-number">8.8</span> Exercises</h2>

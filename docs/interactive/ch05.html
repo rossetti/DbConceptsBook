@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Chapter 5 Self-Checks – Database Concepts Companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7fd429508c10e9aeb0f6cc37510b69d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.js"></script>
+<link href="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="site_libs/quarto-contrib/quarto-project/book-interactive/self-check.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Database Concepts Companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Index</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../index.html"> 
+<span class="menu-text">Back to the book</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#foundations" id="toc-foundations" class="nav-link active" data-scroll-target="#foundations">What a Class Model Adds and Where It Starts</a></li>
+  <li><a href="#classes" id="toc-classes" class="nav-link" data-scroll-target="#classes">Classes and Attributes</a></li>
+  <li><a href="#associations" id="toc-associations" class="nav-link" data-scroll-target="#associations">Associations and Multiplicity</a></li>
+  <li><a href="#assoc-classes" id="toc-assoc-classes" class="nav-link" data-scroll-target="#assoc-classes">Association Classes and Qualified Associations</a></li>
+  <li><a href="#aggregation" id="toc-aggregation" class="nav-link" data-scroll-target="#aggregation">Aggregation and Composition</a></li>
+  <li><a href="#generalization" id="toc-generalization" class="nav-link" data-scroll-target="#generalization">Generalization</a></li>
+  <li><a href="#building" id="toc-building" class="nav-link" data-scroll-target="#building">Building and Reviewing a Class Model</a></li>
+  <li><a href="#notations" id="toc-notations" class="nav-link" data-scroll-target="#notations">Reading Other Notations</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review of the Whole Chapter</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chapter 5 Self-Checks</h1>
+<p class="subtitle lead">Class Modeling with UML</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>These questions follow the order of <a href="../05-Chapter5.html">Chapter 5</a>. Each of the first eight groups checks one or two sections of the chapter, and the last group reviews the whole chapter. The “Self-check” buttons in the chapter lead to these groups. Nothing you answer is recorded.</p>
+<section id="foundations" class="level2">
+<h2 class="anchored" data-anchor-id="foundations">What a Class Model Adds and Where It Starts</h2>
+<p><a href="../05-Chapter5.html#sec-cm-why">Read the sections</a></p>
+<div id="sc-ch05-foundations" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-1" class="bisc-question" data-multiple="false">
+<div id="bisc-q-1-stem" class="bisc-stem">
+<p><strong>1.</strong> A use case diagram for a plant’s maintenance records draws a figure for each actor. Which label is right for one of those figures?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-1-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-1-o1" name="bisc-q-1"><label for="bisc-q-1-o1">Maintenance planner</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Users are named by role, not by person, and a role that uses the system is an actor.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o2" name="bisc-q-1"><label for="bisc-q-1-o2">The name of the planner who works the day shift</label>
+<div class="bisc-feedback" hidden="">
+<p>A person may leave or change jobs, and several people may share a role. The diagram names the role.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o3" name="bisc-q-1"><label for="bisc-q-1-o3">Schedule a repair</label>
+<div class="bisc-feedback" hidden="">
+<p>That is a use case, drawn as an oval inside the system’s boundary, not an actor.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o4" name="bisc-q-1"><label for="bisc-q-1-o4">The maintenance database</label>
+<div class="bisc-feedback" hidden="">
+<p>The system is the box that marks the boundary. An actor is outside it and uses it.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-2" class="bisc-question" data-multiple="false">
+<div id="bisc-q-2-stem" class="bisc-stem">
+<p><strong>2.</strong> A plant’s maintenance group is writing the documents for a new database of machine repairs. Which statement about these documents is correct?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-2-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o1" name="bisc-q-2"><label for="bisc-q-2-o1">A use case is a statement precise enough to test, beginning “the system shall”</label>
+<div class="bisc-feedback" hidden="">
+<p>That is a requirement. A use case is a function of the system as one of its users sees it, a sequence of steps the user starts to get something done.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o2" name="bisc-q-2"><label for="bisc-q-2-o2">The problem statement lists every actor and the use cases each one starts</label>
+<div class="bisc-feedback" hidden="">
+<p>That is the work of the use case diagram. The problem statement is a short narrative of why the system is needed, its setting, and what it must do.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-2-o3" name="bisc-q-2"><label for="bisc-q-2-o3">A sentence saying that the system does not schedule technicians belongs in the problem statement</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Saying what the system will not do draws its boundary, and a boundary left undrawn grows during design.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-2-o4" name="bisc-q-2"><label for="bisc-q-2-o4">“Reports must appear within two seconds” is a use case</label>
+<div class="bisc-feedback" hidden="">
+<p>It is a requirement about a quality rather than a function, a nonfunctional requirement.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="classes" class="level2">
+<h2 class="anchored" data-anchor-id="classes">Classes and Attributes</h2>
+<p><a href="../05-Chapter5.html#sec-cm-classes">Read the section</a></p>
+<div id="sc-ch05-classes" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-3" class="bisc-question" data-multiple="true">
+<div id="bisc-q-3-stem" class="bisc-stem">
+<p><strong>1.</strong> Which names follow the naming conventions of UML that the book’s class models use? Select every one that does.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-3-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-3-o1" name="bisc-q-3"><label for="bisc-q-3-o1"><code>CustomerOrder</code>, as the name of a class</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A class name is a singular noun with each word capitalized.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-3-o2" name="bisc-q-3"><label for="bisc-q-3-o2"><code>requestedShipDate</code>, as the name of an attribute</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. An attribute name begins in lower case, and each later word is capitalized.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-3-o3" name="bisc-q-3"><label for="bisc-q-3-o3"><code>Customers</code>, as the name of a class</label>
+<div class="bisc-feedback" hidden="">
+<p>A class describes one object, so its name is singular: <code>Customer</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-3-o4" name="bisc-q-3"><label for="bisc-q-3-o4"><code>customer_order</code>, as the name of a class</label>
+<div class="bisc-feedback" hidden="">
+<p>Lower case with underscores is how the book names tables and columns. A class name is written <code>CustomerOrder</code>.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-4" class="bisc-question" data-multiple="false">
+<div id="bisc-q-4-stem" class="bisc-stem">
+<p><strong>2.</strong> Two customers of a class model have the same name, the same city, and the same state, and every other fact recorded about them is the same too. What are they?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-4-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o1" name="bisc-q-4"><label for="bisc-q-4-o1">One object, since nothing recorded tells them apart</label>
+<div class="bisc-feedback" hidden="">
+<p>Objects are not told apart by their facts alone.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-4-o2" name="bisc-q-4"><label for="bisc-q-4-o2">Two objects, since an object has an identity of its own</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Two objects remain two even when every recorded fact about them is the same. How the database keeps them apart is decided when the model becomes tables.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o3" name="bisc-q-4"><label for="bisc-q-4-o3">A mistake in the class model, which must be repaired by splitting <code>Customer</code> into two classes</label>
+<div class="bisc-feedback" hidden="">
+<p>Both are customers, with the same kinds of facts, so they belong to one class.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o4" name="bisc-q-4"><label for="bisc-q-4-o4">Two classes that happen to share their attributes</label>
+<div class="bisc-feedback" hidden="">
+<p>Both are customers. They are two members of the one class <code>Customer</code>.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-5" class="bisc-question" data-multiple="false">
+<div id="bisc-q-5-stem" class="bisc-stem">
+<p><strong>3.</strong> A gauge record keeps its calibration lab’s address as one attribute, “14 Oak St., Tulsa, OK 74103”. The quality department now asks for the gauges calibrated by labs in each state. Which modeling choice does the request call for?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-5-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o1" name="bisc-q-5"><label for="bisc-q-5-o1">Keep the address as one attribute, since it is printed whole on the certificate</label>
+<div class="bisc-feedback" hidden="">
+<p>Printing it whole is one use, but the new request needs one part of it on its own. A query would have to pick the state out of the text, and an address typed another way would slip past it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-5-o2" name="bisc-q-5"><label for="bisc-q-5-o2">Split the address into attributes, at least so that the state is one of them</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The test is whether any query, rule, or sort needs part of the value on its own. The state is now needed alone, so it becomes an attribute with a domain of its own.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o3" name="bisc-q-5"><label for="bisc-q-5-o3">Record two attributes, <code>address1</code> and <code>address2</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Numbered attributes form a repeating group; they do not separate the state from the rest.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o4" name="bisc-q-5"><label for="bisc-q-5-o4">The value is not <em>atomic</em> because it contains commas, so it must become a class</label>
+<div class="bisc-feedback" hidden="">
+<p>Whether a value is <em>atomic</em> depends on its domain and how the business uses it, not on how it looks.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="associations" class="level2">
+<h2 class="anchored" data-anchor-id="associations">Associations and Multiplicity</h2>
+<p><a href="../05-Chapter5.html#sec-cm-associations">Read the section</a></p>
+<div id="sc-ch05-associations" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-6" class="bisc-question" data-multiple="false">
+<div id="bisc-q-6-stem" class="bisc-stem">
+<p><strong>1.</strong> A class model draws <code>WorkCenter 1 -- 0..* Machine</code>. Which sentence reads the <code>0..*</code> correctly?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-6-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o1" name="bisc-q-6"><label for="bisc-q-6-o1">Each machine stands in zero or more work centers</label>
+<div class="bisc-feedback" hidden="">
+<p>This reads the number from the wrong end. The <code>0..*</code> is written at the <code>Machine</code> end, so it is a count of machines.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-6-o2" name="bisc-q-6"><label for="bisc-q-6-o2">Each work center has zero or more machines</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The <code>0..*</code> is written at the <code>Machine</code> end and counts the machines of one work center. The other sentence, from the <code>1</code>, is that each machine stands in exactly one work center.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o3" name="bisc-q-6"><label for="bisc-q-6-o3">Each work center has at least one machine</label>
+<div class="bisc-feedback" hidden="">
+<p>A minimum of 0 means a work center may have no machines.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o4" name="bisc-q-6"><label for="bisc-q-6-o4">There are zero or more work centers in the plant</label>
+<div class="bisc-feedback" hidden="">
+<p>The <code>0..*</code> says nothing about how many work centers the plant has.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-7" class="bisc-question" data-multiple="false">
+<div id="bisc-q-7-stem" class="bisc-stem">
+<p><strong>2.</strong> Riverside Hardware placed order SO-5001. In the terms of a class model, what is this fact?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-7-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-7-o1" name="bisc-q-7"><label for="bisc-q-7-o1">A link, one member of the association between customers and their orders</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Links are to an association what objects are to a class: its members.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o2" name="bisc-q-7"><label for="bisc-q-7-o2">An attribute of <code>Customer</code></label>
+<div class="bisc-feedback" hidden="">
+<p>An order is an object of its own, with facts of its own. The connection between the two is drawn as an association.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o3" name="bisc-q-7"><label for="bisc-q-7-o3">A multiplicity</label>
+<div class="bisc-feedback" hidden="">
+<p>A multiplicity is written at an end of an association and counts objects. This fact is one connection, not a count.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o4" name="bisc-q-7"><label for="bisc-q-7-o4">A class</label>
+<div class="bisc-feedback" hidden="">
+<p>A class describes many objects. This fact concerns one customer and one order.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-8" class="bisc-question" data-multiple="false">
+<div id="bisc-q-8-stem" class="bisc-stem">
+<p><strong>3.</strong> An association <code>Truck 0..1 -- 0..* Delivery</code> connects trucks and deliveries. What does the minimum of 0 at the <code>Truck</code> end allow?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-8-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o1" name="bisc-q-8"><label for="bisc-q-8-o1">A truck to exist with no deliveries</label>
+<div class="bisc-feedback" hidden="">
+<p>That is the minimum at the <code>Delivery</code> end, which counts the deliveries of one truck.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-8-o2" name="bisc-q-8"><label for="bisc-q-8-o2">A delivery to exist that is not yet assigned to any truck</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The minimum at an end decides whether an object at the other end may exist without a link. Here a delivery may have no truck.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o3" name="bisc-q-8"><label for="bisc-q-8-o3">A delivery to be made by several trucks</label>
+<div class="bisc-feedback" hidden="">
+<p>The maximum at the <code>Truck</code> end is 1, so a delivery has at most one truck.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o4" name="bisc-q-8"><label for="bisc-q-8-o4">Nothing; the minimum matters only after the model becomes tables</label>
+<div class="bisc-feedback" hidden="">
+<p>The minimum is a rule of the business in the model. Mapped to tables, a minimum of 1 would become a foreign key declared <code>NOT NULL</code>.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="assoc-classes" class="level2">
+<h2 class="anchored" data-anchor-id="assoc-classes">Association Classes and Qualified Associations</h2>
+<p><a href="../05-Chapter5.html#sec-cm-association-classes">Read the section</a></p>
+<div id="sc-ch05-assoc-classes" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-9" class="bisc-question" data-multiple="true">
+<div id="bisc-q-9-stem" class="bisc-stem">
+<p><strong>1.</strong> At stage D4, <code>StockLevel</code> is drawn as an association class on the association <code>Warehouse 0..* -- 0..* Product</code>, joined to its line by a dashed line. Which statements about it are correct? Select every one that is.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-9-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-9-o1" name="bisc-q-9"><label for="bisc-q-9-o1">Each link between a warehouse and a product has exactly one <code>StockLevel</code> object</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The association class is the association seen as a class, so its objects and the links correspond one to one.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-9-o2" name="bisc-q-9"><label for="bisc-q-9-o2">A <code>StockLevel</code> object cannot exist without its link</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A stock level is the link between one warehouse and one product, with its quantity on hand and reorder point.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-9-o3" name="bisc-q-9"><label for="bisc-q-9-o3">The dashed line needs a multiplicity at each of its ends</label>
+<div class="bisc-feedback" hidden="">
+<p>An association class has no multiplicity of its own. The multiplicities are those of the association it is attached to.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-9-o4" name="bisc-q-9"><label for="bisc-q-9-o4"><code>StockLevel</code> also needs a line to <code>Warehouse</code> and a line to <code>Product</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Lines of its own would make <code>StockLevel</code> an ordinary class, a different model. The association class already belongs to the association between the two.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-10" class="bisc-question" data-multiple="false">
+<div id="bisc-q-10-stem" class="bisc-stem">
+<p><strong>2.</strong> The cloud instance diagram of the bill of materials draws one cloud for parts in the role of assembly and one for parts in the role of component. The wheel assembly WA-10 appears as a dot in both clouds. What does that mean?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-10-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o1" name="bisc-q-10"><label for="bisc-q-10-o1">The database holds two parts numbered WA-10</label>
+<div class="bisc-feedback" hidden="">
+<p>A part number names one part. The two dots are one part drawn twice.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-10-o2" name="bisc-q-10"><label for="bisc-q-10-o2">WA-10 is one object playing two roles: an assembly of its own components, and a component of the HT-100</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. In a recursive association an object of the class can be linked to another of the same class. A cloud for each role keeps the lines readable, and the role names say which end of each link is which.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o3" name="bisc-q-10"><label for="bisc-q-10-o3">The diagram is wrong, since an object may appear in only one cloud</label>
+<div class="bisc-feedback" hidden="">
+<p>Drawing a cloud for each role is a choice made for readability. The role names tell the reader that both clouds hold parts.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o4" name="bisc-q-10"><label for="bisc-q-10-o4">WA-10 is both a manufactured part and a purchased part</label>
+<div class="bisc-feedback" hidden="">
+<p>Being an assembly and being a component are roles in the bill of materials, not subclasses of <code>Part</code>.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-11" class="bisc-question" data-multiple="false">
+<div id="bisc-q-11-stem" class="bisc-stem">
+<p><strong>3.</strong> A hypothetical ternary association links operators, machines, and work orders, one link for each run, with <code>0..*</code> at the <code>WorkOrder</code> end. What does that <code>0..*</code> say?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-11-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o1" name="bisc-q-11"><label for="bisc-q-11-o1">Each work order is run by any number of operators</label>
+<div class="bisc-feedback" hidden="">
+<p>The multiplicity at an end of a ternary association counts the objects at that end, not at another end.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-11-o2" name="bisc-q-11"><label for="bisc-q-11-o2">An operator may run a given machine on any number of work orders, including none</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. At an end of a ternary association, the multiplicity says how many objects at that end may be linked to a given pair of objects at the other two ends.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o3" name="bisc-q-11"><label for="bisc-q-11-o3">The plant has zero or more work orders</label>
+<div class="bisc-feedback" hidden="">
+<p>Multiplicity counts the objects linked to other objects, not the size of a class.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o4" name="bisc-q-11"><label for="bisc-q-11-o4">A work order may exist without any machine</label>
+<div class="bisc-feedback" hidden="">
+<p>The <code>0..*</code> is a count of work orders for a given operator and machine; it says nothing about work orders on their own.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-12" class="bisc-question" data-multiple="false">
+<div id="bisc-q-12-stem" class="bisc-stem">
+<p><strong>4.</strong> A class diagram shows a hollow diamond in the middle of the drawing, with a line from it to each of three classes. What does the diamond mark?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-12-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-12-o1" name="bisc-q-12"><label for="bisc-q-12-o1">A ternary association, an association whose links each connect three objects</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. UML draws the association itself as the diamond, with a line to each class it relates.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o2" name="bisc-q-12"><label for="bisc-q-12-o2">An aggregation of three parts in one whole</label>
+<div class="bisc-feedback" hidden="">
+<p>The diamond of an aggregation sits at the end of a line, against the whole. This diamond stands alone, with three lines leaving it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o3" name="bisc-q-12"><label for="bisc-q-12-o3">A composition of three classes</label>
+<div class="bisc-feedback" hidden="">
+<p>Composition is drawn with a filled diamond at the whole’s end of a line.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o4" name="bisc-q-12"><label for="bisc-q-12-o4">A generalization with three subclasses</label>
+<div class="bisc-feedback" hidden="">
+<p>Generalization is drawn with a hollow triangle at the superclass.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="aggregation" class="level2">
+<h2 class="anchored" data-anchor-id="aggregation">Aggregation and Composition</h2>
+<p><a href="../05-Chapter5.html#sec-cm-aggregation">Read the section</a></p>
+<div id="sc-ch05-aggregation" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-13" class="bisc-question" data-multiple="false">
+<div id="bisc-q-13-stem" class="bisc-stem">
+<p><strong>1.</strong> In a composition that is not recursive, the multiplicity at the whole’s end is <code>1</code>. Why?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-13-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o1" name="bisc-q-13"><label for="bisc-q-13-o1">Because UML requires the number 1 next to every diamond</label>
+<div class="bisc-feedback" hidden="">
+<p>The number comes from what composition says about each part, not from a drawing rule.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-13-o2" name="bisc-q-13"><label for="bisc-q-13-o2">Because each part belongs to exactly one whole and cannot exist without it</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A minimum of 0 would let a part exist with no whole, and a maximum above 1 would let it belong to two.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o3" name="bisc-q-13"><label for="bisc-q-13-o3">Because a whole has exactly one part</label>
+<div class="bisc-feedback" hidden="">
+<p>The number at the whole’s end counts wholes for one part. A whole may have many parts, as an order has many lines.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o4" name="bisc-q-13"><label for="bisc-q-13-o4">Because the part’s table will have a primary key</label>
+<div class="bisc-feedback" hidden="">
+<p>A class model shows no keys. The multiplicity states a rule of the business.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-14" class="bisc-question" data-multiple="false">
+<div id="bisc-q-14-stem" class="bisc-stem">
+<p><strong>2.</strong> <em>True</em> or <em>False</em>: UML defines aggregation precisely, so two modelers who follow UML will always draw the hollow diamond in the same places.</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-14-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o1" name="bisc-q-14"><label for="bisc-q-14-o1">True</label>
+<div class="bisc-feedback" hidden="">
+<p>UML leaves the exact meaning of aggregation to the modeler. The book fixes its own use: a part that is part of the whole but has a life of its own.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-14-o2" name="bisc-q-14"><label for="bisc-q-14-o2">False</label>
+<div class="bisc-feedback" hidden="">
+<p>Right. Because UML leaves aggregation’s meaning open, a model that uses it should say what it means by it. This book uses it for a part that can outlive its whole or move to another.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="generalization" class="level2">
+<h2 class="anchored" data-anchor-id="generalization">Generalization</h2>
+<p><a href="../05-Chapter5.html#sec-cm-generalization">Read the section</a></p>
+<div id="sc-ch05-generalization" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-15" class="bisc-question" data-multiple="false">
+<div id="bisc-q-15-stem" class="bisc-stem">
+<p><strong>1.</strong> UML names the opposite of <code>{disjoint}</code>. Which keyword allows an object to belong to more than one subclass?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-15-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-15-o1" name="bisc-q-15"><label for="bisc-q-15-o1"><code>{overlapping}</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A part bought in one season and made in another would need <code>{overlapping}</code> in place of <code>{disjoint}</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-15-o2" name="bisc-q-15"><label for="bisc-q-15-o2"><code>{incomplete}</code></label>
+<div class="bisc-feedback" hidden="">
+<p>That keyword is the opposite of <code>{complete}</code>, not of <code>{disjoint}</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-15-o3" name="bisc-q-15"><label for="bisc-q-15-o3"><code>{ordered}</code></label>
+<div class="bisc-feedback" hidden="">
+<p><code>{ordered}</code> marks an end of an association whose sequence matters. It has nothing to do with subclasses.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-15-o4" name="bisc-q-15"><label for="bisc-q-15-o4"><code>{shared}</code></label>
+<div class="bisc-feedback" hidden="">
+<p>UML gives no such keyword for generalization.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-16" class="bisc-question" data-multiple="false">
+<div id="bisc-q-16-stem" class="bisc-stem">
+<p><strong>2.</strong> In a class diagram, the name of the superclass <code>Part</code> is written in italics. What does that say?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-16-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o1" name="bisc-q-16"><label for="bisc-q-16-o1">That <code>Part</code> is a role played in an association</label>
+<div class="bisc-feedback" hidden="">
+<p>A role is written as a role name at the end of an association, not as a class.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-16-o2" name="bisc-q-16"><label for="bisc-q-16-o2">That <code>Part</code> is an abstract class, with no objects of its own</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Every part belongs to some subclass, so <code>Part</code> has no objects apart from theirs. It still holds what the subclasses share.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o3" name="bisc-q-16"><label for="bisc-q-16-o3">That <code>Part</code> has been eliminated from the model</label>
+<div class="bisc-feedback" hidden="">
+<p>An eliminated candidate is not drawn at all.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o4" name="bisc-q-16"><label for="bisc-q-16-o4">That <code>Part</code> is a derived class, computed from its subclasses</label>
+<div class="bisc-feedback" hidden="">
+<p>Italics mark an abstract class. A derived attribute is one computed from others, which is a different idea.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-17" class="bisc-question" data-multiple="false">
+<div id="bisc-q-17-stem" class="bisc-stem">
+<p><strong>3.</strong> In a cloud instance diagram, how are the objects of a subclass drawn?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-17-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o1" name="bisc-q-17"><label for="bisc-q-17-o1">In a separate cloud beside the superclass’s cloud, with a line from each object to its superclass object</label>
+<div class="bisc-feedback" hidden="">
+<p>A manufactured part <em>is</em> a part, one object, not two objects joined by a link.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-17-o2" name="bisc-q-17"><label for="bisc-q-17-o2">As a cloud inside the superclass’s cloud, since a subclass’s objects are a subset of the superclass’s objects</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Each manufactured part is also a part, so its dot lies inside the cloud of <code>Part</code> as well as inside the cloud of <code>ManufacturedPart</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o3" name="bisc-q-17"><label for="bisc-q-17-o3">Only in the superclass’s cloud, since a subclass has no objects of its own</label>
+<div class="bisc-feedback" hidden="">
+<p>It is the superclass that may have no objects of its own. A subclass’s objects are the ones drawn in its cloud.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o4" name="bisc-q-17"><label for="bisc-q-17-o4">Generalization cannot be drawn in a cloud instance diagram</label>
+<div class="bisc-feedback" hidden="">
+<p>The diagram draws it naturally: a cloud inside a cloud.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="building" class="level2">
+<h2 class="anchored" data-anchor-id="building">Building and Reviewing a Class Model</h2>
+<p><a href="../05-Chapter5.html#sec-cm-building">Read the sections</a></p>
+<div id="sc-ch05-building" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-18" class="bisc-question" data-multiple="false">
+<div id="bisc-q-18-stem" class="bisc-stem">
+<p><strong>1.</strong> An analyst describes a class <code>HandTruckModel</code> as “the HT-100 and the HT-200”. Which test of a class’s soundness does that description fail?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-18-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-18-o1" name="bisc-q-18"><label for="bisc-q-18-o1">The <em>more than a list</em> test</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A class defined only by listing its members is not yet understood. Its description should give the test that decides whether a new model, added next year, belongs.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o2" name="bisc-q-18"><label for="bisc-q-18-o2">The <em>uniformity</em> test</label>
+<div class="bisc-feedback" hidden="">
+<p>Uniformity asks whether every object of the class has the same kinds of facts and relationships. A list of two members says nothing either way.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o3" name="bisc-q-18"><label for="bisc-q-18-o3">The <em>or</em> test</label>
+<div class="bisc-feedback" hidden="">
+<p>The <em>or</em> test looks for a description that joins unlike things with “or”, which may hide two classes. This description joins two things of one kind.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o4" name="bisc-q-18"><label for="bisc-q-18-o4">None; listing the members is the clearest description a class can have</label>
+<div class="bisc-feedback" hidden="">
+<p>A list fixes today’s members but gives no rule for tomorrow’s, which is what a class description must supply.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-19" class="bisc-question" data-multiple="true">
+<div id="bisc-q-19-stem" class="bisc-stem">
+<p><strong>2.</strong> A data dictionary holds an entry for each association of a class model as well as for each class and attribute. What does an association’s entry give? Select every one that it does.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-19-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-19-o1" name="bisc-q-19"><label for="bisc-q-19-o1">The association’s name and the classes it relates</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The entry begins by saying which association it describes, such as <em>Shipment leaves from Warehouse</em>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-19-o2" name="bisc-q-19"><label for="bisc-q-19-o2">The multiplicity at each end</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Each end’s multiplicity is stated in words.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-19-o3" name="bisc-q-19"><label for="bisc-q-19-o3">The reason for each multiplicity</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A reason, such as a shipment being loaded at one dock, lets the business confirm the rule or correct it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-19-o4" name="bisc-q-19"><label for="bisc-q-19-o4">The foreign key column that will implement it</label>
+<div class="bisc-feedback" hidden="">
+<p>A class model leaves the implementation to the mapping into tables, so the data dictionary of the model names no columns.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-20" class="bisc-question" data-multiple="false">
+<div id="bisc-q-20-stem" class="bisc-stem">
+<p><strong>3.</strong> A reviewer traces the request “which supplier delivered each lot of steel used on a work order” through a class model and finds no path of associations from <code>WorkOrder</code> to <code>Supplier</code>. What does the review conclude?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-20-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o1" name="bisc-q-20"><label for="bisc-q-20-o1">The request is answered by a join, so the model does not need a path</label>
+<div class="bisc-feedback" hidden="">
+<p>The joins of a query follow the model’s associations. A request with no path has nothing for the joins to follow.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-20-o2" name="bisc-q-20"><label for="bisc-q-20-o2">The model is missing something the business needs, which is cheaper to repair now than after tables are loaded</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A request with no path means the model is missing something. Whether to add it is then a decision for the business.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o3" name="bisc-q-20"><label for="bisc-q-20-o3">The request should be dropped, since the problem statement did not list it</label>
+<div class="bisc-feedback" hidden="">
+<p>The list of requests is part of what the business must review; a missing request is a gap in the documents, not a reason to ignore it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o4" name="bisc-q-20"><label for="bisc-q-20-o4">A foreign key <code>supplierFk</code> should be added to <code>WorkOrder</code></label>
+<div class="bisc-feedback" hidden="">
+<p>A class model shows relationships as associations, not as reference attributes.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="notations" class="level2">
+<h2 class="anchored" data-anchor-id="notations">Reading Other Notations</h2>
+<p><a href="../05-Chapter5.html#sec-cm-other-notations">Read the section</a></p>
+<div id="sc-ch05-notations" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-21" class="bisc-question" data-multiple="false">
+<div id="bisc-q-21-stem" class="bisc-stem">
+<p><strong>1.</strong> <em>True</em> or <em>False</em>: the marks of a crow’s foot diagram sit at the opposite ends of a line from where UML writes its multiplicities, so a reader must swap the ends when translating.</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-21-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-21-o1" name="bisc-q-21"><label for="bisc-q-21-o1">True</label>
+<div class="bisc-feedback" hidden="">
+<p>The marks sit at the same ends as UML’s numbers, so no swap is needed.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-21-o2" name="bisc-q-21"><label for="bisc-q-21-o2">False</label>
+<div class="bisc-feedback" hidden="">
+<p>Right. Each end’s marks count the objects at that end, as a UML multiplicity does, so the rule for reading an association as two sentences applies unchanged.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-22" class="bisc-question" data-multiple="false">
+<div id="bisc-q-22-stem" class="bisc-stem">
+<p><strong>2.</strong> A reader finds a data model in another book that draws each relationship as a diamond between the boxes it connects. What is it, and what does this book say about it?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-22-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-22-o1" name="bisc-q-22"><label for="bisc-q-22-o1">A UML diagram full of aggregations, read as this chapter reads them</label>
+<div class="bisc-feedback" hidden="">
+<p>The diamond of an aggregation sits at the end of a line, against the whole, not between two boxes.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-22-o2" name="bisc-q-22"><label for="bisc-q-22-o2">A crow’s foot diagram, read with the table of crow’s foot marks</label>
+<div class="bisc-feedback" hidden="">
+<p>Crow’s foot notation draws a relationship as a plain line with marks at its ends.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-22-o3" name="bisc-q-22"><label for="bisc-q-22-o3">Peter Chen’s original entity-relationship notation, which this book does not use but which can be translated by the same method</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Chen’s notation draws relationships as diamonds. A reader who meets it translates it construct by construct, as the book does for crow’s foot notation.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-22-o4" name="bisc-q-22"><label for="bisc-q-22-o4">A notation that cannot express multiplicities, and so cannot be translated</label>
+<div class="bisc-feedback" hidden="">
+<p>The book’s point is the opposite: other notations say much the same things with different marks.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review of the Whole Chapter</h2>
+<p><a href="../05-Chapter5.html#sec-classmodeling-summary">Read the chapter summary</a></p>
+<div id="sc-ch05-review" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-23" class="bisc-question" data-multiple="false">
+<div id="bisc-q-23-stem" class="bisc-stem">
+<p><strong>1.</strong> An analyst follows every step of the method for building a class model, from the candidate classes to the data dictionary, with care. The problem statement never mentions the weight of a shipment. What will the model say about weight?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-23-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-23-o1" name="bisc-q-23"><label for="bisc-q-23-o1">It will include a weight, since step 4 asks what every object of a class has</label>
+<div class="bisc-feedback" hidden="">
+<p>Step 4 finds attributes in the documents and in what the business brings to the model. No step invents a fact that nobody mentioned.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-23-o2" name="bisc-q-23"><label for="bisc-q-23-o2">Nothing, and no step of the method will notice that it is missing</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The method finds only what the documents mention, which is why the documents, like the list of requests, are part of what the business must review.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-23-o3" name="bisc-q-23"><label for="bisc-q-23-o3">It will record the weight as a derived attribute</label>
+<div class="bisc-feedback" hidden="">
+<p>A derived attribute is computed from facts that are recorded. Nothing recorded gives a weight.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-23-o4" name="bisc-q-23"><label for="bisc-q-23-o4">The data dictionary will flag the gap</label>
+<div class="bisc-feedback" hidden="">
+<p>The data dictionary describes the names the model has. It cannot describe a fact that was never named.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-24" class="bisc-question" data-multiple="false">
+<div id="bisc-q-24-stem" class="bisc-stem">
+<p><strong>2.</strong> <em>True</em> or <em>False</em>: the steps of the method for building a class model are done once each, in order, from finding the candidates to writing the data dictionary.</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-24-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-24-o1" name="bisc-q-24"><label for="bisc-q-24-o1">True</label>
+<div class="bisc-feedback" hidden="">
+<p>Later steps often send the analyst back to earlier ones.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-24-o2" name="bisc-q-24"><label for="bisc-q-24-o2">False</label>
+<div class="bisc-feedback" hidden="">
+<p>Right. Eliminating a candidate often turns it into an attribute of another class, and finding an association often shows that its links carry facts, which adds an association class.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-25" class="bisc-question" data-multiple="false">
+<div id="bisc-q-25-stem" class="bisc-stem">
+<p><strong>3.</strong> UML has its own picture of instances, the object diagram, which draws each object as a box. How does the book’s cloud instance diagram compare with it?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-25-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-25-o1" name="bisc-q-25"><label for="bisc-q-25-o1">It shows multiplicities that an object diagram cannot</label>
+<div class="bisc-feedback" hidden="">
+<p>Neither picture writes multiplicities. Both draw particular objects and links, from which a multiplicity can be counted.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-25-o2" name="bisc-q-25"><label for="bisc-q-25-o2">It says the same things, and its clouds make it hard to miss that a class is a set of objects</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Every statement a class diagram makes is a statement about the members of sets, and the clouds draw the sets.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-25-o3" name="bisc-q-25"><label for="bisc-q-25-o3">It replaces the class diagram, so a model needs no class diagram once its clouds are drawn</label>
+<div class="bisc-feedback" hidden="">
+<p>A cloud instance diagram shows a few objects at a moment. The class diagram states the rules every set of objects must follow.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-25-o4" name="bisc-q-25"><label for="bisc-q-25-o4">It shows the keys of each object, which an object diagram leaves out</label>
+<div class="bisc-feedback" hidden="">
+<p>A cloud instance diagram labels each dot with a business identifier, such as a customer number; it shows no keys chosen for tables.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

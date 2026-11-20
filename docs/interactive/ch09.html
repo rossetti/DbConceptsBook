@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Chapter 9 Self-Checks – Database Concepts Companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7fd429508c10e9aeb0f6cc37510b69d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.js"></script>
+<link href="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="site_libs/quarto-contrib/quarto-project/book-interactive/self-check.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Database Concepts Companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Index</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../index.html"> 
+<span class="menu-text">Back to the book</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#views" id="toc-views" class="nav-link active" data-scroll-target="#views">Views</a></li>
+  <li><a href="#acid" id="toc-acid" class="nav-link" data-scroll-target="#acid">Transactions and the ACID Properties</a></li>
+  <li><a href="#isolation" id="toc-isolation" class="nav-link" data-scroll-target="#isolation">Concurrency and Isolation Levels</a></li>
+  <li><a href="#security" id="toc-security" class="nav-link" data-scroll-target="#security">Security and Privileges</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review of the Whole Chapter</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chapter 9 Self-Checks</h1>
+<p class="subtitle lead">Views, Transactions, and Concurrency</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>These questions follow the order of <a href="../09-Chapter9.html">Chapter 9</a>. Each of the first four groups checks one section of the chapter, and the last group reviews the whole chapter. The “Self-check” buttons in the chapter lead to these groups. Nothing you answer is recorded.</p>
+<section id="views" class="level2">
+<h2 class="anchored" data-anchor-id="views">Views</h2>
+<p><a href="../09-Chapter9.html#sec-tx-views">Read the section</a></p>
+<div id="sc-ch09-views" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-1" class="bisc-question" data-multiple="false">
+<div id="bisc-q-1-stem" class="bisc-stem">
+<p><strong>1.</strong> The view <code>order_report</code> joins orders, customers, order lines, and products. After it is created, one product’s description is changed with an <code>UPDATE</code> of <code>product</code>. What does the next query of the view show for that product’s lines?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-1-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-1-o1" name="bisc-q-1"><label for="bisc-q-1-o1">The new description, on every line of the product</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A view stores no rows. Each query that uses it runs the view’s query against the tables as they are at that moment, so the one changed row shows everywhere.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o2" name="bisc-q-1"><label for="bisc-q-1-o2">The old description, until the view is created again</label>
+<div class="bisc-feedback" hidden="">
+<p>That would be true of a stored copy. A view is a named query, not a copy of its result.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o3" name="bisc-q-1"><label for="bisc-q-1-o3">The old description on old orders and the new one on later orders</label>
+<div class="bisc-feedback" hidden="">
+<p>The view holds no history; every line reads the one current row of <code>product</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o4" name="bisc-q-1"><label for="bisc-q-1-o4">An error, since a table under a view cannot be changed</label>
+<div class="bisc-feedback" hidden="">
+<p>The tables behind a view are changed as usual. The view simply reads them as they are.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-2" class="bisc-question" data-multiple="true">
+<div id="bisc-q-2-stem" class="bisc-stem">
+<p><strong>2.</strong> Which of these views does PostgreSQL make updatable automatically? Select every one.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-2-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-2-o1" name="bisc-q-2"><label for="bisc-q-2-o1">A view of <code>customer</code> that keeps the rows <code>WHERE state = 'OK'</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. It selects from a single table, and each of its rows comes from one row of <code>customer</code>.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-2-o2" name="bisc-q-2"><label for="bisc-q-2-o2">A view of <code>product</code> that shows only <code>product_number</code> and <code>description</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Choosing some of a single table’s columns keeps each view row tied to one table row.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-2-o3" name="bisc-q-2"><label for="bisc-q-2-o3">A view of <code>customer</code> that shows only the first ten customers, with <code>LIMIT 10</code></label>
+<div class="bisc-feedback" hidden="">
+<p><code>LIMIT</code> is among the clauses that keep PostgreSQL from making a view updatable automatically.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-2-o4" name="bisc-q-2"><label for="bisc-q-2-o4">A view of <code>stock_level</code> that shows <code>SUM(quantity_on_hand)</code> for each product</label>
+<div class="bisc-feedback" hidden="">
+<p>A row of an aggregate comes from many rows, so the database could not tell which row a change should reach.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-2-o5" name="bisc-q-2"><label for="bisc-q-2-o5">A view of <code>customer</code> that shows <code>DISTINCT state</code></label>
+<div class="bisc-feedback" hidden="">
+<p><code>DISTINCT</code> merges rows, so a view row no longer comes from one table row.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-3" class="bisc-question" data-multiple="false">
+<div id="bisc-q-3-stem" class="bisc-stem">
+<p><strong>3.</strong> The view <code>oklahoma_customer</code> shows the customers <code>WHERE state = 'OK'</code> and was created <code>WITH CHECK OPTION</code>. What does the clause do?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-3-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o1" name="bisc-q-3"><label for="bisc-q-3-o1">It checks each customer’s state against a list of valid states</label>
+<div class="bisc-feedback" hidden="">
+<p>The clause knows nothing of valid states. It compares a row with the view’s own condition.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-3-o2" name="bisc-q-3"><label for="bisc-q-3-o2">It refuses a change made through the view that would produce a row the view could not show, such as a customer in Arkansas</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Without it, a clerk could add through the view a row that the view itself would never show.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o3" name="bisc-q-3"><label for="bisc-q-3-o3">It makes the view store its rows, so they can be checked</label>
+<div class="bisc-feedback" hidden="">
+<p>A view with the clause still stores no rows. A view that stores its result is a materialized view.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o4" name="bisc-q-3"><label for="bisc-q-3-o4">It lets a view over a join be updated</label>
+<div class="bisc-feedback" hidden="">
+<p>The clause does not make a view updatable. It limits the changes allowed through a view that already is.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-4" class="bisc-question" data-multiple="false">
+<div id="bisc-q-4-stem" class="bisc-stem">
+<p><strong>4.</strong> <em>True</em> or <em>False</em>: because a view is defined in advance, a query of the view runs much faster than the same query written out with the view’s joins.</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-4-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-4-o1" name="bisc-q-4"><label for="bisc-q-4-o1">True</label>
+<div class="bisc-feedback" hidden="">
+<p>A view stores no rows, so its query still runs every time. Storing the result for speed is what a materialized view does, at the price of being current only when refreshed.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-4-o2" name="bisc-q-4"><label for="bisc-q-4-o2">False</label>
+<div class="bisc-feedback" hidden="">
+<p>Correct. PostgreSQL merges the view’s query into the query that uses it, so the two cost about the same. A materialized view trades currency for speed and is brought up to date only by <code>REFRESH MATERIALIZED VIEW</code>.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="acid" class="level2">
+<h2 class="anchored" data-anchor-id="acid">Transactions and the ACID Properties</h2>
+<p><a href="../09-Chapter9.html#sec-tx-acid">Read the section</a></p>
+<div id="sc-ch09-acid" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-5" class="bisc-question" data-multiple="false">
+<div id="bisc-q-5-stem" class="bisc-stem">
+<p><strong>1.</strong> In PostgreSQL, a foreign key with <code>NO ACTION</code> is declared <code>DEFERRABLE INITIALLY DEFERRED</code>. Inside one transaction, a statement leaves a row that refers to nothing, and a later statement repairs the reference before <code>COMMIT</code>. What happens?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-5-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o1" name="bisc-q-5"><label for="bisc-q-5-o1">The first statement is refused, since a foreign key is checked as each statement runs</label>
+<div class="bisc-feedback" hidden="">
+<p>That is how a key that is not deferred behaves. A deferred key waits.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-5-o2" name="bisc-q-5"><label for="bisc-q-5-o2">The transaction commits, since the key’s check waits until <code>COMMIT</code> and finds every reference in place then</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Deferring the check lets a transaction pass through an inconsistent state on its way to a consistent one.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o3" name="bisc-q-5"><label for="bisc-q-5-o3"><code>COMMIT</code> is refused, since the transaction once held a row that referred to nothing</label>
+<div class="bisc-feedback" hidden="">
+<p>The deferred check looks at the rows as they are at <code>COMMIT</code>, not at the states the transaction passed through.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o4" name="bisc-q-5"><label for="bisc-q-5-o4">The transaction commits only if the key’s action is <code>RESTRICT</code></label>
+<div class="bisc-feedback" hidden="">
+<p>A <code>RESTRICT</code> check is never deferred. It is the <code>NO ACTION</code> key that can wait until <code>COMMIT</code>.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-6" class="bisc-question" data-multiple="false">
+<div id="bisc-q-6-stem" class="bisc-stem">
+<p><strong>2.</strong> A transaction runs these steps in PostgreSQL:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span>;</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> stock_level <span class="op">..</span>. ;   <span class="co">-- succeeds</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SAVEPOINT</span> before_carts;</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> stock_level <span class="op">..</span>. ;   <span class="co">-- refused</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ROLLBACK</span> <span class="kw">TO</span> <span class="kw">SAVEPOINT</span> before_carts;</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">COMMIT</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>What is committed?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-6-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-6-o1" name="bisc-q-6"><label for="bisc-q-6-o1">The first <code>UPDATE</code> only</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. <code>ROLLBACK TO SAVEPOINT</code> undoes only the work after the savepoint, here the refused statement, and the first update stays in the transaction.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o2" name="bisc-q-6"><label for="bisc-q-6-o2">Nothing, since a statement in the transaction failed</label>
+<div class="bisc-feedback" hidden="">
+<p>The savepoint marks a point to return to, and rolling back to it keeps the work done before it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o3" name="bisc-q-6"><label for="bisc-q-6-o3">Both updates</label>
+<div class="bisc-feedback" hidden="">
+<p>The second update was refused, and it made no change to keep.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o4" name="bisc-q-6"><label for="bisc-q-6-o4">Nothing, since <code>ROLLBACK TO SAVEPOINT</code> ends the transaction</label>
+<div class="bisc-feedback" hidden="">
+<p>It ends nothing. Only <code>COMMIT</code> or <code>ROLLBACK</code> ends the transaction.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-7" class="bisc-question" data-multiple="true">
+<div id="bisc-q-7-stem" class="bisc-stem">
+<p><strong>3.</strong> Against which events does durability protect a transaction whose <code>COMMIT</code> has returned? Select every one.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-7-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-7-o1" name="bisc-q-7"><label for="bisc-q-7-o1">The database server crashes a minute later</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. PostgreSQL wrote the change to its write-ahead log before reporting the commit, and replays the log after a crash.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-7-o2" name="bisc-q-7"><label for="bisc-q-7-o2">The machine loses power a minute later</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A crash of the machine is recovered from the log in the same way.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-7-o3" name="bisc-q-7"><label for="bisc-q-7-o3">The transaction was a mistaken <code>DELETE</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Durability keeps committed changes, mistaken ones included. Recovering the deleted rows takes a backup.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-7-o4" name="bisc-q-7"><label for="bisc-q-7-o4">The disk that holds the database fails</label>
+<div class="bisc-feedback" hidden="">
+<p>The log is on a disk too. A failed disk or a lost machine calls for a backup kept elsewhere.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-8" class="bisc-question" data-multiple="false">
+<div id="bisc-q-8-stem" class="bisc-stem">
+<p><strong>4.</strong> <em>True</em> or <em>False</em>: in DataGrip or DBeaver with the console in auto-commit, a <code>DELETE</code> typed by mistake can be undone with <code>ROLLBACK</code>, provided no other statement has run since.</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-8-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o1" name="bisc-q-8"><label for="bisc-q-8-o1">True</label>
+<div class="bisc-feedback" hidden="">
+<p>In auto-commit, each statement runs in its own transaction and is committed at once, so there is nothing left to roll back.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-8-o2" name="bisc-q-8"><label for="bisc-q-8-o2">False</label>
+<div class="bisc-feedback" hidden="">
+<p>Correct. The <code>DELETE</code> is permanent the moment it runs. To experiment safely, type <code>BEGIN</code> first and end with <code>ROLLBACK</code>.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="isolation" class="level2">
+<h2 class="anchored" data-anchor-id="isolation">Concurrency and Isolation Levels</h2>
+<p><a href="../09-Chapter9.html#sec-tx-isolation">Read the section</a></p>
+<div id="sc-ch09-isolation" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-9" class="bisc-question" data-multiple="false">
+<div id="bisc-q-9-stem" class="bisc-stem">
+<p><strong>1.</strong> Two clerks, each in a transaction, insert a customer with the same customer number, a <code>UNIQUE</code> column. Clerk A’s insert runs first, and A has not yet committed. What happens to clerk B’s insert in PostgreSQL?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-9-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o1" name="bisc-q-9"><label for="bisc-q-9-o1">It fails at once as a duplicate</label>
+<div class="bisc-feedback" hidden="">
+<p>A’s row is not committed and may yet be rolled back, so the database cannot yet say whether B’s row is a duplicate.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-9-o2" name="bisc-q-9"><label for="bisc-q-9-o2">It waits until A’s transaction ends, then fails if A committed and goes ahead if A rolled back</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Two inserts of the same value of a <code>UNIQUE</code> column wait for each other, as two changes of the same row do.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o3" name="bisc-q-9"><label for="bisc-q-9-o3">It succeeds at once, since B cannot see A’s uncommitted row</label>
+<div class="bisc-feedback" hidden="">
+<p>B cannot read A’s row, but the constraint must still account for it, so B waits.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o4" name="bisc-q-9"><label for="bisc-q-9-o4">Both succeed, and the duplicate is removed at the next <code>COMMIT</code></label>
+<div class="bisc-feedback" hidden="">
+<p>A <code>UNIQUE</code> constraint never lets two committed rows share a value, and nothing is removed for you.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-10" class="bisc-question" data-multiple="false">
+<div id="bisc-q-10-stem" class="bisc-stem">
+<p><strong>2.</strong> Transaction A runs in PostgreSQL at <code>REPEATABLE READ</code>. It totals the carts in stock; transaction B then changes one stock level and commits; A totals the carts again and then tries to change the same stock level. What happens?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-10-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o1" name="bisc-q-10"><label for="bisc-q-10-o1">A’s second total shows B’s change, and A’s update succeeds</label>
+<div class="bisc-feedback" hidden="">
+<p>That is <code>READ COMMITTED</code>, where each statement sees the data committed when the statement began.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-10-o2" name="bisc-q-10"><label for="bisc-q-10-o2">A’s second total equals its first, and A’s update is refused, so A must try again in a new transaction</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A sees the database as it was when its first statement ran, and it may not change a row that another transaction changed after that. A program at this level must be written to retry.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o3" name="bisc-q-10"><label for="bisc-q-10-o3">A’s update overwrites B’s change, since A began first</label>
+<div class="bisc-feedback" hidden="">
+<p>Overwriting a change A never saw is the lost update. <code>REPEATABLE READ</code> refuses it instead.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o4" name="bisc-q-10"><label for="bisc-q-10-o4">A’s update waits until B commits, then succeeds</label>
+<div class="bisc-feedback" hidden="">
+<p>B has already committed. The refusal comes because the row changed after A’s first statement.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-11" class="bisc-question" data-multiple="false">
+<div id="bisc-q-11-stem" class="bisc-stem">
+<p><strong>3.</strong> At <code>READ COMMITTED</code>, a planner’s transaction runs one long <code>SELECT SUM(quantity_on_hand)</code> over every stock level. While the query is running, a clerk’s change to one stock level commits. What does the planner’s sum include?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-11-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-11-o1" name="bisc-q-11"><label for="bisc-q-11-o1">Each quantity as committed when the planner’s statement began, without the clerk’s change</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. At <code>READ COMMITTED</code> each statement sees the data as committed when the statement began, so one statement’s result is consistent with itself.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o2" name="bisc-q-11"><label for="bisc-q-11-o2">The clerk’s change, since it committed before the sum finished</label>
+<div class="bisc-feedback" hidden="">
+<p>A statement’s view of the data is fixed when the statement begins.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o3" name="bisc-q-11"><label for="bisc-q-11-o3">Some rows before the change and some after, depending on when each row was read</label>
+<div class="bisc-feedback" hidden="">
+<p>The whole statement sees the data as it was committed when the statement began.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o4" name="bisc-q-11"><label for="bisc-q-11-o4">Nothing; the query is cancelled and must be run again</label>
+<div class="bisc-feedback" hidden="">
+<p>A commit by another transaction does not cancel a query. The query simply reads the data its view calls for.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-12" class="bisc-question" data-multiple="false">
+<div id="bisc-q-12-stem" class="bisc-stem">
+<p><strong>4.</strong> Transaction A has updated a stock level and has not yet committed. Transaction B, at <code>READ COMMITTED</code>, runs an ordinary <code>SELECT</code> of the same row. What does B get in PostgreSQL?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-12-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o1" name="bisc-q-12"><label for="bisc-q-12-o1">A’s new quantity, since it is the latest value of the row</label>
+<div class="bisc-feedback" hidden="">
+<p>Reading a change that is not committed is a dirty read, and B, at <code>READ COMMITTED</code>, reads only committed data.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-12-o2" name="bisc-q-12"><label for="bisc-q-12-o2">The quantity as last committed, at once, without waiting for A</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. PostgreSQL keeps several versions of a changed row, and a reader sees the version its snapshot calls for, so an ordinary read never waits for a write.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o3" name="bisc-q-12"><label for="bisc-q-12-o3">Nothing until A ends, since A holds a lock on the row</label>
+<div class="bisc-feedback" hidden="">
+<p>A’s lock makes another change of the row wait, as it does a read that locks, such as <code>SELECT ... FOR UPDATE</code>. An ordinary read does not wait.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o4" name="bisc-q-12"><label for="bisc-q-12-o4">An error, since the row is being changed</label>
+<div class="bisc-feedback" hidden="">
+<p>Reading a row that another transaction is changing is allowed; the question is only which version is read.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="security" class="level2">
+<h2 class="anchored" data-anchor-id="security">Security and Privileges</h2>
+<p><a href="../09-Chapter9.html#sec-tx-security">Read the section</a></p>
+<div id="sc-ch09-security" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-13" class="bisc-question" data-multiple="true">
+<div id="bisc-q-13-stem" class="bisc-stem">
+<p><strong>1.</strong> A program prints a weekly report from the <code>quality</code> schema and changes nothing. Which practices does the chapter call for? Select every one.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-13-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-13-o1" name="bisc-q-13"><label for="bisc-q-13-o1">Connect as a role that may only read the tables the report needs</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A program connects as a role whose privileges match its job, so a mistake in it cannot change data.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-13-o2" name="bisc-q-13"><label for="bisc-q-13-o2">Read the password from a file such as <code>db.properties</code> that is never committed</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. No password belongs in a script or in code kept under version control.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-13-o3" name="bisc-q-13"><label for="bisc-q-13-o3">Connect as the database’s owner, so that a new table is readable at once</label>
+<div class="bisc-feedback" hidden="">
+<p>No program should connect as the owner or as a superuser; a mistake would then have every privilege.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-13-o4" name="bisc-q-13"><label for="bisc-q-13-o4">Write the password into the program’s source, where it cannot be lost</label>
+<div class="bisc-feedback" hidden="">
+<p>Source code is shared and kept under version control, so a password in it is given to everyone who reads the code.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-14" class="bisc-question" data-multiple="false">
+<div id="bisc-q-14-stem" class="bisc-stem">
+<p><strong>2.</strong> The role <code>hg_sales</code> is granted <code>SELECT</code> on the view <code>production.part_catalog</code>, but nobody has granted it anything on the schema <code>production</code>. A clerk acting as <code>hg_sales</code> queries the view. What happens?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-14-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o1" name="bisc-q-14"><label for="bisc-q-14-o1">The query succeeds, since <code>SELECT</code> on the view is all a query of it needs</label>
+<div class="bisc-feedback" hidden="">
+<p>A table or view can be reached only through its schema, which needs a privilege of its own.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-14-o2" name="bisc-q-14"><label for="bisc-q-14-o2">The query is refused, since the role lacks <code>USAGE</code> on the schema</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. <code>USAGE</code> on a schema is needed to reach the objects in it at all, which is why the sales role is granted <code>USAGE</code> on <code>production</code> along with the view.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o3" name="bisc-q-14"><label for="bisc-q-14-o3">The query succeeds but returns no rows</label>
+<div class="bisc-feedback" hidden="">
+<p>A missing privilege refuses the statement; it never silently empties the result.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o4" name="bisc-q-14"><label for="bisc-q-14-o4">The query is refused, since a view can be granted only to its owner</label>
+<div class="bisc-feedback" hidden="">
+<p>Views are granted like tables; granting a view and not its table is how the chapter hides the standard cost.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-15" class="bisc-question" data-multiple="false">
+<div id="bisc-q-15-stem" class="bisc-stem">
+<p><strong>3.</strong> Why does each sales clerk get a login role of their own, made a member of the group role <code>hg_sales</code>, rather than everyone logging in as one shared role?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-15-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-15-o1" name="bisc-q-15"><label for="bisc-q-15-o1">Login roles cannot hold privileges, so a group is needed</label>
+<div class="bisc-feedback" hidden="">
+<p>A login role can hold privileges. The group is a matter of management, not of what roles can do.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-15-o2" name="bisc-q-15"><label for="bisc-q-15-o2">The privileges are managed in one place, and each session still identifies the clerk who opened it</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Granting or revoking a privilege on the group changes it for every member, and the database still knows who did what.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-15-o3" name="bisc-q-15"><label for="bisc-q-15-o3">A role created <code>NOLOGIN</code> holds every privilege automatically</label>
+<div class="bisc-feedback" hidden="">
+<p>A new role has no privileges beyond those granted to everyone. <code>NOLOGIN</code> means only that nobody logs in as it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-15-o4" name="bisc-q-15"><label for="bisc-q-15-o4">A shared login is safer, since one password is easier to protect</label>
+<div class="bisc-feedback" hidden="">
+<p>A shared login hides who opened each session, and its password must be given to everyone who uses it.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review of the Whole Chapter</h2>
+<p><a href="../09-Chapter9.html#sec-transactions-summary">Read the chapter summary</a></p>
+<div id="sc-ch09-review" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-16" class="bisc-question" data-multiple="false">
+<div id="bisc-q-16-stem" class="bisc-stem">
+<p><strong>1.</strong> HG Industries keeps at least 30 carts of one product across its two warehouses. A planner’s program checks the total and then takes carts from one warehouse, while another planner may do the same at the other warehouse. At which isolation level should the program’s transaction run in PostgreSQL?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-16-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o1" name="bisc-q-16"><label for="bisc-q-16-o1"><code>READ COMMITTED</code>, the default</label>
+<div class="bisc-feedback" hidden="">
+<p>The default allows both planners to read the same total and both changes to commit.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o2" name="bisc-q-16"><label for="bisc-q-16-o2"><code>REPEATABLE READ</code></label>
+<div class="bisc-feedback" hidden="">
+<p>The two planners change different rows, so <code>REPEATABLE READ</code> finds nothing to refuse: a write skew.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-16-o3" name="bisc-q-16"><label for="bisc-q-16-o3"><code>SERIALIZABLE</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. PostgreSQL tracks what each transaction read and refuses a commit that no one-at-a-time order could produce. The program must retry a transaction that fails this way.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o4" name="bisc-q-16"><label for="bisc-q-16-o4">Any level, provided each program commits quickly</label>
+<div class="bisc-feedback" hidden="">
+<p>A short transaction makes the overlap less likely, but the same schedule can still occur, and both changes commit.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-17" class="bisc-question" data-multiple="false">
+<div id="bisc-q-17-stem" class="bisc-stem">
+<p><strong>2.</strong> Transaction A has changed stock level 1 and now wants stock level 3, while transaction B has changed stock level 3 and now wants stock level 1. What does PostgreSQL do?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-17-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o1" name="bisc-q-17"><label for="bisc-q-17-o1">Both wait until one of the clerks cancels a transaction</label>
+<div class="bisc-feedback" hidden="">
+<p>Neither can proceed, but the database does not leave them waiting.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-17-o2" name="bisc-q-17"><label for="bisc-q-17-o2">It detects the deadlock after a second or so and cancels one transaction with an error, which the program must retry</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Neither transaction can proceed, so the database breaks the deadlock by cancelling one, and the program that receives the error tries its work again.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o3" name="bisc-q-17"><label for="bisc-q-17-o3">It rolls back both transactions</label>
+<div class="bisc-feedback" hidden="">
+<p>Cancelling one is enough to let the other go on.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o4" name="bisc-q-17"><label for="bisc-q-17-o4">It lets both changes go ahead, since each changes a different row first</label>
+<div class="bisc-feedback" hidden="">
+<p>Each transaction holds its lock on the row it changed until it ends, so the second change of each must wait.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-18" class="bisc-question" data-multiple="true">
+<div id="bisc-q-18-stem" class="bisc-stem">
+<p><strong>3.</strong> Which habits does the chapter recommend for an engineer who writes reports and programs against a shared database? Select every one.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-18-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-18-o1" name="bisc-q-18"><label for="bisc-q-18-o1">Keep transactions short, since a transaction holds its locks until it ends</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A long transaction makes others wait for the rows it has changed.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-18-o2" name="bisc-q-18"><label for="bisc-q-18-o2">Run a transaction that checks a rule across several rows before it changes one of them at <code>SERIALIZABLE</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Only that level refuses a write skew.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-18-o3" name="bisc-q-18"><label for="bisc-q-18-o3">Write a program that uses <code>REPEATABLE READ</code> or <code>SERIALIZABLE</code> to retry a transaction that fails</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. At those levels PostgreSQL refuses a change it cannot make safely, and the work must be tried again.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-18-o4" name="bisc-q-18"><label for="bisc-q-18-o4">Connect a program as the database’s owner, so that it is never refused</label>
+<div class="bisc-feedback" hidden="">
+<p>A program should connect as a role that may do only what its job needs, and never as the owner or a superuser.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-18-o5" name="bisc-q-18"><label for="bisc-q-18-o5">Run every transaction at <code>SERIALIZABLE</code>, so that no transaction needs a retry</label>
+<div class="bisc-feedback" hidden="">
+<p><code>SERIALIZABLE</code> is the level whose transactions may fail and need a retry, sometimes even when they would have done no harm.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

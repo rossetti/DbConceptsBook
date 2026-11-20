@@ -85,6 +85,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -336,6 +337,7 @@ window.Quarto = {
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -725,6 +727,7 @@ Table&nbsp;10.1: Reading the Book’s SQL Types from a Result Set
 </figure>
 </div>
 <p>A NULL needs care. <code>getInt</code> returns 0 for a NULL, and <code>getBoolean</code> returns <code>false</code>, so a program cannot tell a missing value from a real zero unless it asks <code>rows.wasNull()</code> after reading, or reads with <code>getObject</code>, which returns <code>null</code>. The methods that return objects, <code>getString</code> and <code>getBigDecimal</code> among them, return <code>null</code> directly. The next section turns to the <code>?</code> of the query, which is more important than it looks.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch10.html#jdbc" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-prog-injection" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="sec-prog-injection"><span class="header-section-number">10.2</span> Parameterized queries and SQL injection</h2>
@@ -784,6 +787,7 @@ As a parameter
 <p>The first input is a real lot, and both functions count its two measurements. The second is an attack. Pasted into the SQL, it makes the condition <code>i.lot_number = 'L7005-03' OR '1'='1'</code>, which is true of every row, and the query counts all 34 measurements of stage Q: the input has changed what the query does. The third input is merely a lot number with a mistyped apostrophe, and pasted into the SQL it leaves a string unterminated; the message, from the PostgreSQL driver, shows the broken SQL the function built. The second function treats each input as what it is, a lot number, finds no such lot, and counts zero.</p>
 <p>Changing a query’s meaning through the values supplied to it is called <strong>SQL injection</strong>, and it is among the most exploited weaknesses of real software. It is not limited to reading: an input that ends one statement and begins another can delete or change rows, with the program’s privileges. The prepared statement prevents it by construction. The SQL, with its <code>?</code>, reaches the database first and is parsed; the values follow separately, and the database uses each as a value, never as SQL, whatever characters it contains. The same mechanism handles the ordinary case correctly: a customer named <code>Crowley's Ridge Hardware</code> needs no doubled quote (<a href="08-Chapter8.html#sec-ddl-dml" class="quarto-xref"><span>Section 8.4</span></a>) when it is a parameter.</p>
 <p>The rule is simple and has no exceptions: <strong>a value that comes from outside the program goes into SQL only as a parameter.</strong> Build the SQL text from constants alone, and supply every value with <code>setString</code>, <code>setInt</code>, <code>setBigDecimal</code>, or <code>setObject</code>. A table or column name cannot be a parameter; if a program must choose one at run time, it chooses from a fixed list written in the program, never from its input. The rule fails in one case, where the whole statement, not a value in it, comes from outside: an AI assistant that writes SQL for a program to run. <a href="21-AppAssistants.html#sec-appassistants-risks" class="quarto-xref"><span>Section I.2</span></a> shows what that case requires instead. The next section organizes a program’s statements.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch10.html#injection" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-prog-crud" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="sec-prog-crud"><span class="header-section-number">10.3</span> CRUD and the data access object</h2>
@@ -1054,6 +1058,7 @@ Deleted 1 inspection; lot L7005-09 recorded: false</code></pre>
 </div>
 <p>A DAO takes a little more code than SQL scattered through a program, and repays it at once. The SQL for inspections is in one class, where a change to the tables is made once. The rest of the program reads as the business does, <code>dao.create(inspection, measurements)</code>, and never handles a surrogate key. And the DAO is the natural place for a transaction, since it knows which changes belong together.</p>
 <p>In a larger program, the DAO is often split in two: a Kotlin <strong>interface</strong> that lists its operations, which the rest of the program depends on, and a class that implements them with JDBC. The interface lets a second implementation take the first one’s place, one that keeps inspections in memory for testing the program’s logic without a database, for example, and the program cannot tell the difference. The book’s DAO is a single class, which is enough for a program of this size. The next section shows what the KSL provides so that simple tables need no hand-written DAO at all.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch10.html#crud" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-prog-ksl" class="level2" data-number="10.4">
@@ -1179,6 +1184,7 @@ outside [0.6200, 0.6300]: 1 of 8; Cpk = 0.61</code></pre>
 <p><em>Where it breaks.</em> <span class="math inline">\(C_{pk}\)</span> assumes a stable process whose values scatter around a fixed mean. A drifting process is not stable, so the index here describes the eight lots taken together, not the process as it will run; the engineer should say so, or compute it over a stable stretch. The query also assumes one diameter per lot. The database refuses a second diameter in one inspection, but not a second inspection of a lot, since <code>lot_number</code> is not unique; a lot inspected twice would be counted twice, and the query would return nine rows.</p>
 </div>
 <p>The steps of <a href="#exm-prog-capability" class="quarto-xref">Example&nbsp;<span>10.2</span></a>, a query, a result set, a data frame, and a statistic, are the path by which a database feeds any analysis in Kotlin, and <a href="12-Chapter12.html" class="quarto-xref"><span>Chapter 12</span></a> follows it further. The next section moves data in bulk between the database and files.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch10.html#ksl" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-prog-io" class="level2" data-number="10.5">
 <h2 data-number="10.5" class="anchored" data-anchor-id="sec-prog-io"><span class="header-section-number">10.5</span> Importing and exporting data</h2>
@@ -1418,6 +1424,7 @@ Table&nbsp;10.3: Four Ways for a Kotlin Program to Work with a Database
 </figure>
 </div>
 <p>Each library is one more thing to learn, and each hides the SQL behind its own vocabulary; when a query misbehaves, you still debug it as SQL. For the programs an industrial engineer writes, to record data, analyze it, and feed a simulation, SQL through JDBC and the KSL is enough, and it keeps the SQL, which the rest of this book taught, in view. Reach for a library when a program grows into an application with many tables that several people maintain, and choose by what the team knows.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch10.html#io-libraries" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-dbprogramming-summary" class="level2" data-number="10.7">
 <h2 data-number="10.7" class="anchored" data-anchor-id="sec-dbprogramming-summary"><span class="header-section-number">10.7</span> Summary</h2>
@@ -1428,6 +1435,7 @@ Table&nbsp;10.3: Four Ways for a Kotlin Program to Work with a Database
 <p><strong>A query becomes a data frame, and a data frame becomes statistics.</strong> <code>DatabaseIfc.toDataFrame</code> turns a result set into a data frame of typed columns, and a KSL <code>Statistic</code> summarizes a column. A <code>NUMERIC</code> column has the type <code>BigDecimal</code>, the values as stored, and a <code>Statistic</code> needs <code>Double</code> values, so convert each with <code>(it as Number).toDouble()</code>.</p>
 <p><strong>Files move in and out through the KSL and a batch.</strong> Export a table to CSV or a schema to Excel with one call; read CSV with <code>CSVUtil</code>, which respects quoting; and load many rows with a batch of prepared inserts in one transaction, into a staging table first.</p>
 <p><strong>Libraries such as jOOQ, Exposed, and Ktorm write the SQL from Kotlin.</strong> They let the compiler check tables and columns and remove repetitive code, at the price of one more vocabulary over the SQL. For an engineer’s programs, JDBC and the KSL are enough; a library earns its place in a large application.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch10.html#review" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check for the whole chapter</a></p>
 </section>
 <section id="sec-dbprogramming-exercises" class="level2" data-number="10.8">
 <h2 data-number="10.8" class="anchored" data-anchor-id="sec-dbprogramming-exercises"><span class="header-section-number">10.8</span> Exercises</h2>

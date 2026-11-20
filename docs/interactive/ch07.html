@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Chapter 7 Self-Checks – Database Concepts Companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7fd429508c10e9aeb0f6cc37510b69d0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3e264c35aae4b0f400c81d0347ca2468.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.js"></script>
+<link href="site_libs/quarto-contrib/book-interactive-self-check-0.1.0/self-check.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="site_libs/quarto-contrib/quarto-project/book-interactive/self-check.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Database Concepts Companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Index</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../index.html"> 
+<span class="menu-text">Back to the book</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#anomalies" id="toc-anomalies" class="nav-link active" data-scroll-target="#anomalies">The Procedure and Anomalies in a Poorly Designed Table</a></li>
+  <li><a href="#fds" id="toc-fds" class="nav-link" data-scroll-target="#fds">Functional Dependencies</a></li>
+  <li><a href="#forms" id="toc-forms" class="nav-link" data-scroll-target="#forms">Normal Forms</a></li>
+  <li><a href="#decomposition" id="toc-decomposition" class="nav-link" data-scroll-target="#decomposition">Decomposition</a></li>
+  <li><a href="#classmodels" id="toc-classmodels" class="nav-link" data-scroll-target="#classmodels">Normalization and Class Modeling</a></li>
+  <li><a href="#mvd" id="toc-mvd" class="nav-link" data-scroll-target="#mvd">Multivalued Dependencies and Fourth Normal Form</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">Review of the Whole Chapter</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chapter 7 Self-Checks</h1>
+<p class="subtitle lead">Normalization</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>These questions follow the order of <a href="../07-Chapter7.html">Chapter 7</a>. Each of the first six groups checks one or two sections of the chapter, and the last group reviews the whole chapter. The “Self-check” buttons in the chapter lead to these groups. Nothing you answer is recorded.</p>
+<section id="anomalies" class="level2">
+<h2 class="anchored" data-anchor-id="anomalies">The Procedure and Anomalies in a Poorly Designed Table</h2>
+<p><a href="../07-Chapter7.html#sec-nf-procedure">Read the sections</a></p>
+<div id="sc-ch07-anomalies" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-1" class="bisc-question" data-multiple="false">
+<div id="bisc-q-1-stem" class="bisc-stem">
+<p><strong>1.</strong> A tool crib keeps one flat table, with a row for each checkout: the tool’s number and description, the employee who took it, and the date. A new torque wrench arrives, and nobody has checked it out yet. Which anomaly keeps the crib from recording the new wrench and its description?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-1-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o1" name="bisc-q-1"><label for="bisc-q-1-o1">An update anomaly</label>
+<div class="bisc-feedback" hidden="">
+<p>Nothing is being changed. The trouble is a fact that has no row to go on.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o2" name="bisc-q-1"><label for="bisc-q-1-o2">A deletion anomaly</label>
+<div class="bisc-feedback" hidden="">
+<p>A deletion anomaly loses a fact when a row is removed. Nothing is being removed.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-1-o3" name="bisc-q-1"><label for="bisc-q-1-o3">An insertion anomaly</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The wrench’s description can be recorded only on a checkout row, so it cannot be recorded until an unrelated fact, a checkout, exists.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-1-o4" name="bisc-q-1"><label for="bisc-q-1-o4">None; the crib can add a row with the employee and the date left empty</label>
+<div class="bisc-feedback" hidden="">
+<p>A checkout row with no checkout records something that did not happen. The table has no place for a tool on its own, which is the anomaly.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-2" class="bisc-question" data-multiple="true">
+<div id="bisc-q-2-stem" class="bisc-stem">
+<p><strong>2.</strong> The sales department keeps its orders in the flat order report, a row for each order line with the customer’s number and name and the product’s number and description. Which of these situations are symptoms of the report’s design? Select every one that is.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-2-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-2-o1" name="bisc-q-2"><label for="bisc-q-2-o1">One customer number appears with two different names</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Two names for one number is the trace of a rename that missed some rows: an update anomaly that has already happened.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-2-o2" name="bisc-q-2"><label for="bisc-q-2-o2">Deleting a product’s only order line removes every trace of the product’s description</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The description was stored only on that line, so removing the line removes the fact: a deletion anomaly.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-2-o3" name="bisc-q-2"><label for="bisc-q-2-o3">A product that has never been ordered cannot appear in the report</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The product’s description needs an order line to sit on: an insertion anomaly.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-2-o4" name="bisc-q-2"><label for="bisc-q-2-o4">One order has two lines for the same product</label>
+<div class="bisc-feedback" hidden="">
+<p>This is legitimate data, not an anomaly. An order may list a product on two lines, and each line is a fact of its own.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-3" class="bisc-question" data-multiple="false">
+<div id="bisc-q-3-stem" class="bisc-stem">
+<p><strong>3.</strong> Step 4 of the normalization procedure names a table’s normal form. How is it done?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-3-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o1" name="bisc-q-3"><label for="bisc-q-3-o1">Count the repeated values in the sample rows; the fewer there are, the higher the form</label>
+<div class="bisc-feedback" hidden="">
+<p>The sample shows where facts repeat, but the normal form is a condition on the dependencies, not a count of values.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-3-o2" name="bisc-q-3"><label for="bisc-q-3-o2">Test the table against the normal forms from the first up, and find the first one it fails</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The forms are nested, so the first one a table fails tells you which kind of repeated fact it holds, and which split step 5 must make.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o3" name="bisc-q-3"><label for="bisc-q-3-o3">Start from the highest normal form and stop at the first one the table passes</label>
+<div class="bisc-feedback" hidden="">
+<p>The procedure tests from the first form up, since each form includes the ones below it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-3-o4" name="bisc-q-3"><label for="bisc-q-3-o4">Look up the table’s normal form in the database’s catalog</label>
+<div class="bisc-feedback" hidden="">
+<p>A database does not know a table’s dependencies, so it cannot name the table’s normal form.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="fds" class="level2">
+<h2 class="anchored" data-anchor-id="fds">Functional Dependencies</h2>
+<p><a href="../07-Chapter7.html#sec-nf-fds">Read the section</a></p>
+<div id="sc-ch07-fds" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-4" class="bisc-question" data-multiple="true">
+<div id="bisc-q-4-stem" class="bisc-stem">
+<p><strong>1.</strong> A hypothetical tool crib table holds these three rows:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Bin</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">T-1</td>
+<td style="text-align: left;">Torque wrench</td>
+<td style="text-align: left;">B4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">T-2</td>
+<td style="text-align: left;">Torque wrench</td>
+<td style="text-align: left;">B7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">T-1</td>
+<td style="text-align: left;">Torque wrench</td>
+<td style="text-align: left;">B4</td>
+</tr>
+</tbody>
+</table>
+<p>Which functional dependencies do these rows refute? Select every one.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-4-stem">
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-4-o1" name="bisc-q-4"><label for="bisc-q-4-o1"><code>tool_number → description</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Each tool number appears with one description here, so the rows do not refute it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-4-o2" name="bisc-q-4"><label for="bisc-q-4-o2"><code>description → tool_number</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. “Torque wrench” appears with T-1 and with T-2, two values of the dependent for one value of the determinant. Reading a dependency backwards is a common mistake: two tools may share a description.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-4-o3" name="bisc-q-4"><label for="bisc-q-4-o3"><code>tool_number → bin</code></label>
+<div class="bisc-feedback" hidden="">
+<p>T-1 appears twice, both times in B4, so the rows agree with the dependency.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-4-o4" name="bisc-q-4"><label for="bisc-q-4-o4"><code>description → bin</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. “Torque wrench” appears with B4 and with B7.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-5" class="bisc-question" data-multiple="false">
+<div id="bisc-q-5-stem" class="bisc-stem">
+<p><strong>2.</strong> A sales clerk has kept a flat order table by hand for years. A query groups it by <code>customer_number</code> and keeps the groups with <code>COUNT(DISTINCT customer_name) &gt; 1</code>, and it returns three customer numbers. What does that result show?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-5-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o1" name="bisc-q-5"><label for="bisc-q-5-o1">That <code>customer_number → customer_name</code> is not a rule of the business, and should be dropped from the design</label>
+<div class="bisc-feedback" hidden="">
+<p>The business still gives each customer one name. The rows broke the rule; they did not repeal it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-5-o2" name="bisc-q-5"><label for="bisc-q-5-o2">That update anomalies have already happened: three customers each carry two or more names</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A dependency is broken wherever one value of its determinant appears with two values of its dependent. In a table kept by hand, this query is the quickest way to find the damage.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o3" name="bisc-q-5"><label for="bisc-q-5-o3">That the three customers share a name with some other customer</label>
+<div class="bisc-feedback" hidden="">
+<p>That would be one name with several numbers, the dependency read backwards. The query found one number with several names.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-5-o4" name="bisc-q-5"><label for="bisc-q-5-o4">Nothing, since rows can never say anything about a dependency</label>
+<div class="bisc-feedback" hidden="">
+<p>Each of the three numbers appears with more than one name, which is exactly what the dependency forbids.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-6" class="bisc-question" data-multiple="false">
+<div id="bisc-q-6-stem" class="bisc-stem">
+<p><strong>3.</strong> A hypothetical table records the steps of work orders: (<code>work_order_number</code>, <code>step_number</code>, <code>work_center</code>, <code>center_manager</code>, <code>hours</code>), with key (<code>work_order_number</code>, <code>step_number</code>). The rules are that each step of a work order is performed in one work center, and each work center has one manager. How does <code>center_manager</code> depend on the key?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-6-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o1" name="bisc-q-6"><label for="bisc-q-6-o1">Partially, since it depends on part of the key</label>
+<div class="bisc-feedback" hidden="">
+<p>A partial dependency leaves one column of a composite key. Here the work center depends on the whole key, since a work order has several steps in different centers.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-6-o2" name="bisc-q-6"><label for="bisc-q-6-o2">Transitively, through <code>work_center</code>, a column that is not part of a key</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The key decides the work center, and the work center decides its manager. The manager is repeated on every step performed in the center.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o3" name="bisc-q-6"><label for="bisc-q-6-o3">Directly on the whole key, so the table has no problem</label>
+<div class="bisc-feedback" hidden="">
+<p>The manager is decided by the work center alone, whatever the work order or the step.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-6-o4" name="bisc-q-6"><label for="bisc-q-6-o4">It does not depend on the key at all</label>
+<div class="bisc-feedback" hidden="">
+<p>It does, through the chain from the key to the work center to the manager.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="forms" class="level2">
+<h2 class="anchored" data-anchor-id="forms">Normal Forms</h2>
+<p><a href="../07-Chapter7.html#sec-nf-forms">Read the section</a></p>
+<div id="sc-ch07-forms" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-7" class="bisc-question" data-multiple="false">
+<div id="bisc-q-7-stem" class="bisc-stem">
+<p><strong>1.</strong> A query builds a report with one row per order and a column <code>products</code> that holds the order’s product numbers joined into one string, such as “HT-100, GC-300”. Why does such a column belong in a report and never in a stored table?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-7-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o1" name="bisc-q-7"><label for="bisc-q-7-o1">Because PostgreSQL cannot store a string that contains commas</label>
+<div class="bisc-feedback" hidden="">
+<p>A text column holds commas like any other character. The trouble is what the value means, not how it is typed.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-7-o2" name="bisc-q-7"><label for="bisc-q-7-o2">Because the column holds a list, not a value: a query must search inside strings to find an order of one product, and no foreign key can refer from one element of the list to <code>product</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A list in one cell breaks first normal form. Read in a report, it is convenient; stored, it hides facts the database cannot reach.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o3" name="bisc-q-7"><label for="bisc-q-7-o3">Because the report has too few rows to be a table</label>
+<div class="bisc-feedback" hidden="">
+<p>The number of rows has nothing to do with a normal form.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-7-o4" name="bisc-q-7"><label for="bisc-q-7-o4">Because <code>STRING_AGG</code> is PostgreSQL’s own function</label>
+<div class="bisc-feedback" hidden="">
+<p>The standard’s aggregate, <code>LISTAGG</code>, builds the same list, and the list would be just as wrong in a stored table.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-8" class="bisc-question" data-multiple="false">
+<div id="bisc-q-8-stem" class="bisc-stem">
+<p><strong>2.</strong> In a functional dependency diagram, <code>order_number</code> and <code>line_number</code> together decide <code>product_number</code>. How is that drawn?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-8-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o1" name="bisc-q-8"><label for="bisc-q-8-o1">An arrow from each of the two ovals to <code>product_number</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Two separate arrows would say that each column alone decides the product, which is false: every order has a line 1.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-8-o2" name="bisc-q-8"><label for="bisc-q-8-o2">A larger outline around the two ovals, with the arrow leaving the outline</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Only the two columns together decide the value, so the arrow starts from the outline that holds them both.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o3" name="bisc-q-8"><label for="bisc-q-8-o3">One oval holding both names, with no arrow</label>
+<div class="bisc-feedback" hidden="">
+<p>Each column keeps its own oval, and every dependency is drawn as an arrow.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-8-o4" name="bisc-q-8"><label for="bisc-q-8-o4">An arrow from <code>product_number</code> back to each of the two columns</label>
+<div class="bisc-feedback" hidden="">
+<p>Arrows run from the determinant to the columns it decides, not the other way.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-9" class="bisc-question" data-multiple="false">
+<div id="bisc-q-9-stem" class="bisc-stem">
+<p><strong>3.</strong> The chapter states BCNF with candidate keys, and adds that, strictly, a determinant may also be a <em>superkey</em>. What is a superkey?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-9-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o1" name="bisc-q-9"><label for="bisc-q-9-o1">A key made of more than three columns</label>
+<div class="bisc-feedback" hidden="">
+<p>The number of columns does not make a superkey.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-9-o2" name="bisc-q-9"><label for="bisc-q-9-o2">A set of columns that contains a candidate key</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A candidate key with columns added to it still decides every column, so it is a superkey. The book states the rule with candidate keys because a determinant is taken to be as small as it can be.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o3" name="bisc-q-9"><label for="bisc-q-9-o3">The primary key, as opposed to the alternate keys</label>
+<div class="bisc-feedback" hidden="">
+<p>The primary key is the candidate key chosen to identify rows. A superkey need not be chosen at all.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-9-o4" name="bisc-q-9"><label for="bisc-q-9-o4">A key that spans two tables</label>
+<div class="bisc-feedback" hidden="">
+<p>A key belongs to one table. A superkey is a set of a table’s own columns.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="decomposition" class="level2">
+<h2 class="anchored" data-anchor-id="decomposition">Decomposition</h2>
+<p><a href="../07-Chapter7.html#sec-nf-decomposition">Read the section</a></p>
+<div id="sc-ch07-decomposition" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-10" class="bisc-question" data-multiple="false">
+<div id="bisc-q-10-stem" class="bisc-stem">
+<p><strong>1.</strong> A hypothetical lot table (<code>lot_number</code>, <code>part_number</code>, <code>part_description</code>, <code>quantity_made</code>) has key <code>lot_number</code> and fails third normal form through <code>part_number → part_description</code>. Which split repairs it?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-10-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-10-o1" name="bisc-q-10"><label for="bisc-q-10-o1">A new table (<code>part_number</code>, <code>part_description</code>) keyed by <code>part_number</code>, and the lot table keeps <code>part_number</code> but loses <code>part_description</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The determinant and the column it decides move to a new table keyed by the determinant, and the determinant stays behind as a foreign key that refers to it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o2" name="bisc-q-10"><label for="bisc-q-10-o2">A new table (<code>part_number</code>, <code>part_description</code>), and the lot table loses both columns</label>
+<div class="bisc-feedback" hidden="">
+<p>With <code>part_number</code> gone, nothing says which part a lot made, and joining the two tables cannot give the lots back.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o3" name="bisc-q-10"><label for="bisc-q-10-o3">A new table (<code>part_number</code>, <code>part_description</code>) keyed by <code>part_description</code></label>
+<div class="bisc-feedback" hidden="">
+<p>The new table’s key is the determinant of the dependency, <code>part_number</code>. Two parts may share a description.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-10-o4" name="bisc-q-10"><label for="bisc-q-10-o4">A new table of parts, with <code>part_description</code> kept in the lot table as well, for convenience</label>
+<div class="bisc-feedback" hidden="">
+<p>Keeping the description in the lot table keeps the repeated fact and the transitive dependency the split was meant to remove.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-11" class="bisc-question" data-multiple="false">
+<div id="bisc-q-11-stem" class="bisc-stem">
+<p><strong>2.</strong> The order report is decomposed into <code>customer</code>, <code>customer_order</code>, <code>order_line</code>, and <code>product</code>, and the dependencies are drawn with each table in its own outline. What in the drawing shows that each table is in Boyce-Codd normal form?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-11-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o1" name="bisc-q-11"><label for="bisc-q-11-o1">Each outline holds the same number of columns</label>
+<div class="bisc-feedback" hidden="">
+<p>The tables have different numbers of columns, and the count says nothing about the dependencies.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-11-o2" name="bisc-q-11"><label for="bisc-q-11-o2">In every outline, the arrows leave the key and nothing else</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A table whose only determinant is its key meets the condition of BCNF.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o3" name="bisc-q-11"><label for="bisc-q-11-o3">No arrow is drawn at all</label>
+<div class="bisc-feedback" hidden="">
+<p>Every table still has its dependencies. What changed is where the arrows start.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-11-o4" name="bisc-q-11"><label for="bisc-q-11-o4">Every column is shaded as part of a key</label>
+<div class="bisc-feedback" hidden="">
+<p>Most columns, such as <code>customer_name</code> and <code>quantity</code>, are not part of a key, and need not be.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-12" class="bisc-question" data-multiple="false">
+<div id="bisc-q-12-stem" class="bisc-stem">
+<p><strong>3.</strong> After the order report is decomposed, the transitive chain <code>order_number → customer_number → customer_name</code> is cut at its middle column. What is <code>customer_number</code> in the result?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-12-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o1" name="bisc-q-12"><label for="bisc-q-12-o1">A column of <code>customer</code> only, removed from the order’s table</label>
+<div class="bisc-feedback" hidden="">
+<p>With <code>customer_number</code> gone from the order’s table, nothing would say which customer placed an order.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-12-o2" name="bisc-q-12"><label for="bisc-q-12-o2">A foreign key in the order’s table, and the key of <code>customer</code></label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The middle column of each chain becomes a foreign key in one table and the key of another, which is how the tables join back together.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o3" name="bisc-q-12"><label for="bisc-q-12-o3">A column repeated in every table, so that any two can be joined</label>
+<div class="bisc-feedback" hidden="">
+<p>It appears only where it is needed: as the key of <code>customer</code> and as the reference to it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-12-o4" name="bisc-q-12"><label for="bisc-q-12-o4">A surrogate key that normalization adds</label>
+<div class="bisc-feedback" hidden="">
+<p>Normalization works with the natural columns. Surrogate keys are added by the mapping, not by the decomposition.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-13" class="bisc-question" data-multiple="false">
+<div id="bisc-q-13-stem" class="bisc-stem">
+<p><strong>4.</strong> The inspection sheet was normalized under the rule that a lot is inspected once. Suppose instead that a failed lot may be reworked and inspected again. What changes?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-13-stem">
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-13-o1" name="bisc-q-13"><label for="bisc-q-13-o1"><code>lot_number</code> no longer determines the inspector, so the keys of the inspection and of its measurements need the inspection’s time as well</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The dependencies came from a business rule, and when the rule changes, they change. The book’s database anticipates this by giving each inspection its own surrogate key.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o2" name="bisc-q-13"><label for="bisc-q-13-o2">Nothing, since the dependencies are found from the rows already recorded</label>
+<div class="bisc-feedback" hidden="">
+<p>The rule of the business has changed, and the dependencies follow the rule.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o3" name="bisc-q-13"><label for="bisc-q-13-o3">The measurement table falls to first normal form</label>
+<div class="bisc-feedback" hidden="">
+<p>First normal form concerns atomic values, which a second inspection does not change.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-13-o4" name="bisc-q-13"><label for="bisc-q-13-o4">The second inspection must be given a new lot number</label>
+<div class="bisc-feedback" hidden="">
+<p>That would record something false about the lot. The design must change to fit the rule, not the other way round.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="classmodels" class="level2">
+<h2 class="anchored" data-anchor-id="classmodels">Normalization and Class Modeling</h2>
+<p><a href="../07-Chapter7.html#sec-nf-classmodels">Read the section</a></p>
+<div id="sc-ch07-classmodels" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-14" class="bisc-question" data-multiple="false">
+<div id="bisc-q-14-stem" class="bisc-stem">
+<p><strong>1.</strong> A class model gives the class <code>OrderLine</code> an attribute <code>orderDate</code>. Which normal form does the mapped <code>order_line</code> table fail?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-14-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o1" name="bisc-q-14"><label for="bisc-q-14-o1">First normal form</label>
+<div class="bisc-feedback" hidden="">
+<p>The order date is one value per row, so it is atomic.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-14-o2" name="bisc-q-14"><label for="bisc-q-14-o2">Second normal form</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The date depends on the order alone, part of the line’s key, so it is repeated on every line of the order. The repair belongs in the model: the attribute describes the whole, <code>CustomerOrder</code>, not its part.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o3" name="bisc-q-14"><label for="bisc-q-14-o3">Third normal form only</label>
+<div class="bisc-feedback" hidden="">
+<p>Third normal form concerns a column that depends on another column outside the key. The date depends on part of the key.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-14-o4" name="bisc-q-14"><label for="bisc-q-14-o4">None; the date describes the line</label>
+<div class="bisc-feedback" hidden="">
+<p>Every line of an order has the order’s date, so the date describes the order, not the line.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-15" class="bisc-question" data-multiple="true">
+<div id="bisc-q-15-stem" class="bisc-stem">
+<p><strong>2.</strong> Which statements agree with the chapter? Select every one.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-15-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-15-o1" name="bisc-q-15"><label for="bisc-q-15-o1">A report such as the flat order report can be produced by a query or a view when it is needed, while its facts stay stored once</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Normalization governs the tables that store facts, not every table a database shows.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-15-o2" name="bisc-q-15"><label for="bisc-q-15-o2">Denormalization is a decision made about a normalized design, and the designer should be able to say which dependencies it gives up</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A designer may store a repeated fact on purpose, to make reading faster or simpler, and accept the anomalies it brings.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-15-o3" name="bisc-q-15"><label for="bisc-q-15-o3">A report that people read often must be stored as a table of its own</label>
+<div class="bisc-feedback" hidden="">
+<p>A query produces the report whenever it is needed, so its facts can stay stored once.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-15-o4" name="bisc-q-15"><label for="bisc-q-15-o4">A normal form violation in a mapped table is best repaired in the tables alone, leaving the class model as it was</label>
+<div class="bisc-feedback" hidden="">
+<p>The violation points to a mistake in the model, and the repair belongs there, so that the model and the tables agree.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="mvd" class="level2">
+<h2 class="anchored" data-anchor-id="mvd">Multivalued Dependencies and Fourth Normal Form</h2>
+<p><a href="../07-Chapter7.html#sec-nf-4nf">Read the section</a></p>
+<div id="sc-ch07-mvd" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-16" class="bisc-question" data-multiple="false">
+<div id="bisc-q-16-stem" class="bisc-stem">
+<p><strong>1.</strong> A hypothetical table holds each machine’s certified operators and its maintenance tasks, a row for each combination. The multivalued dependency <code>machine →→ operator</code> holds. Which part of that statement goes beyond a machine simply having many operators?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-16-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o1" name="bisc-q-16"><label for="bisc-q-16-o1">That each operator is certified on at least one machine</label>
+<div class="bisc-feedback" hidden="">
+<p>That is a rule about operators, and the dependency does not state it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o2" name="bisc-q-16"><label for="bisc-q-16-o2">That a machine has more than one operator</label>
+<div class="bisc-feedback" hidden="">
+<p>Many operators per machine is only a one-to-many relationship. A multivalued dependency says something more.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-16-o3" name="bisc-q-16"><label for="bisc-q-16-o3">That the set of operators of a machine is the same whatever task the row holds</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Because the set does not depend on the task, every operator must be paired with every task, which is where the repetition comes from.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-16-o4" name="bisc-q-16"><label for="bisc-q-16-o4">That the operator determines the machine</label>
+<div class="bisc-feedback" hidden="">
+<p>The arrow runs from the machine. An operator may be certified on several machines.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-17" class="bisc-question" data-multiple="false">
+<div id="bisc-q-17-stem" class="bisc-stem">
+<p><strong>2.</strong> The table is split into <code>machine_operator (machine, operator)</code> and <code>machine_task (machine, task)</code>. The two join on <code>machine</code>, which is a key of neither. Why is the split lossless all the same?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-17-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o1" name="bisc-q-17"><label for="bisc-q-17-o1">Because every split into two tables is lossless</label>
+<div class="bisc-feedback" hidden="">
+<p>Whether a split loses nothing depends on the dependencies behind it, so it must be shown for each split.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o2" name="bisc-q-17"><label for="bisc-q-17-o2">Because <code>machine</code> is the primary key of the original table</label>
+<div class="bisc-feedback" hidden="">
+<p>The original table’s key is all three columns together.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-17-o3" name="bisc-q-17"><label for="bisc-q-17-o3">Because every operator of a machine performs every task of the machine, so each pairing the join makes is a row the original table held</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A split on a multivalued dependency is lossless for this reason, not by the rule that governs a split on a functional dependency.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-17-o4" name="bisc-q-17"><label for="bisc-q-17-o4">Because the join is written with <code>DISTINCT</code></label>
+<div class="bisc-feedback" hidden="">
+<p><code>DISTINCT</code> removes duplicate rows. It cannot remove a row that was never true.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+</section>
+<section id="review" class="level2">
+<h2 class="anchored" data-anchor-id="review">Review of the Whole Chapter</h2>
+<p><a href="../07-Chapter7.html#sec-normalization-summary">Read the chapter summary</a></p>
+<div id="sc-ch07-review" class="bisc-self-check">
+<div class="bisc-title-row"><div class="bisc-title">Self-Check</div><button type="button" class="btn btn-sm bisc-clear-all">Clear all answers</button></div>
+<div id="bisc-q-18" class="bisc-question" data-multiple="false">
+<div id="bisc-q-18-stem" class="bisc-stem">
+<p><strong>1.</strong> One engineer normalizes HG Industries’ flat order report. Another maps the class model of customers, orders, order lines, and products to tables. How do their designs compare?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-18-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o1" name="bisc-q-18"><label for="bisc-q-18-o1">They differ, since normalization works from data and mapping works from a diagram</label>
+<div class="bisc-feedback" hidden="">
+<p>The two start from different places and meet at the same design, because both follow the same dependencies.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-18-o2" name="bisc-q-18"><label for="bisc-q-18-o2">They have the same four tables and the same dependencies; the mapped database adds surrogate keys and columns the report did not carry</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Normalizing a table that exists and mapping a sound class model are two routes to one design, and a normal form violation in a mapped table points back to a mistake in the model.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o3" name="bisc-q-18"><label for="bisc-q-18-o3">Normalization produces more tables, one for each dependency, including one for each column</label>
+<div class="bisc-feedback" hidden="">
+<p>Each split follows a dependency that breaks a normal form, and the order report needs three splits, giving four tables.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-18-o4" name="bisc-q-18"><label for="bisc-q-18-o4">The mapped tables still need normalizing, since a class model ignores dependencies</label>
+<div class="bisc-feedback" hidden="">
+<p>A class whose attributes each describe its own object maps to tables already in Boyce-Codd normal form.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-19" class="bisc-question" data-multiple="true">
+<div id="bisc-q-19-stem" class="bisc-stem">
+<p><strong>2.</strong> Which statements agree with the chapter? Select every one.</p>
+<p><em>Select all that apply.</em></p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-19-stem">
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-19-o1" name="bisc-q-19"><label for="bisc-q-19-o1">A normal form is a condition on a table’s dependencies that rules out one kind of repeated fact</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. Each form names one kind of repetition and the dependencies that cause it.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-19-o2" name="bisc-q-19"><label for="bisc-q-19-o2">A key is a smallest set of columns that determines every other column of the table</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. A larger set that also determines every column is not a key, since a smaller one does the work.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="checkbox" id="bisc-q-19-o3" name="bisc-q-19"><label for="bisc-q-19-o3">Fifth normal form concerns tables that can be rebuilt only by joining three or more smaller tables, which is rare in practice</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The book names it and goes no further.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-19-o4" name="bisc-q-19"><label for="bisc-q-19-o4">A functional dependency is drawn with an arrow that runs from the column decided to the column that decides it</label>
+<div class="bisc-feedback" hidden="">
+<p>The arrow runs from the determinant to each column it determines.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="checkbox" id="bisc-q-19-o5" name="bisc-q-19"><label for="bisc-q-19-o5">Normalization requires each stored table to have a surrogate key</label>
+<div class="bisc-feedback" hidden="">
+<p>Normalization works with the natural columns. Surrogate keys are a decision of the mapping.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+<div id="bisc-q-20" class="bisc-question" data-multiple="false">
+<div id="bisc-q-20-stem" class="bisc-stem">
+<p><strong>3.</strong> The quality engineers like reading their inspection results as one sheet, a row per measurement with the part’s description and the inspector’s name. How should the database serve them?</p>
+</div>
+<fieldset class="bisc-options" aria-labelledby="bisc-q-20-stem">
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o1" name="bisc-q-20"><label for="bisc-q-20-o1">Store the sheet as one table, and train the engineers to change every copy of a fact</label>
+<div class="bisc-feedback" hidden="">
+<p>Every copy is a place where the table can contradict itself, and an insertion or deletion anomaly cannot be avoided by care.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="true">
+<input type="radio" id="bisc-q-20-o2" name="bisc-q-20"><label for="bisc-q-20-o2">Store the facts in normalized tables, and produce the sheet with a query, or name that query as a view</label>
+<div class="bisc-feedback" hidden="">
+<p>Yes. The sheet is a fine way to read the results, and a query produces it on demand while each fact stays stored once.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o3" name="bisc-q-20"><label for="bisc-q-20-o3">Store both the sheet and the normalized tables, and copy changes from one to the other</label>
+<div class="bisc-feedback" hidden="">
+<p>Two stored copies are two places to update, the problem normalization removes.</p>
+</div>
+</div>
+<div class="bisc-option" data-correct="false">
+<input type="radio" id="bisc-q-20-o4" name="bisc-q-20"><label for="bisc-q-20-o4">Store each column in a table of its own</label>
+<div class="bisc-feedback" hidden="">
+<p>Splitting is done on a dependency, not on every column, and a split that drops the key from a table loses the link between its facts.</p>
+</div>
+</div>
+</fieldset>
+<div class="bisc-actions"><button type="button" class="btn btn-sm btn-primary bisc-check">Check</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reveal">Show answer</button> <button type="button" class="btn btn-sm btn-outline-primary bisc-reset">Reset</button></div><div class="bisc-result" role="status" aria-live="polite"></div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

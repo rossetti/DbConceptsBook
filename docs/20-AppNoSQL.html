@@ -104,6 +104,7 @@ div.csl-indent {
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -326,6 +327,7 @@ div.csl-indent {
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -665,6 +667,7 @@ Table&nbsp;H.1: The Four Families of NoSQL Databases
 <h3 data-number="H.2.1" class="anchored" data-anchor-id="time-series-databases-and-plant-historians"><span class="header-section-number">H.2.1</span> Time-series databases and plant historians</h3>
 <p>The non-relational data you are most likely to meet in a plant is neither of these four. A <strong>time-series database</strong> records the value of a measurement at each moment: a spindle’s speed, an oven’s temperature, a line’s count of finished units. In manufacturing, the usual one is a <strong>plant historian</strong>, such as the AVEVA PI System, which collects thousands of such measurements, called tags, from the plant’s controllers, many times a second, and keeps years of them. Other time-series databases include InfluxDB and TimescaleDB, the latter an extension of PostgreSQL.</p>
 <p>A historian answers questions about one tag over a span of time well, such as the average oven temperature during each shift. It does not hold orders, parts, or work orders, so the questions an industrial engineer asks usually combine the two: the temperatures during the runs of one lot that failed inspection. The usual design summarizes the readings (an average, a minimum, and a maximum for each tag over each hour or each run) and loads the summaries into a relational database, where they join the rest of the plant’s data. That is the extract, transform, and load of <a href="11-Chapter11.html#sec-dw-etl" class="quarto-xref"><span>Section 11.3</span></a>, and the summaries are often the input data of the simulation models of <a href="12-Chapter12.html#sec-simdb-inputs" class="quarto-xref"><span>Section 12.1</span></a>.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appnosql.html#families" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-appnosql-tradeoffs" class="level2" data-number="H.3">
@@ -688,6 +691,7 @@ Table&nbsp;H.1: The Four Families of NoSQL Databases
 <section id="questions-nobody-planned-for" class="level3" data-number="H.3.4">
 <h3 data-number="H.3.4" class="anchored" data-anchor-id="questions-nobody-planned-for"><span class="header-section-number">H.3.4</span> Questions nobody planned for</h3>
 <p>A relational database answers any question its data can answer: a new question is a new query, joining whatever tables it needs. NoSQL databases are designed the other way round, around the questions known in advance. A key-value store finds a record only by its key, a wide-column store by its key and range, and a document database most easily by the fields of one collection; combining collections is often left to the program. Thus, the designer of a NoSQL database starts from the questions and shapes the records to answer them, while the designer of a relational database starts from the business, as <a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a> does, and lets the questions come later. For the data of an industrial engineer, whose next question is rarely the last one, that difference usually decides the matter.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appnosql.html#tradeoffs" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-appnosql-jsonb" class="level2" data-number="H.4">
@@ -1186,6 +1190,7 @@ Steel garden cart
 </div>
 <p><a href="#tbl-appnosql-rename" class="quarto-xref">Table&nbsp;<span>H.7</span></a> shows the product renamed and all eight copies still carrying the old name. Each copy must be found and changed by a program, and the database cannot tell the program where they are. Thus, a document should copy only what must not change once it is written. A line’s unit price is such a fact: it records the price the customer was charged, which a later change of list price must not alter. A product’s description is not.</p>
 <p>PostgreSQL’s documents are most useful beside tables, not instead of them. A table of test results, for example, can keep the columns every test has (the lot, the date, the inspector, the result) as ordinary columns with keys and constraints, and hold the measurements that differ from product to product in one <code>JSONB</code> column. The rules that matter are kept by the database, and the part of the record that varies is free to vary.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appnosql.html#jsonb" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-appnosql-choosing" class="level2" data-number="H.5">
 <h2 data-number="H.5" class="anchored" data-anchor-id="sec-appnosql-choosing"><span class="header-section-number">H.5</span> Choosing</h2>
@@ -1197,6 +1202,7 @@ Steel garden cart
 <li><strong>Networks whose questions are about paths</strong>, such as a multi-tier supply network: a graph database, or a recursive query (<a href="04-Chapter4.html#sec-agg-recursive" class="quarto-xref"><span>Section 4.6</span></a>) while the network is small.</li>
 </ul>
 <p>A system that uses several kinds of database, each for the data it suits, is said to practice <strong>polyglot persistence</strong> <span class="citation" data-cites="sadalage2012nosql">(<a href="references.html#ref-sadalage2012nosql" role="doc-biblioref">Sadalage and Fowler 2012</a>)</span>. A plant’s information systems usually do: a historian on the floor, a relational database for orders and production, and a warehouse for analysis (<a href="11-Chapter11.html" class="quarto-xref"><span>Chapter 11</span></a>). The skills of this book carry over to all of them, because each still has to answer the two questions of <a href="02-Chapter2.html#sec-rm-other-models" class="quarto-xref"><span>Section 2.7</span></a>, and a designer who can answer them for a relational database can see how another database answers them.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/appnosql.html#choosing" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-appnosql-exercises" class="level2" data-number="H.6">
 <h2 data-number="H.6" class="anchored" data-anchor-id="sec-appnosql-exercises"><span class="header-section-number">H.6</span> Exercises</h2>

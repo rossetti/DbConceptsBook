@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/index.html</loc>
-    <lastmod>2026-10-23T21:09:40.437Z</lastmod>
+    <lastmod>2026-11-20T14:56:08.846Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/00-author.html</loc>
@@ -10,51 +10,51 @@
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/01-Chapter1.html</loc>
-    <lastmod>2026-10-14T21:54:39.927Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.537Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/02-Chapter2.html</loc>
-    <lastmod>2026-10-31T14:51:09.059Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.538Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/03-Chapter3.html</loc>
-    <lastmod>2026-10-31T14:51:09.060Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.539Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/04-Chapter4.html</loc>
-    <lastmod>2026-10-31T14:51:09.060Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.540Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/05-Chapter5.html</loc>
-    <lastmod>2026-10-31T14:51:09.061Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.541Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/06-Chapter6.html</loc>
-    <lastmod>2026-10-31T14:51:09.062Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.542Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/07-Chapter7.html</loc>
-    <lastmod>2026-10-31T14:51:09.062Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.543Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/08-Chapter8.html</loc>
-    <lastmod>2026-10-31T14:51:09.063Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.544Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/09-Chapter9.html</loc>
-    <lastmod>2026-11-13T20:16:07.488Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.545Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/10-Chapter10.html</loc>
-    <lastmod>2026-11-13T20:16:07.489Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.546Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/11-Chapter11.html</loc>
-    <lastmod>2026-10-31T14:51:09.065Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.547Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/12-Chapter12.html</loc>
-    <lastmod>2026-10-31T14:51:09.066Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.548Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/13-AppPostgreSQLSetup.html</loc>
@@ -78,15 +78,15 @@
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/18-AppSQLReference.html</loc>
-    <lastmod>2026-10-16T18:02:22.296Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.548Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/19-AppEmbeddedDatabases.html</loc>
-    <lastmod>2026-10-30T14:16:24.985Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.549Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/20-AppNoSQL.html</loc>
-    <lastmod>2026-10-30T14:16:24.985Z</lastmod>
+    <lastmod>2026-11-20T14:28:03.550Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/21-AppAssistants.html</loc>
@@ -98,6 +98,6 @@
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/dbconcepts-book.pdf</loc>
-    <lastmod>2026-11-13T20:22:07.918Z</lastmod>
+    <lastmod>2026-11-20T15:08:48.828Z</lastmod>
   </url>
 </urlset>

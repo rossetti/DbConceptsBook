@@ -104,6 +104,7 @@ div.csl-indent {
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/book-interactive-self-check-link-0.1.0/self-check.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -326,6 +327,7 @@ div.csl-indent {
         <div class="sidebar-tools-main tools-wide">
     <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
     <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
     <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -878,6 +880,7 @@ Table&nbsp;12.2: Expected Utilization of Each Work Center, Computed by Hand
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <!-- end code -->
 <p>Setting <code>resetStartStreamOption</code> makes each experiment start from the same random numbers, so that replication 7 of one scenario sees the same arrivals and the same processing-time variations as replication 7 of the other. This is called <strong>common random numbers</strong>, and it makes the comparison of <a href="#sec-simdb-analysis" class="quarto-xref"><span>Section 12.3</span></a> sharper, since the scenarios then differ only in what differs between them. The <code>KSLDatabaseObserver</code> attached to each model writes its results to the database as the replications finish. The next section reads them.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch12.html#inputs" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-simdb-outputs" class="level2" data-number="12.2">
 <h2 data-number="12.2" class="anchored" data-anchor-id="sec-simdb-outputs"><span class="header-section-number">12.2</span> Simulation output databases</h2>
@@ -1472,6 +1475,7 @@ WLD:R:Util
 </figure>
 </div>
 <p>The simulated utilizations of <a href="#tbl-simdb-sim-utilization" class="quarto-xref">Table&nbsp;<span>12.6</span></a> agree with the hand calculation of <a href="#tbl-simdb-hand-utilization" class="quarto-xref">Table&nbsp;<span>12.2</span></a>: 0.693 against 0.685 at the saw, 0.802 and 0.539 against 0.801 and 0.534 at welding, 0.848 against 0.853 at paint. The small differences are the random variation of 30 replications. The model is doing what its inputs say, and its waiting times, which the hand calculation could not give, can now be trusted. The next section analyzes them.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch12.html#outputs" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 <section id="sec-simdb-analysis" class="level2" data-number="12.3">
 <h2 data-number="12.3" class="anchored" data-anchor-id="sec-simdb-analysis"><span class="header-section-number">12.3</span> Analyzing experiments with SQL</h2>
@@ -2117,6 +2121,7 @@ WorkInProcess
 </div>
 <p>The saw’s row of <a href="#tbl-simdb-paired-all" class="quarto-xref">Table&nbsp;<span>12.13</span></a> is a check of the experiment itself. The saw comes before welding, so a third welder cannot change a lot’s wait at the saw, and with common random numbers the waits are the same in every replication: the difference is 0.000 with a half-width of 0.000. A nonzero difference there would mean the scenarios did not share their random numbers. The welding queue loses about 265 minutes and the paint queue gains about 247, and the time in shop and the work in process are nearly unchanged.</p>
 <p>The KSL can also make these comparisons itself, with its <code>MultipleComparisonAnalyzer</code> class, which computes the pairwise differences of any number of scenarios <span class="citation" data-cites="rossetti2025ksl">(<a href="references.html#ref-rossetti2025ksl" role="doc-biblioref">Rossetti 2025</a>)</span>. The SQL is worth knowing because the results are in the database long after the program that produced them, and because a question the KSL’s reports do not answer is one query away. The next section turns to databases that analysts design for their own experiments.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch12.html#analysis" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-simdb-project" class="level2" data-number="12.4">
@@ -2773,6 +2778,7 @@ PRIMARY KEY(runId)
 <!-- end output -->
 <p>Read the statement against the class. Each property became a column, with its Kotlin type mapped to an SQL type and <code>NOT NULL</code> wherever the type does not allow <code>null</code>; <code>gap</code>, a <code>Double?</code>, may be NULL. The key fields became the primary key. Nothing else did: no foreign keys, no <code>UNIQUE</code> or <code>CHECK</code> constraints, and the column names are the properties’ camel case, which PostgreSQL folds to lower case (<code>runId</code> becomes <code>runid</code>). The type <code>DOUBLE</code> is not PostgreSQL’s spelling, which is <code>DOUBLE PRECISION</code>; the KSL builds these quick databases as SQLite or Derby files (<code>Database.createSimpleDb</code>), which accept it, and PostgreSQL refuses the statement as it stands.</p>
 <p>Quick tables suit a study that one program writes and one analyst reads, where the tables are few and the rules live in the program that fills them. A designed schema is worth its time when the database will outlive the program, be shared, or be joined to other data, since then the rules must live in the database, where every program that writes it must obey them. The mini-projects of <a href="#sec-simdatabases-exercises" class="quarto-xref"><span>Section 12.6</span></a> ask you to design both kinds and to compare them.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch12.html#project" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check</a></p>
 </section>
 </section>
 <section id="sec-simdatabases-summary" class="level2" data-number="12.5">
@@ -2783,6 +2789,7 @@ PRIMARY KEY(runId)
 <p><strong>A difference can be statistically significant without being practically significant.</strong> The third welder shortens the mean time in shop by an amount the pairs can distinguish from zero, about 7 minutes in 33.6 hours, because the queue moves from welding to paint. The decision turns on the size of the difference, not on its significance.</p>
 <p><strong>The same results can be stored long or wide.</strong> A wide table has a row per observation and a column per variable; a long table has a row per observation and variable. <code>GROUP BY</code> with <code>FILTER</code> turns long into wide, and <code>UNION ALL</code> turns wide into long. Long accepts new variables and summarizes them all at once; wide gives each variable its type and puts a calculation across variables in one row. Which is which depends on the question, and a column per replication is the repeating group that first normal form forbids.</p>
 <p><strong>A database for experimental work has a common shape.</strong> Methods are run on test cases, replicated, within a study, and each run records its results. Its design records what produced each result, chooses between long and wide results, derives summaries rather than storing them, keys the grid, and links to data it does not own by alternate keys. The KSL’s quick tables from data classes suit a study one program writes; a designed schema suits a database that is shared, joined, or kept.</p>
+<p class="bisc-link"><a class="btn btn-sm bisc-link-button" href="interactive/ch12.html#review" target="_blank" rel="noopener"><i class="bi bi-patch-question" aria-hidden="true"></i> Self-check for the whole chapter</a></p>
 </section>
 <section id="sec-simdatabases-exercises" class="level2" data-number="12.6">
 <h2 data-number="12.6" class="anchored" data-anchor-id="sec-simdatabases-exercises"><span class="header-section-number">12.6</span> Exercises</h2>
