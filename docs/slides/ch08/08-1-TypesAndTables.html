@@ -1139,74 +1139,42 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb2-5"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> data_type</span>
 <span id="cb2-6"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">columns</span> <span class="kw">DESC</span>, data_type;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-data_type
-</th>
-<th style="text-align:right;">
-columns
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> data_type </th>
+   <th style="text-align:right;"> columns </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-integer
-</td>
-<td style="text-align:right;">
-73
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-character varying
-</td>
-<td style="text-align:right;">
-36
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:right;">
-16
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-character
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-boolean
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-timestamp without time zone
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> integer </td>
+   <td style="text-align:right;"> 73 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> character varying </td>
+   <td style="text-align:right;"> 36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> numeric </td>
+   <td style="text-align:right;"> 16 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> date </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> character </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> boolean </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> timestamp without time zone </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1229,38 +1197,22 @@ timestamp without time zone
 <span id="cb3-3"><a href></a>       <span class="fl">0.1</span>:<span class="ch">:DOUBLE</span> <span class="dt">PRECISION</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">=</span> <span class="fl">0.3</span> <span class="kw">AS</span> double_equal,</span>
 <span id="cb3-4"><a href></a>       <span class="fl">0.1</span>:<span class="ch">:NUMERIC</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">=</span> <span class="fl">0.3</span> <span class="kw">AS</span> numeric_equal;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-double_sum
-</th>
-<th style="text-align:right;">
-numeric_sum
-</th>
-<th style="text-align:left;">
-double_equal
-</th>
-<th style="text-align:left;">
-numeric_equal
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> double_sum </th>
+   <th style="text-align:right;"> numeric_sum </th>
+   <th style="text-align:left;"> double_equal </th>
+   <th style="text-align:left;"> numeric_equal </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-0.30000000000000004
-</td>
-<td style="text-align:right;">
-0.3
-</td>
-<td style="text-align:left;">
-false
-</td>
-<td style="text-align:left;">
-true
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 0.30000000000000004 </td>
+   <td style="text-align:right;"> 0.3 </td>
+   <td style="text-align:left;"> false </td>
+   <td style="text-align:left;"> true </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1276,26 +1228,18 @@ true
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href></a><span class="kw">SELECT</span> <span class="fl">32.38</span>:<span class="ch">:REAL</span> <span class="kw">AS</span> real_value,</span>
 <span id="cb4-2"><a href></a>       <span class="fl">32.38</span>:<span class="ch">:REAL</span>:<span class="ch">:DOUBLE</span> <span class="dt">PRECISION</span> <span class="kw">AS</span> stored_value;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-real_value
-</th>
-<th style="text-align:right;">
-stored_value
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> real_value </th>
+   <th style="text-align:right;"> stored_value </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-32.38
-</td>
-<td style="text-align:right;">
-32.380001068115234
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 32.38 </td>
+   <td style="text-align:right;"> 32.380001068115234 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1323,26 +1267,18 @@ stored_value
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href></a><span class="kw">SELECT</span> <span class="st">&#39;07201&#39;</span>:<span class="ch">:INTEGER</span> <span class="kw">AS</span> as_integer,</span>
 <span id="cb5-2"><a href></a>       <span class="st">&#39;07201&#39;</span>:<span class="ch">:VARCHAR</span>(<span class="dv">5</span>) <span class="kw">AS</span> as_text;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-as_integer
-</th>
-<th style="text-align:left;">
-as_text
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> as_integer </th>
+   <th style="text-align:left;"> as_text </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-7201
-</td>
-<td style="text-align:left;">
-07201
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 7201 </td>
+   <td style="text-align:left;"> 07201 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1530,74 +1466,42 @@ as_text
 <span id="cb9-5"><a href></a>  <span class="kw">AND</span> constraint_name <span class="kw">NOT</span> <span class="kw">LIKE</span> <span class="st">&#39;%not_null&#39;</span></span>
 <span id="cb9-6"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> constraint_type, constraint_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-constraint_name
-</th>
-<th style="text-align:left;">
-constraint_type
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> constraint_name </th>
+   <th style="text-align:left;"> constraint_type </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-order_line_line_number_check
-</td>
-<td style="text-align:left;">
-CHECK
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line_quantity_check
-</td>
-<td style="text-align:left;">
-CHECK
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line_unit_price_check
-</td>
-<td style="text-align:left;">
-CHECK
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line_customer_order_fk_fkey
-</td>
-<td style="text-align:left;">
-FOREIGN KEY
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line_product_fk_fkey
-</td>
-<td style="text-align:left;">
-FOREIGN KEY
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line_pkey
-</td>
-<td style="text-align:left;">
-PRIMARY KEY
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line_customer_order_fk_line_number_key
-</td>
-<td style="text-align:left;">
-UNIQUE
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> order_line_line_number_check </td>
+   <td style="text-align:left;"> CHECK </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line_quantity_check </td>
+   <td style="text-align:left;"> CHECK </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line_unit_price_check </td>
+   <td style="text-align:left;"> CHECK </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line_customer_order_fk_fkey </td>
+   <td style="text-align:left;"> FOREIGN KEY </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line_product_fk_fkey </td>
+   <td style="text-align:left;"> FOREIGN KEY </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line_pkey </td>
+   <td style="text-align:left;"> PRIMARY KEY </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line_customer_order_fk_line_number_key </td>
+   <td style="text-align:left;"> UNIQUE </td>
+  </tr>
 </tbody>
 </table>
 </div>

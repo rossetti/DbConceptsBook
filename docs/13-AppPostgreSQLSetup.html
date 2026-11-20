@@ -502,6 +502,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./22-AppSpatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -561,7 +567,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 echo /Applications/Postgres.app/Contents/Versions/latest/bin |
 sudo tee /etc/paths.d/postgresapp</code></pre>
 <p>Homebrew (<code>brew install postgresql@18</code>) and the EDB installer below also work on macOS.</p></li>
-<li><p><strong>Windows.</strong> Download the interactive installer by EDB from the Windows page of <code>postgresql.org/download</code>. Keep the default components (the server, pgAdmin 4, and the command-line tools); Stack Builder is not needed. The installer asks for a password for the superuser, named <code>postgres</code>: choose one you will remember, since every tool asks for it. Keep the default port,</p>
+<li><p><strong>Windows.</strong> Download the interactive installer by EDB from the Windows page of <code>postgresql.org/download</code>. Keep the default components (the server, pgAdmin 4, and the command-line tools); Stack Builder is not needed, except for PostGIS (<a href="22-AppSpatial.html#sec-appspatial-install" class="quarto-xref"><span>Section J.2</span></a>). The installer asks for a password for the superuser, named <code>postgres</code>: choose one you will remember, since every tool asks for it. Keep the default port,</p>
 <ol start="5432" type="1">
 <li>The server then starts with Windows. The installer does not put the command-line tools on your path: search the Start menu for <em>Edit environment variables for your account</em>, select <code>Path</code>, choose <em>Edit</em>, then <em>New</em>, enter the folder <code>C:\Program Files\PostgreSQL\18\bin</code>, choose <em>OK</em> in both windows, and open a new terminal. A terminal inside an application that was already open, such as IntelliJ IDEA’s, keeps the old path until the application restarts. The Start menu’s <em>SQL Shell (psql)</em> also opens psql, and asks for each connection setting in turn, showing its default in brackets; press Enter to accept it.</li>
 </ol></li>

@@ -1186,65 +1186,35 @@ Manuel D. Rossetti, PhD P.E.
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href></a><span class="kw">SELECT</span> product_number, description, list_price</span>
 <span id="cb2-2"><a href></a><span class="kw">FROM</span> distribution.product;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-<th style="text-align:right;">
-list_price
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:left;"> description </th>
+   <th style="text-align:right;"> list_price </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:left;">
-Convertible hand truck
-</td>
-<td style="text-align:right;">
-139.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:left;">
-Poly garden cart
-</td>
-<td style="text-align:right;">
-149.00
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 89.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:left;"> Convertible hand truck </td>
+   <td style="text-align:right;"> 139.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 119.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:left;"> Poly garden cart </td>
+   <td style="text-align:right;"> 149.00 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1276,70 +1246,46 @@ Poly garden cart
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href></a><span class="kw">SELECT</span> carrier</span>
 <span id="cb3-2"><a href></a><span class="kw">FROM</span> distribution.shipment;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-carrier
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> carrier </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Boston Mountain Freight
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tri-State Logistics
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Customer pickup
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Boston Mountain Freight
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Boston Mountain Freight
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tri-State Logistics
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tri-State Logistics
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tri-State Logistics
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Customer pickup
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Boston Mountain Freight
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Boston Mountain Freight
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> Boston Mountain Freight </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Tri-State Logistics </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Customer pickup </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Boston Mountain Freight </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Boston Mountain Freight </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Tri-State Logistics </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Tri-State Logistics </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Tri-State Logistics </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Customer pickup </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Boston Mountain Freight </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Boston Mountain Freight </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1351,30 +1297,22 @@ Boston Mountain Freight
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> carrier</span>
 <span id="cb4-2"><a href></a><span class="kw">FROM</span> distribution.shipment;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-carrier
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> carrier </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Customer pickup
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tri-State Logistics
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Boston Mountain Freight
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> Customer pickup </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Tri-State Logistics </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Boston Mountain Freight </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1487,43 +1425,25 @@ Boston Mountain Freight
 <span id="cb5-2"><a href></a><span class="kw">FROM</span> distribution.product</span>
 <span id="cb5-3"><a href></a><span class="kw">WHERE</span> list_price <span class="op">&lt;</span> <span class="dv">125</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-<th style="text-align:right;">
-list_price
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:left;"> description </th>
+   <th style="text-align:right;"> list_price </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 89.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 119.00 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1669,52 +1589,28 @@ Steel garden cart
 <span id="cb6-3"><a href></a><span class="kw">FROM</span> distribution.stock_level</span>
 <span id="cb6-4"><a href></a><span class="kw">WHERE</span> quantity_on_hand <span class="op">&lt;=</span> reorder_point;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-warehouse_fk
-</th>
-<th style="text-align:right;">
-product_fk
-</th>
-<th style="text-align:right;">
-quantity_on_hand
-</th>
-<th style="text-align:right;">
-reorder_point
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> warehouse_fk </th>
+   <th style="text-align:right;"> product_fk </th>
+   <th style="text-align:right;"> quantity_on_hand </th>
+   <th style="text-align:right;"> reorder_point </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:right;">
-25
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1747,66 +1643,34 @@ reorder_point
 <span id="cb7-4"><a href></a><span class="kw">WHERE</span> warehouse_fk <span class="op">=</span> <span class="dv">2</span> <span class="kw">AND</span> quantity_on_hand <span class="op">&lt;=</span> reorder_point</span>
 <span id="cb7-5"><a href></a>   <span class="kw">OR</span> quantity_on_hand <span class="op">&lt;</span> <span class="dv">20</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-warehouse_fk
-</th>
-<th style="text-align:right;">
-product_fk
-</th>
-<th style="text-align:right;">
-quantity_on_hand
-</th>
-<th style="text-align:right;">
-reorder_point
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> warehouse_fk </th>
+   <th style="text-align:right;"> product_fk </th>
+   <th style="text-align:right;"> quantity_on_hand </th>
+   <th style="text-align:right;"> reorder_point </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:right;">
-25
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1823,52 +1687,28 @@ reorder_point
 <span id="cb8-5"><a href></a>  <span class="kw">AND</span> (quantity_on_hand <span class="op">&lt;=</span> reorder_point</span>
 <span id="cb8-6"><a href></a>       <span class="kw">OR</span> quantity_on_hand <span class="op">&lt;</span> <span class="dv">20</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-warehouse_fk
-</th>
-<th style="text-align:right;">
-product_fk
-</th>
-<th style="text-align:right;">
-quantity_on_hand
-</th>
-<th style="text-align:right;">
-reorder_point
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> warehouse_fk </th>
+   <th style="text-align:right;"> product_fk </th>
+   <th style="text-align:right;"> quantity_on_hand </th>
+   <th style="text-align:right;"> reorder_point </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1891,65 +1731,35 @@ reorder_point
 <span id="cb9-3"><a href></a><span class="kw">WHERE</span> order_date <span class="kw">BETWEEN</span> <span class="dt">DATE</span> <span class="st">&#39;2026-02-01&#39;</span></span>
 <span id="cb9-4"><a href></a>                     <span class="kw">AND</span> <span class="dt">DATE</span> <span class="st">&#39;2026-02-28&#39;</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-order_date
-</th>
-<th style="text-align:left;">
-requested_ship_date
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> order_date </th>
+   <th style="text-align:left;"> requested_ship_date </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5007
-</td>
-<td style="text-align:left;">
-2026-02-03
-</td>
-<td style="text-align:left;">
-2026-02-10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5008
-</td>
-<td style="text-align:left;">
-2026-02-11
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5009
-</td>
-<td style="text-align:left;">
-2026-02-18
-</td>
-<td style="text-align:left;">
-2026-02-25
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5010
-</td>
-<td style="text-align:left;">
-2026-02-24
-</td>
-<td style="text-align:left;">
-2026-03-03
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5007 </td>
+   <td style="text-align:left;"> 2026-02-03 </td>
+   <td style="text-align:left;"> 2026-02-10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5008 </td>
+   <td style="text-align:left;"> 2026-02-11 </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5009 </td>
+   <td style="text-align:left;"> 2026-02-18 </td>
+   <td style="text-align:left;"> 2026-02-25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5010 </td>
+   <td style="text-align:left;"> 2026-02-24 </td>
+   <td style="text-align:left;"> 2026-03-03 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1976,34 +1786,22 @@ SO-5010
 <span id="cb10-2"><a href></a><span class="kw">FROM</span> production.part</span>
 <span id="cb10-3"><a href></a><span class="kw">WHERE</span> description <span class="kw">LIKE</span> <span class="st">&#39;%cart%&#39;</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-part_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> part_number </th>
+   <th style="text-align:left;"> description </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:left;">
-Poly garden cart
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:left;"> Poly garden cart </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2017,42 +1815,26 @@ Poly garden cart
 <span id="cb11-2"><a href></a><span class="kw">FROM</span> production.part</span>
 <span id="cb11-3"><a href></a><span class="kw">WHERE</span> <span class="fu">LOWER</span>(description) <span class="kw">LIKE</span> <span class="st">&#39;%cart%&#39;</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-part_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> part_number </th>
+   <th style="text-align:left;"> description </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:left;">
-Poly garden cart
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CF-310
-</td>
-<td style="text-align:left;">
-Cart frame
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:left;"> Poly garden cart </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CF-310 </td>
+   <td style="text-align:left;"> Cart frame </td>
+  </tr>
 </tbody>
 </table>
 </div>

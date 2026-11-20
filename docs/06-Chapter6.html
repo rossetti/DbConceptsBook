@@ -522,6 +522,12 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./22-AppSpatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -938,7 +944,7 @@ operator (operator_pk, employee_number, name, hire_date,
 </figure>
 </div>
 <p><em>The result.</em> With the tables of <a href="#lst-map-locker-natural" class="quarto-xref">Listing&nbsp;<span>6.6</span></a>, the everyday question reads one table:</p>
-<div id="tbl-map-locker" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="map-locker-setup">
+<div id="tbl-map-locker" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="map-locker-setup" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-locker-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.3: Each Operator with a Locker, from One Table (Hypothetical Lockers)
@@ -1042,7 +1048,7 @@ L-103
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> production.locker (locker_number, location)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="st">'L-107'</span>, <span class="st">'Locker room, row 2'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tbl-map-locker-spare" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="[&quot;map-locker-setup&quot;,&quot;map-locker-spare&quot;]">
+<div id="tbl-map-locker-spare" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="[&quot;map-locker-setup&quot;,&quot;map-locker-spare&quot;]" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-locker-spare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.4: A Locker That No Operator Uses (Hypothetical Lockers)
@@ -1182,7 +1188,7 @@ Listing&nbsp;6.8: The Operator Table with Each Operator’s Lead (Hypothetical)
 </figure>
 </div>
 <p><em>The result.</em> With the column of <a href="#lst-map-recursive-lead" class="quarto-xref">Listing&nbsp;<span>6.8</span></a> added, each operator’s row holds the key of its lead:</p>
-<div id="tbl-map-lead-rows" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="map-lead-setup">
+<div id="tbl-map-lead-rows" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="map-lead-setup" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-lead-rows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.5: Each Operator’s Row with Its Lead’s Key (Hypothetical Leads)
@@ -1301,7 +1307,7 @@ Tom Becker
 </figure>
 </div>
 <p>A key means nothing to a reader, so a query that shows each operator beside the lead joins <code>operator</code> to itself, a self-join (<a href="03-Chapter3.html#sec-q-inner-joins" class="quarto-xref"><span>Section 3.6</span></a>), once as the crew member and once as the lead. A left join (<a href="03-Chapter3.html#sec-q-outer-joins" class="quarto-xref"><span>Section 3.7</span></a>) keeps the operator who has no lead:</p>
-<div id="tbl-map-lead-names" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="p3" data-changes="map-lead-setup">
+<div id="tbl-map-lead-names" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-changes="map-lead-setup" data-stage="p3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-map-lead-names-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.6: Each Operator and the Operator’s Lead (Hypothetical Leads)

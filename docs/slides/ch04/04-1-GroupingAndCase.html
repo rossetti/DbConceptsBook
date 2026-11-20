@@ -1135,44 +1135,24 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb2-5"><a href></a>       <span class="fu">AVG</span>(unit_price) <span class="kw">AS</span> average_price</span>
 <span id="cb2-6"><a href></a><span class="kw">FROM</span> distribution.order_line;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-lines
-</th>
-<th style="text-align:right;">
-units
-</th>
-<th style="text-align:right;">
-lowest_price
-</th>
-<th style="text-align:right;">
-highest_price
-</th>
-<th style="text-align:right;">
-average_price
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> lines </th>
+   <th style="text-align:right;"> units </th>
+   <th style="text-align:right;"> lowest_price </th>
+   <th style="text-align:right;"> highest_price </th>
+   <th style="text-align:right;"> average_price </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-22
-</td>
-<td style="text-align:right;">
-215
-</td>
-<td style="text-align:right;">
-79.00
-</td>
-<td style="text-align:right;">
-139.00
-</td>
-<td style="text-align:right;">
-111.1818181818181818
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 22 </td>
+   <td style="text-align:right;"> 215 </td>
+   <td style="text-align:right;"> 79.00 </td>
+   <td style="text-align:right;"> 139.00 </td>
+   <td style="text-align:right;"> 111.1818181818181818 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1190,26 +1170,18 @@ average_price
 <span id="cb3-2"><a href></a>       <span class="fu">COUNT</span>(requested_ship_date) <span class="kw">AS</span> with_requested_date</span>
 <span id="cb3-3"><a href></a><span class="kw">FROM</span> distribution.customer_order;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-orders
-</th>
-<th style="text-align:right;">
-with_requested_date
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> orders </th>
+   <th style="text-align:right;"> with_requested_date </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1244,120 +1216,60 @@ with_requested_date
 <span id="cb4-3"><a href></a><span class="kw">WHERE</span> customer_order_fk <span class="op">&lt;=</span> <span class="dv">4</span></span>
 <span id="cb4-4"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_fk, customer_order_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-customer_order_fk
-</th>
-<th style="text-align:right;">
-product_fk
-</th>
-<th style="text-align:right;">
-quantity
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> customer_order_fk </th>
+   <th style="text-align:right;"> product_fk </th>
+   <th style="text-align:right;"> quantity </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-12
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-20
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 20 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1442,54 +1354,30 @@ quantity
 <span id="cb5-6"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> product_fk</span>
 <span id="cb5-7"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_fk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-product_fk
-</th>
-<th style="text-align:right;">
-lines
-</th>
-<th style="text-align:right;">
-units
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> product_fk </th>
+   <th style="text-align:right;"> lines </th>
+   <th style="text-align:right;"> units </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-52
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-15
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 52 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 15 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1533,65 +1421,35 @@ units
 <span id="cb8-11"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> p.product_number</span>
 <span id="cb8-12"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> p.product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:right;">
-lines
-</th>
-<th style="text-align:right;">
-units
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:right;"> lines </th>
+   <th style="text-align:right;"> units </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-317
-</td>
-<td style="text-align:right;">
-4030
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:right;">
-132
-</td>
-<td style="text-align:right;">
-1639
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-295
-</td>
-<td style="text-align:right;">
-3584
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-299
-</td>
-<td style="text-align:right;">
-3636
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 317 </td>
+   <td style="text-align:right;"> 4030 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:right;"> 132 </td>
+   <td style="text-align:right;"> 1639 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 295 </td>
+   <td style="text-align:right;"> 3584 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 299 </td>
+   <td style="text-align:right;"> 3636 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1631,76 +1489,40 @@ HT-200
 <span id="cb9-9"><a href></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="op">&gt;</span> <span class="dv">40</span></span>
 <span id="cb9-10"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> orders <span class="kw">DESC</span>, c.customer_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-customer_number
-</th>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:right;">
-orders
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> orders </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-C-1014
-</td>
-<td style="text-align:left;">
-Green Country Hardware
-</td>
-<td style="text-align:right;">
-45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1023
-</td>
-<td style="text-align:left;">
-Sunflower Hardware
-</td>
-<td style="text-align:right;">
-45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1003
-</td>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:right;">
-44
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1006
-</td>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-<td style="text-align:right;">
-43
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-42
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> C-1014 </td>
+   <td style="text-align:left;"> Green Country Hardware </td>
+   <td style="text-align:right;"> 45 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1023 </td>
+   <td style="text-align:left;"> Sunflower Hardware </td>
+   <td style="text-align:right;"> 45 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1003 </td>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:right;"> 44 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1006 </td>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+   <td style="text-align:right;"> 43 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 42 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1734,26 +1556,18 @@ Riverside Hardware
 <span id="cb10-10"><a href></a>                   <span class="kw">FROM</span> production.machine</span>
 <span id="cb10-11"><a href></a>                   <span class="kw">WHERE</span> work_center_fk <span class="op">=</span> <span class="dv">2</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-employee_number
-</th>
-<th style="text-align:left;">
-name
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> employee_number </th>
+   <th style="text-align:left;"> name </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-E-202
-</td>
-<td style="text-align:left;">
-James Carter
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> E-202 </td>
+   <td style="text-align:left;"> James Carter </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1785,32 +1599,20 @@ James Carter
 <span id="cb11-12"><a href></a><span class="kw">FROM</span> monthly</span>
 <span id="cb11-13"><a href></a><span class="kw">WHERE</span> orders <span class="op">=</span> (<span class="kw">SELECT</span> <span class="fu">MAX</span>(orders) <span class="kw">FROM</span> monthly);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-year
-</th>
-<th style="text-align:right;">
-month
-</th>
-<th style="text-align:right;">
-orders
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> year </th>
+   <th style="text-align:right;"> month </th>
+   <th style="text-align:right;"> orders </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-2027
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-65
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 2027 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 65 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1845,164 +1647,76 @@ orders
 <h2>Work orders classified by completion: the result</h2>
 <div class="cell" data-stage="p3" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-work_order_number
-</th>
-<th style="text-align:left;">
-due_on
-</th>
-<th style="text-align:left;">
-completed_on
-</th>
-<th style="text-align:left;">
-status
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> work_order_number </th>
+   <th style="text-align:left;"> due_on </th>
+   <th style="text-align:left;"> completed_on </th>
+   <th style="text-align:left;"> status </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-WO-7001
-</td>
-<td style="text-align:left;">
-2026-01-16
-</td>
-<td style="text-align:left;">
-2026-01-15
-</td>
-<td style="text-align:left;">
-early
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7002
-</td>
-<td style="text-align:left;">
-2026-01-13
-</td>
-<td style="text-align:left;">
-2026-01-12
-</td>
-<td style="text-align:left;">
-early
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7003
-</td>
-<td style="text-align:left;">
-2026-01-30
-</td>
-<td style="text-align:left;">
-2026-02-02
-</td>
-<td style="text-align:left;">
-late
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7004
-</td>
-<td style="text-align:left;">
-2026-02-06
-</td>
-<td style="text-align:left;">
-2026-02-05
-</td>
-<td style="text-align:left;">
-early
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7005
-</td>
-<td style="text-align:left;">
-2026-02-09
-</td>
-<td style="text-align:left;">
-2026-02-09
-</td>
-<td style="text-align:left;">
-on time
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7006
-</td>
-<td style="text-align:left;">
-2026-02-20
-</td>
-<td style="text-align:left;">
-2026-02-24
-</td>
-<td style="text-align:left;">
-late
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7007
-</td>
-<td style="text-align:left;">
-2026-02-27
-</td>
-<td style="text-align:left;">
-2026-02-26
-</td>
-<td style="text-align:left;">
-early
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7008
-</td>
-<td style="text-align:left;">
-2026-03-13
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-open
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7009
-</td>
-<td style="text-align:left;">
-2026-03-16
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-open
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7010
-</td>
-<td style="text-align:left;">
-2026-03-27
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-open
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> WO-7001 </td>
+   <td style="text-align:left;"> 2026-01-16 </td>
+   <td style="text-align:left;"> 2026-01-15 </td>
+   <td style="text-align:left;"> early </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7002 </td>
+   <td style="text-align:left;"> 2026-01-13 </td>
+   <td style="text-align:left;"> 2026-01-12 </td>
+   <td style="text-align:left;"> early </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7003 </td>
+   <td style="text-align:left;"> 2026-01-30 </td>
+   <td style="text-align:left;"> 2026-02-02 </td>
+   <td style="text-align:left;"> late </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7004 </td>
+   <td style="text-align:left;"> 2026-02-06 </td>
+   <td style="text-align:left;"> 2026-02-05 </td>
+   <td style="text-align:left;"> early </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7005 </td>
+   <td style="text-align:left;"> 2026-02-09 </td>
+   <td style="text-align:left;"> 2026-02-09 </td>
+   <td style="text-align:left;"> on time </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7006 </td>
+   <td style="text-align:left;"> 2026-02-20 </td>
+   <td style="text-align:left;"> 2026-02-24 </td>
+   <td style="text-align:left;"> late </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7007 </td>
+   <td style="text-align:left;"> 2026-02-27 </td>
+   <td style="text-align:left;"> 2026-02-26 </td>
+   <td style="text-align:left;"> early </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7008 </td>
+   <td style="text-align:left;"> 2026-03-13 </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> open </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7009 </td>
+   <td style="text-align:left;"> 2026-03-16 </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> open </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7010 </td>
+   <td style="text-align:left;"> 2026-03-27 </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> open </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2030,65 +1744,35 @@ open
 <span id="cb13-7"><a href></a><span class="kw">FROM</span> production.part</span>
 <span id="cb13-8"><a href></a><span class="kw">WHERE</span> part_number <span class="kw">LIKE</span> <span class="st">&#39;T%&#39;</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-part_number
-</th>
-<th style="text-align:left;">
-unit_of_measure
-</th>
-<th style="text-align:left;">
-unit
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> part_number </th>
+   <th style="text-align:left;"> unit_of_measure </th>
+   <th style="text-align:left;"> unit </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-TU-12
-</td>
-<td style="text-align:left;">
-FT
-</td>
-<td style="text-align:left;">
-feet
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TI-10
-</td>
-<td style="text-align:left;">
-EA
-</td>
-<td style="text-align:left;">
-each
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TR-300
-</td>
-<td style="text-align:left;">
-EA
-</td>
-<td style="text-align:left;">
-each
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TR-400
-</td>
-<td style="text-align:left;">
-EA
-</td>
-<td style="text-align:left;">
-each
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> TU-12 </td>
+   <td style="text-align:left;"> FT </td>
+   <td style="text-align:left;"> feet </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TI-10 </td>
+   <td style="text-align:left;"> EA </td>
+   <td style="text-align:left;"> each </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TR-300 </td>
+   <td style="text-align:left;"> EA </td>
+   <td style="text-align:left;"> each </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TR-400 </td>
+   <td style="text-align:left;"> EA </td>
+   <td style="text-align:left;"> each </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2117,178 +1801,82 @@ each
 <h2>Measurements by specification class: the result</h2>
 <div class="cell" data-stage="g" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-characteristic_pk
-</th>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:left;">
-class
-</th>
-<th style="text-align:right;">
-measurements
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> characteristic_pk </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> class </th>
+   <th style="text-align:right;"> measurements </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Diameter
-</td>
-<td style="text-align:left;">
-above
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Diameter
-</td>
-<td style="text-align:left;">
-within
-</td>
-<td style="text-align:right;">
-138
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Length
-</td>
-<td style="text-align:left;">
-below
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Length
-</td>
-<td style="text-align:left;">
-within
-</td>
-<td style="text-align:right;">
-138
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-Weld strength
-</td>
-<td style="text-align:left;">
-below
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-Weld strength
-</td>
-<td style="text-align:left;">
-within
-</td>
-<td style="text-align:right;">
-53
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-below
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-within
-</td>
-<td style="text-align:right;">
-57
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-above
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-below
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-within
-</td>
-<td style="text-align:right;">
-57
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> Diameter </td>
+   <td style="text-align:left;"> above </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> Diameter </td>
+   <td style="text-align:left;"> within </td>
+   <td style="text-align:right;"> 138 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> Length </td>
+   <td style="text-align:left;"> below </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> Length </td>
+   <td style="text-align:left;"> within </td>
+   <td style="text-align:right;"> 138 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> Weld strength </td>
+   <td style="text-align:left;"> below </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> Weld strength </td>
+   <td style="text-align:left;"> within </td>
+   <td style="text-align:right;"> 53 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> below </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> within </td>
+   <td style="text-align:right;"> 57 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> above </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> below </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> within </td>
+   <td style="text-align:right;"> 57 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2321,131 +1909,65 @@ within
 <h2>CASE in ORDER BY: the result</h2>
 <div class="cell" data-stage="p3" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-work_order_number
-</th>
-<th style="text-align:left;">
-due_on
-</th>
-<th style="text-align:left;">
-completed_on
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> work_order_number </th>
+   <th style="text-align:left;"> due_on </th>
+   <th style="text-align:left;"> completed_on </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-WO-7008
-</td>
-<td style="text-align:left;">
-2026-03-13
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7009
-</td>
-<td style="text-align:left;">
-2026-03-16
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7010
-</td>
-<td style="text-align:left;">
-2026-03-27
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7003
-</td>
-<td style="text-align:left;">
-2026-01-30
-</td>
-<td style="text-align:left;">
-2026-02-02
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7006
-</td>
-<td style="text-align:left;">
-2026-02-20
-</td>
-<td style="text-align:left;">
-2026-02-24
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7002
-</td>
-<td style="text-align:left;">
-2026-01-13
-</td>
-<td style="text-align:left;">
-2026-01-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7001
-</td>
-<td style="text-align:left;">
-2026-01-16
-</td>
-<td style="text-align:left;">
-2026-01-15
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7004
-</td>
-<td style="text-align:left;">
-2026-02-06
-</td>
-<td style="text-align:left;">
-2026-02-05
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7005
-</td>
-<td style="text-align:left;">
-2026-02-09
-</td>
-<td style="text-align:left;">
-2026-02-09
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WO-7007
-</td>
-<td style="text-align:left;">
-2026-02-27
-</td>
-<td style="text-align:left;">
-2026-02-26
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> WO-7008 </td>
+   <td style="text-align:left;"> 2026-03-13 </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7009 </td>
+   <td style="text-align:left;"> 2026-03-16 </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7010 </td>
+   <td style="text-align:left;"> 2026-03-27 </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7003 </td>
+   <td style="text-align:left;"> 2026-01-30 </td>
+   <td style="text-align:left;"> 2026-02-02 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7006 </td>
+   <td style="text-align:left;"> 2026-02-20 </td>
+   <td style="text-align:left;"> 2026-02-24 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7002 </td>
+   <td style="text-align:left;"> 2026-01-13 </td>
+   <td style="text-align:left;"> 2026-01-12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7001 </td>
+   <td style="text-align:left;"> 2026-01-16 </td>
+   <td style="text-align:left;"> 2026-01-15 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7004 </td>
+   <td style="text-align:left;"> 2026-02-06 </td>
+   <td style="text-align:left;"> 2026-02-05 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7005 </td>
+   <td style="text-align:left;"> 2026-02-09 </td>
+   <td style="text-align:left;"> 2026-02-09 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WO-7007 </td>
+   <td style="text-align:left;"> 2026-02-27 </td>
+   <td style="text-align:left;"> 2026-02-26 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2488,95 +2010,45 @@ WO-7007
 <h2>Garden cart units ordered by quarter: the result</h2>
 <div class="cell" data-stage="g" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-year
-</th>
-<th style="text-align:right;">
-quarter
-</th>
-<th style="text-align:right;">
-gc_300
-</th>
-<th style="text-align:right;">
-gc_400
-</th>
-<th style="text-align:right;">
-all_carts
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> year </th>
+   <th style="text-align:right;"> quarter </th>
+   <th style="text-align:right;"> gc_300 </th>
+   <th style="text-align:right;"> gc_400 </th>
+   <th style="text-align:right;"> all_carts </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-2026
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1645
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1645
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2026
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-728
-</td>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-928
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2026
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-941
-</td>
-<td style="text-align:right;">
-723
-</td>
-<td style="text-align:right;">
-1664
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2027
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-716
-</td>
-<td style="text-align:right;">
-716
-</td>
-<td style="text-align:right;">
-1432
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 2026 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1645 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1645 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2026 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 728 </td>
+   <td style="text-align:right;"> 200 </td>
+   <td style="text-align:right;"> 928 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2026 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 941 </td>
+   <td style="text-align:right;"> 723 </td>
+   <td style="text-align:right;"> 1664 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2027 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 716 </td>
+   <td style="text-align:right;"> 716 </td>
+   <td style="text-align:right;"> 1432 </td>
+  </tr>
 </tbody>
 </table>
 </div>

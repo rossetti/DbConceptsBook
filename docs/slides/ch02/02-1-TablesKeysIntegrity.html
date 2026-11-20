@@ -1099,163 +1099,73 @@ Manuel D. Rossetti, PhD P.E.
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href></a><span class="kw">SELECT</span> <span class="op">*</span></span>
 <span id="cb1-2"><a href></a><span class="kw">FROM</span> distribution.customer;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-customer_pk
-</th>
-<th style="text-align:left;">
-customer_number
-</th>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:left;">
-city
-</th>
-<th style="text-align:left;">
-state
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> customer_pk </th>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> city </th>
+   <th style="text-align:left;"> state </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:left;">
-Fayetteville
-</td>
-<td style="text-align:left;">
-AR
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-C-1002
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:left;">
-Springdale
-</td>
-<td style="text-align:left;">
-AR
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-C-1003
-</td>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:left;">
-Tulsa
-</td>
-<td style="text-align:left;">
-OK
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-C-1004
-</td>
-<td style="text-align:left;">
-Midtown Tool Supply
-</td>
-<td style="text-align:left;">
-Joplin
-</td>
-<td style="text-align:left;">
-MO
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-C-1005
-</td>
-<td style="text-align:left;">
-Prairie Garden Center
-</td>
-<td style="text-align:left;">
-Fort Smith
-</td>
-<td style="text-align:left;">
-AR
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:left;">
-C-1006
-</td>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-<td style="text-align:left;">
-Springfield
-</td>
-<td style="text-align:left;">
-MO
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:left;">
-C-1007
-</td>
-<td style="text-align:left;">
-Tri-County Farm and Home
-</td>
-<td style="text-align:left;">
-Bentonville
-</td>
-<td style="text-align:left;">
-AR
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:left;">
-C-1008
-</td>
-<td style="text-align:left;">
-Northgate Hardware
-</td>
-<td style="text-align:left;">
-Little Rock
-</td>
-<td style="text-align:left;">
-AR
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:left;"> Fayetteville </td>
+   <td style="text-align:left;"> AR </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> C-1002 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:left;"> Springdale </td>
+   <td style="text-align:left;"> AR </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> C-1003 </td>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:left;"> Tulsa </td>
+   <td style="text-align:left;"> OK </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Midtown Tool Supply </td>
+   <td style="text-align:left;"> Joplin </td>
+   <td style="text-align:left;"> MO </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> C-1005 </td>
+   <td style="text-align:left;"> Prairie Garden Center </td>
+   <td style="text-align:left;"> Fort Smith </td>
+   <td style="text-align:left;"> AR </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> C-1006 </td>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+   <td style="text-align:left;"> Springfield </td>
+   <td style="text-align:left;"> MO </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:left;"> C-1007 </td>
+   <td style="text-align:left;"> Tri-County Farm and Home </td>
+   <td style="text-align:left;"> Bentonville </td>
+   <td style="text-align:left;"> AR </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> C-1008 </td>
+   <td style="text-align:left;"> Northgate Hardware </td>
+   <td style="text-align:left;"> Little Rock </td>
+   <td style="text-align:left;"> AR </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1562,231 +1472,101 @@ AR
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href></a><span class="kw">SELECT</span> <span class="op">*</span></span>
 <span id="cb3-2"><a href></a><span class="kw">FROM</span> distribution.customer_order;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-customer_order_pk
-</th>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-order_date
-</th>
-<th style="text-align:left;">
-requested_ship_date
-</th>
-<th style="text-align:right;">
-customer_fk
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> customer_order_pk </th>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> order_date </th>
+   <th style="text-align:left;"> requested_ship_date </th>
+   <th style="text-align:right;"> customer_fk </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:left;">
-2026-01-05
-</td>
-<td style="text-align:left;">
-2026-01-12
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:left;">
-2026-01-07
-</td>
-<td style="text-align:left;">
-2026-01-14
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:left;">
-2026-01-12
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:left;">
-2026-01-15
-</td>
-<td style="text-align:left;">
-2026-01-22
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:left;">
-SO-5005
-</td>
-<td style="text-align:left;">
-2026-01-21
-</td>
-<td style="text-align:left;">
-2026-02-02
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:left;">
-SO-5006
-</td>
-<td style="text-align:left;">
-2026-01-28
-</td>
-<td style="text-align:left;">
-2026-02-04
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:left;">
-SO-5007
-</td>
-<td style="text-align:left;">
-2026-02-03
-</td>
-<td style="text-align:left;">
-2026-02-10
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:left;">
-SO-5008
-</td>
-<td style="text-align:left;">
-2026-02-11
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:left;">
-SO-5009
-</td>
-<td style="text-align:left;">
-2026-02-18
-</td>
-<td style="text-align:left;">
-2026-02-25
-</td>
-<td style="text-align:right;">
-7
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:left;">
-SO-5010
-</td>
-<td style="text-align:left;">
-2026-02-24
-</td>
-<td style="text-align:left;">
-2026-03-03
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:left;">
-SO-5011
-</td>
-<td style="text-align:left;">
-2026-03-04
-</td>
-<td style="text-align:left;">
-2026-03-11
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:left;">
-SO-5012
-</td>
-<td style="text-align:left;">
-2026-03-10
-</td>
-<td style="text-align:left;">
-2026-03-17
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:left;"> 2026-01-05 </td>
+   <td style="text-align:left;"> 2026-01-12 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:left;"> 2026-01-07 </td>
+   <td style="text-align:left;"> 2026-01-14 </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:left;"> 2026-01-12 </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:left;"> 2026-01-15 </td>
+   <td style="text-align:left;"> 2026-01-22 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> SO-5005 </td>
+   <td style="text-align:left;"> 2026-01-21 </td>
+   <td style="text-align:left;"> 2026-02-02 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> SO-5006 </td>
+   <td style="text-align:left;"> 2026-01-28 </td>
+   <td style="text-align:left;"> 2026-02-04 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:left;"> SO-5007 </td>
+   <td style="text-align:left;"> 2026-02-03 </td>
+   <td style="text-align:left;"> 2026-02-10 </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> SO-5008 </td>
+   <td style="text-align:left;"> 2026-02-11 </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:left;"> SO-5009 </td>
+   <td style="text-align:left;"> 2026-02-18 </td>
+   <td style="text-align:left;"> 2026-02-25 </td>
+   <td style="text-align:right;"> 7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:left;"> SO-5010 </td>
+   <td style="text-align:left;"> 2026-02-24 </td>
+   <td style="text-align:left;"> 2026-03-03 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:left;"> SO-5011 </td>
+   <td style="text-align:left;"> 2026-03-04 </td>
+   <td style="text-align:left;"> 2026-03-11 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:left;"> SO-5012 </td>
+   <td style="text-align:left;"> 2026-03-10 </td>
+   <td style="text-align:left;"> 2026-03-17 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
 </tbody>
 </table>
 </div>

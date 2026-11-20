@@ -1211,109 +1211,55 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb4-4"><a href></a>  <span class="kw">ON</span> m.part_fk <span class="op">=</span> p.part_pk</span>
 <span id="cb4-5"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> p.part_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-part_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-<th style="text-align:right;">
-lot_size
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> part_number </th>
+   <th style="text-align:left;"> description </th>
+   <th style="text-align:right;"> lot_size </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-AX-10
-</td>
-<td style="text-align:left;">
-Axle, 5/8 in
-</td>
-<td style="text-align:right;">
-400
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CF-310
-</td>
-<td style="text-align:left;">
-Cart frame
-</td>
-<td style="text-align:right;">
-80
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:right;">
-100
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-40
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:left;">
-Poly garden cart
-</td>
-<td style="text-align:right;">
-20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:left;">
-Convertible hand truck
-</td>
-<td style="text-align:right;">
-25
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WA-10
-</td>
-<td style="text-align:left;">
-Wheel assembly, 10 in
-</td>
-<td style="text-align:right;">
-200
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> AX-10 </td>
+   <td style="text-align:left;"> Axle, 5/8 in </td>
+   <td style="text-align:right;"> 400 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CF-310 </td>
+   <td style="text-align:left;"> Cart frame </td>
+   <td style="text-align:right;"> 80 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:right;"> 100 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 40 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:left;"> Poly garden cart </td>
+   <td style="text-align:right;"> 20 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 50 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:left;"> Convertible hand truck </td>
+   <td style="text-align:right;"> 25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WA-10 </td>
+   <td style="text-align:left;"> Wheel assembly, 10 in </td>
+   <td style="text-align:right;"> 200 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1353,17 +1299,16 @@ Wheel assembly, 10 in
 <span id="cb5-13"><a href></a>                       <span class="kw">FROM</span> production.purchased_part <span class="kw">AS</span> u</span>
 <span id="cb5-14"><a href></a>                       <span class="kw">WHERE</span> u.part_fk <span class="op">=</span> p.part_pk));</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-part_number
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> part_number </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-</tr>
+  <tr>
+
+  </tr>
 </tbody>
 </table>
 </div>

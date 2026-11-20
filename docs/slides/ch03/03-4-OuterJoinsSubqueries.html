@@ -1110,76 +1110,40 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb1-5"><a href></a><span class="kw">WHERE</span> c.customer_pk <span class="kw">IN</span> (<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">8</span>)</span>
 <span id="cb1-6"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> c.customer_pk, o.order_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-customer_pk
-</th>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:left;">
-order_number
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> customer_pk </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> order_number </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:left;">
-SO-5003
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:left;">
-SO-5012
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:left;">
-SO-5002
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:left;">
-SO-5007
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:left;">
-Northgate Hardware
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:left;"> SO-5003 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:left;"> SO-5012 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:left;"> SO-5002 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:left;"> SO-5007 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> Northgate Hardware </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1221,65 +1185,35 @@ NULL
 <span id="cb2-6"><a href></a>  <span class="kw">AND</span> o.order_date <span class="op">&lt;</span> <span class="dt">DATE</span> <span class="st">&#39;2026-03-01&#39;</span></span>
 <span id="cb2-7"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> c.name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-order_date
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> order_date </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:left;">
-SO-5007
-</td>
-<td style="text-align:left;">
-2026-02-03
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Prairie Garden Center
-</td>
-<td style="text-align:left;">
-SO-5008
-</td>
-<td style="text-align:left;">
-2026-02-11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:left;">
-SO-5010
-</td>
-<td style="text-align:left;">
-2026-02-24
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tri-County Farm and Home
-</td>
-<td style="text-align:left;">
-SO-5009
-</td>
-<td style="text-align:left;">
-2026-02-18
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:left;"> SO-5007 </td>
+   <td style="text-align:left;"> 2026-02-03 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Prairie Garden Center </td>
+   <td style="text-align:left;"> SO-5008 </td>
+   <td style="text-align:left;"> 2026-02-11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:left;"> SO-5010 </td>
+   <td style="text-align:left;"> 2026-02-24 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Tri-County Farm and Home </td>
+   <td style="text-align:left;"> SO-5009 </td>
+   <td style="text-align:left;"> 2026-02-18 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1305,109 +1239,55 @@ SO-5009
 <span id="cb3-6"><a href></a> <span class="kw">AND</span> o.order_date <span class="op">&lt;</span> <span class="dt">DATE</span> <span class="st">&#39;2026-03-01&#39;</span></span>
 <span id="cb3-7"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> c.name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-order_date
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> order_date </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:left;">
-SO-5007
-</td>
-<td style="text-align:left;">
-2026-02-03
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Midtown Tool Supply
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Northgate Hardware
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Prairie Garden Center
-</td>
-<td style="text-align:left;">
-SO-5008
-</td>
-<td style="text-align:left;">
-2026-02-11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:left;">
-SO-5010
-</td>
-<td style="text-align:left;">
-2026-02-24
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tri-County Farm and Home
-</td>
-<td style="text-align:left;">
-SO-5009
-</td>
-<td style="text-align:left;">
-2026-02-18
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:left;"> SO-5007 </td>
+   <td style="text-align:left;"> 2026-02-03 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Midtown Tool Supply </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Northgate Hardware </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Prairie Garden Center </td>
+   <td style="text-align:left;"> SO-5008 </td>
+   <td style="text-align:left;"> 2026-02-11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:left;"> SO-5010 </td>
+   <td style="text-align:left;"> 2026-02-24 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> NULL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Tri-County Farm and Home </td>
+   <td style="text-align:left;"> SO-5009 </td>
+   <td style="text-align:left;"> 2026-02-18 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1444,26 +1324,18 @@ SO-5009
 <span id="cb4-4"><a href></a>  <span class="kw">ON</span> l.product_fk <span class="op">=</span> p.product_pk</span>
 <span id="cb4-5"><a href></a><span class="kw">WHERE</span> l.order_line_pk <span class="kw">IS</span> <span class="kw">NULL</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:left;"> description </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:left;">
-Poly garden cart
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:left;"> Poly garden cart </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1498,26 +1370,18 @@ Poly garden cart
 <span id="cb5-4"><a href></a>                    <span class="kw">FROM</span> distribution.product</span>
 <span id="cb5-5"><a href></a>                    <span class="kw">WHERE</span> product_number <span class="op">=</span> <span class="st">&#39;HT-200&#39;</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:right;">
-list_price
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:right;"> list_price </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:right;">
-149.00
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:right;"> 149.00 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1542,34 +1406,22 @@ GC-400
 <span id="cb6-5"><a href></a>       <span class="kw">FROM</span> distribution.customer_order</span>
 <span id="cb6-6"><a href></a>       <span class="kw">WHERE</span> order_date <span class="op">&gt;=</span> <span class="dt">DATE</span> <span class="st">&#39;2026-03-01&#39;</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-customer_number
-</th>
-<th style="text-align:left;">
-name
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:left;"> name </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-C-1006
-</td>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1002
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> C-1006 </td>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1002 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1595,20 +1447,17 @@ Summit Farm Supply
 <span id="cb7-3"><a href></a><span class="kw">WHERE</span> order_date <span class="kw">NOT</span> <span class="kw">IN</span> (<span class="kw">SELECT</span> requested_ship_date</span>
 <span id="cb7-4"><a href></a>                         <span class="kw">FROM</span> distribution.customer_order);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-order_date
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> order_date </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-</tr>
+  <tr>
+
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1639,34 +1488,22 @@ order_date
 <span id="cb8-5"><a href></a>              <span class="kw">WHERE</span> s.product_fk <span class="op">=</span> p.product_pk</span>
 <span id="cb8-6"><a href></a>                <span class="kw">AND</span> s.quantity_on_hand <span class="op">&lt;=</span> s.reorder_point);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:left;"> description </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:left;">
-Poly garden cart
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:left;"> Poly garden cart </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1705,106 +1542,58 @@ Poly garden cart
 <h2>The request with NOT EXISTS: the result</h2>
 <div class="cell" data-stage="d5" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-order_date
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> order_date </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:left;">
-2026-01-05
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:left;">
-2026-01-07
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:left;">
-2026-01-15
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5005
-</td>
-<td style="text-align:left;">
-2026-01-21
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5006
-</td>
-<td style="text-align:left;">
-2026-01-28
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5007
-</td>
-<td style="text-align:left;">
-2026-02-03
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5008
-</td>
-<td style="text-align:left;">
-2026-02-11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5009
-</td>
-<td style="text-align:left;">
-2026-02-18
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5010
-</td>
-<td style="text-align:left;">
-2026-02-24
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5011
-</td>
-<td style="text-align:left;">
-2026-03-04
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5012
-</td>
-<td style="text-align:left;">
-2026-03-10
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:left;"> 2026-01-05 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:left;"> 2026-01-07 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:left;"> 2026-01-15 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5005 </td>
+   <td style="text-align:left;"> 2026-01-21 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5006 </td>
+   <td style="text-align:left;"> 2026-01-28 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5007 </td>
+   <td style="text-align:left;"> 2026-02-03 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5008 </td>
+   <td style="text-align:left;"> 2026-02-11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5009 </td>
+   <td style="text-align:left;"> 2026-02-18 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5010 </td>
+   <td style="text-align:left;"> 2026-02-24 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5011 </td>
+   <td style="text-align:left;"> 2026-03-04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5012 </td>
+   <td style="text-align:left;"> 2026-03-10 </td>
+  </tr>
 </tbody>
 </table>
 </div>

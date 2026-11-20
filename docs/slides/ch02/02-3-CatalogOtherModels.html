@@ -1110,82 +1110,46 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb1-3"><a href></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">&#39;distribution&#39;</span></span>
 <span id="cb1-4"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> table_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-table_name
-</th>
-<th style="text-align:left;">
-table_type
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> table_name </th>
+   <th style="text-align:left;"> table_type </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-customer
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-customer_order
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-product
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-shipment
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-shipment_line
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-stock_level
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-warehouse
-</td>
-<td style="text-align:left;">
-BASE TABLE
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> customer </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> customer_order </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> product </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> shipment </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> shipment_line </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> stock_level </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> warehouse </td>
+   <td style="text-align:left;"> BASE TABLE </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1202,94 +1166,46 @@ BASE TABLE
 <span id="cb2-6"><a href></a>  <span class="kw">AND</span> table_name <span class="op">=</span> <span class="st">&#39;customer_order&#39;</span></span>
 <span id="cb2-7"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> ordinal_position;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-column_name
-</th>
-<th style="text-align:left;">
-data_type
-</th>
-<th style="text-align:right;">
-length
-</th>
-<th style="text-align:left;">
-is_nullable
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> column_name </th>
+   <th style="text-align:left;"> data_type </th>
+   <th style="text-align:right;"> length </th>
+   <th style="text-align:left;"> is_nullable </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-customer_order_pk
-</td>
-<td style="text-align:left;">
-integer
-</td>
-<td style="text-align:right;">
-NULL
-</td>
-<td style="text-align:left;">
-NO
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_number
-</td>
-<td style="text-align:left;">
-character varying
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:left;">
-NO
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_date
-</td>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:right;">
-NULL
-</td>
-<td style="text-align:left;">
-NO
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-requested_ship_date
-</td>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:right;">
-NULL
-</td>
-<td style="text-align:left;">
-YES
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-customer_fk
-</td>
-<td style="text-align:left;">
-integer
-</td>
-<td style="text-align:right;">
-NULL
-</td>
-<td style="text-align:left;">
-NO
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> customer_order_pk </td>
+   <td style="text-align:left;"> integer </td>
+   <td style="text-align:right;"> NULL </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_number </td>
+   <td style="text-align:left;"> character varying </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_date </td>
+   <td style="text-align:left;"> date </td>
+   <td style="text-align:right;"> NULL </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> requested_ship_date </td>
+   <td style="text-align:left;"> date </td>
+   <td style="text-align:right;"> NULL </td>
+   <td style="text-align:left;"> YES </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> customer_fk </td>
+   <td style="text-align:left;"> integer </td>
+   <td style="text-align:right;"> NULL </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
 </tbody>
 </table>
 </div>

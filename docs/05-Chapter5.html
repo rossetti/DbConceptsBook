@@ -522,6 +522,12 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./22-AppSpatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -728,7 +734,7 @@ Figure&nbsp;5.3: The Customer Class of Stage D1 as a Cloud of Objects
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="sec-cm-attribute-parts"><span class="header-section-number">5.3.1</span> Attributes with parts</h3>
 <p>Many values that a business records have parts. A telephone number has an area code, a location has a latitude and a longitude, and an address has a street, a city, a state, and a ZIP code. Recall from <a href="02-Chapter2.html#sec-rm-properties" class="quarto-xref"><span>Section 2.1.1</span></a> that a value is <em>atomic</em> when it is one member of its column’s domain, rather than several values joined in one. Thus, whether a value is <em>atomic</em> depends on its domain and on how the business uses it, not on how it looks. While modeling, the test is a question: does any query, rule, or sort need part of the value on its own, in a way the value’s domain does not supply? The answer leads to one of three choices.</p>
 <p>The first choice keeps the value as one attribute, because the business uses it whole. A customer’s name is printed on invoices and searched as a whole, and no request asks for its second word. A telephone number is dialed whole, and the sales office never asks which customers share an area code. Each is one attribute, with one domain.</p>
-<p>The second choice splits the value into attributes, because its parts are used separately. The <code>Customer</code> class of <a href="#fig-cm-class-d2" class="quarto-xref">Figure&nbsp;<span>5.1</span></a> records <code>city</code> and <code>state</code> as two attributes, since the business asks for the customers in a state and sorts them by city. The points of a transit network record a <code>latitude</code> and a <code>longitude</code> rather than one location. A request for the stops north of a given latitude compares latitudes alone, and a request for the stop nearest a rider computes a distance from both. Each part is an attribute with a domain of its own (e.g.&nbsp;a latitude between -90 and 90 degrees).</p>
+<p>The second choice splits the value into attributes, because its parts are used separately. The <code>Customer</code> class of <a href="#fig-cm-class-d2" class="quarto-xref">Figure&nbsp;<span>5.1</span></a> records <code>city</code> and <code>state</code> as two attributes, since the business asks for the customers in a state and sorts them by city. The points of a transit network record a <code>latitude</code> and a <code>longitude</code> rather than one location. A request for the stops north of a given latitude compares latitudes alone, and a request for the stop nearest a rider computes a distance from both. Each part is an attribute with a domain of its own (e.g.&nbsp;a latitude between -90 and 90 degrees). <a href="22-AppSpatial.html" class="quarto-xref"><span>Appendix J</span></a> shows how PostgreSQL stores the two parts as one location for that computation.</p>
 <p>The third choice promotes the value to a class of its own, because it repeats or is shared. A customer may have several telephone numbers, one for orders and one for accounts payable. Recall that an attribute has one value for each object, or none when it is marked <code>[0..1]</code>. Thus, several telephone numbers of one customer are objects of a class, linked to the customer by an association. (UML also allows an attribute marked <code>[0..*]</code>; this book draws a class instead, since the numbers need a table of their own in any case.) In the same way, a delivery site that several customers share, such as the receiving dock of a shopping center, is one thing, recorded once. When the dock’s address or its receiving hours change, one change updates every customer it serves. This is the judgment between a class and an attribute, made earlier for a shipment’s carrier, applied again: a thing with facts or relationships of its own deserves a class.</p>
 <p><a href="#fig-cm-attribute-class" class="quarto-xref">Figure&nbsp;<span>5.4</span></a> draws the third choice for a customer’s telephone numbers. HG Industries’ database records no telephone numbers, so the model is hypothetical.</p>
 <div id="fig-cm-attribute-class" class="quarto-float quarto-figure quarto-figure-left anchored">
@@ -886,180 +892,80 @@ Table&nbsp;5.3: The Lines of the First Four Orders
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> o.order_number <span class="op">&lt;=</span> <span class="st">'SO-5004'</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.order_number, l.line_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:right;">
-line_number
-</th>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:right;">
-quantity
-</th>
-<th style="text-align:right;">
-unit_price
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:right;"> line_number </th>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:right;"> quantity </th>
+   <th style="text-align:right;"> unit_price </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-139.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-85.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-135.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-115.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-79.00
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 89.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 119.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 139.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 85.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 135.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 115.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:right;"> 89.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 119.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 79.00 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1528,94 +1434,46 @@ Table&nbsp;5.7: Machines and Certified Operators for Welding the FR-110
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> op.operation_number <span class="op">=</span> <span class="dv">20</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> m.machine_number, o.name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-machine_number
-</th>
-<th style="text-align:left;">
-model
-</th>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:right;">
-level
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> machine_number </th>
+   <th style="text-align:left;"> model </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> level </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-M-04
-</td>
-<td style="text-align:left;">
-MIG welder MW-250
-</td>
-<td style="text-align:left;">
-Linda Nguyen
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-M-04
-</td>
-<td style="text-align:left;">
-MIG welder MW-250
-</td>
-<td style="text-align:left;">
-Maria Lopez
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-M-05
-</td>
-<td style="text-align:left;">
-MIG welder MW-250
-</td>
-<td style="text-align:left;">
-Aisha Patel
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-M-05
-</td>
-<td style="text-align:left;">
-MIG welder MW-250
-</td>
-<td style="text-align:left;">
-Linda Nguyen
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-M-07
-</td>
-<td style="text-align:left;">
-Robotic welder RW-6
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:right;">
-NULL
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> M-04 </td>
+   <td style="text-align:left;"> MIG welder MW-250 </td>
+   <td style="text-align:left;"> Linda Nguyen </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> M-04 </td>
+   <td style="text-align:left;"> MIG welder MW-250 </td>
+   <td style="text-align:left;"> Maria Lopez </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> M-05 </td>
+   <td style="text-align:left;"> MIG welder MW-250 </td>
+   <td style="text-align:left;"> Aisha Patel </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> M-05 </td>
+   <td style="text-align:left;"> MIG welder MW-250 </td>
+   <td style="text-align:left;"> Linda Nguyen </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> M-07 </td>
+   <td style="text-align:left;"> Robotic welder RW-6 </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:right;"> NULL </td>
+  </tr>
 </tbody>
 </table>
 </div>

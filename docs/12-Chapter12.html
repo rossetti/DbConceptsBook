@@ -522,6 +522,12 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./22-AppSpatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -618,7 +624,7 @@ div.csl-indent {
 <section id="sec-simdb-inputs" class="level2" data-number="12.1">
 <h2 data-number="12.1" class="anchored" data-anchor-id="sec-simdb-inputs"><span class="header-section-number">12.1</span> Input data for models</h2>
 <p>This section reads a simulation model’s parameters from the database that already records them.</p>
-<p>Much of what a model of a plant needs is already in the plant’s operational database. The routing of a part says which work centers it visits and in what order; each operation’s setup and run times say how long it takes; the machines of each work center, and the operators certified to run them, say how many lots can be worked at once. A model that types these numbers into its code is correct on the day it is written and wrong after the next engineering change. A model that reads them from the database stays current with the plant, and a scenario can often be expressed as a change to the data rather than to the model.</p>
+<p>Much of what a model of a plant needs is already in the plant’s operational database. The routing of a part says which work centers it visits and in what order; each operation’s setup and run times say how long it takes; the machines of each work center, and the operators certified to run them, say how many lots can be worked at once. A model that types these numbers into its code is correct on the day it is written and wrong after the next engineering change. A model that reads them from the database stays current with the plant, and a scenario can often be expressed as a change to the data rather than to the model. The same holds for the distances of a model of transport, which a spatial query can compute from the locations of the sites (<a href="22-AppSpatial.html#sec-appspatial-join" class="quarto-xref"><span>Section J.7</span></a>).</p>
 <p>HG Industries’ hand truck frame, part FR-110, is cut, welded, and powder coated. Its routing, with the machines of each work center and the number of them that have a certified operator (<a href="05-Chapter5.html#sec-cm-association-classes" class="quarto-xref"><span>Section 5.5</span></a>), is:</p>
 <div id="tbl-simdb-routing" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="q">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -644,90 +650,42 @@ Table&nbsp;12.1: The Routing of the Hand Truck Frame, with Machines and Staffed 
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>         o.setup_minutes, o.run_minutes_per_unit</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.operation_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-operation_number
-</th>
-<th style="text-align:left;">
-work_center_code
-</th>
-<th style="text-align:right;">
-setup_minutes
-</th>
-<th style="text-align:right;">
-run_minutes_per_unit
-</th>
-<th style="text-align:right;">
-machines
-</th>
-<th style="text-align:right;">
-staffed
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> operation_number </th>
+   <th style="text-align:left;"> work_center_code </th>
+   <th style="text-align:right;"> setup_minutes </th>
+   <th style="text-align:right;"> run_minutes_per_unit </th>
+   <th style="text-align:right;"> machines </th>
+   <th style="text-align:right;"> staffed </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:left;">
-SAW
-</td>
-<td style="text-align:right;">
-15.0
-</td>
-<td style="text-align:right;">
-2.50
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:left;">
-WLD
-</td>
-<td style="text-align:right;">
-20.0
-</td>
-<td style="text-align:right;">
-6.00
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:left;">
-PNT
-</td>
-<td style="text-align:right;">
-30.0
-</td>
-<td style="text-align:right;">
-3.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:left;"> SAW </td>
+   <td style="text-align:right;"> 15.0 </td>
+   <td style="text-align:right;"> 2.50 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:left;"> WLD </td>
+   <td style="text-align:right;"> 20.0 </td>
+   <td style="text-align:right;"> 6.00 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:left;"> PNT </td>
+   <td style="text-align:right;"> 30.0 </td>
+   <td style="text-align:right;"> 3.00 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -955,61 +913,31 @@ Table&nbsp;12.3: The Experiments of Stage K
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ksl_db.experiment</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> exp_id;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-exp_id
-</th>
-<th style="text-align:left;">
-exp_name
-</th>
-<th style="text-align:right;">
-num_chunks
-</th>
-<th style="text-align:right;">
-rep_days
-</th>
-<th style="text-align:right;">
-warm_up_days
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> exp_id </th>
+   <th style="text-align:left;"> exp_name </th>
+   <th style="text-align:right;"> num_chunks </th>
+   <th style="text-align:right;"> rep_days </th>
+   <th style="text-align:right;"> warm_up_days </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1036,180 +964,80 @@ Table&nbsp;12.4: The Model Elements Below the Welding Resource, Experiment 1
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> <span class="kw">parent</span>.element_name <span class="op">=</span> <span class="st">'WLD:R'</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">child</span>.left_count;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-element_id
-</th>
-<th style="text-align:left;">
-element_name
-</th>
-<th style="text-align:left;">
-class_name
-</th>
-<th style="text-align:right;">
-left_count
-</th>
-<th style="text-align:right;">
-right_count
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> element_id </th>
+   <th style="text-align:left;"> element_name </th>
+   <th style="text-align:left;"> class_name </th>
+   <th style="text-align:right;"> left_count </th>
+   <th style="text-align:right;"> right_count </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-33
-</td>
-<td style="text-align:left;">
-WLD:R:SeizeCount
-</td>
-<td style="text-align:left;">
-Counter
-</td>
-<td style="text-align:right;">
-63
-</td>
-<td style="text-align:right;">
-64
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-34
-</td>
-<td style="text-align:left;">
-WLD:R:NumBusy
-</td>
-<td style="text-align:left;">
-TWResponse
-</td>
-<td style="text-align:right;">
-65
-</td>
-<td style="text-align:right;">
-68
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-41
-</td>
-<td style="text-align:left;">
-WLD:R:Util
-</td>
-<td style="text-align:left;">
-TWResponseFunction
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
-67
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-35
-</td>
-<td style="text-align:left;">
-WLD:R:Capacity
-</td>
-<td style="text-align:left;">
-TWResponse
-</td>
-<td style="text-align:right;">
-69
-</td>
-<td style="text-align:right;">
-70
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-36
-</td>
-<td style="text-align:left;">
-WLD:R:NumFailures
-</td>
-<td style="text-align:left;">
-Counter
-</td>
-<td style="text-align:right;">
-71
-</td>
-<td style="text-align:right;">
-72
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-37
-</td>
-<td style="text-align:left;">
-WLD:R:FailedState
-</td>
-<td style="text-align:left;">
-TWResponse
-</td>
-<td style="text-align:right;">
-73
-</td>
-<td style="text-align:right;">
-74
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-38
-</td>
-<td style="text-align:left;">
-WLD:R:IdleState
-</td>
-<td style="text-align:left;">
-TWResponse
-</td>
-<td style="text-align:right;">
-75
-</td>
-<td style="text-align:right;">
-76
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-39
-</td>
-<td style="text-align:left;">
-WLD:R:BusyState
-</td>
-<td style="text-align:left;">
-TWResponse
-</td>
-<td style="text-align:right;">
-77
-</td>
-<td style="text-align:right;">
-78
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-40
-</td>
-<td style="text-align:left;">
-WLD:R:InactiveState
-</td>
-<td style="text-align:left;">
-TWResponse
-</td>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-80
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 33 </td>
+   <td style="text-align:left;"> WLD:R:SeizeCount </td>
+   <td style="text-align:left;"> Counter </td>
+   <td style="text-align:right;"> 63 </td>
+   <td style="text-align:right;"> 64 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34 </td>
+   <td style="text-align:left;"> WLD:R:NumBusy </td>
+   <td style="text-align:left;"> TWResponse </td>
+   <td style="text-align:right;"> 65 </td>
+   <td style="text-align:right;"> 68 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 41 </td>
+   <td style="text-align:left;"> WLD:R:Util </td>
+   <td style="text-align:left;"> TWResponseFunction </td>
+   <td style="text-align:right;"> 66 </td>
+   <td style="text-align:right;"> 67 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 35 </td>
+   <td style="text-align:left;"> WLD:R:Capacity </td>
+   <td style="text-align:left;"> TWResponse </td>
+   <td style="text-align:right;"> 69 </td>
+   <td style="text-align:right;"> 70 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 36 </td>
+   <td style="text-align:left;"> WLD:R:NumFailures </td>
+   <td style="text-align:left;"> Counter </td>
+   <td style="text-align:right;"> 71 </td>
+   <td style="text-align:right;"> 72 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 37 </td>
+   <td style="text-align:left;"> WLD:R:FailedState </td>
+   <td style="text-align:left;"> TWResponse </td>
+   <td style="text-align:right;"> 73 </td>
+   <td style="text-align:right;"> 74 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 38 </td>
+   <td style="text-align:left;"> WLD:R:IdleState </td>
+   <td style="text-align:left;"> TWResponse </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 76 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 39 </td>
+   <td style="text-align:left;"> WLD:R:BusyState </td>
+   <td style="text-align:left;"> TWResponse </td>
+   <td style="text-align:right;"> 77 </td>
+   <td style="text-align:right;"> 78 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 40 </td>
+   <td style="text-align:left;"> WLD:R:InactiveState </td>
+   <td style="text-align:left;"> TWResponse </td>
+   <td style="text-align:right;"> 79 </td>
+   <td style="text-align:right;"> 80 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1238,112 +1066,52 @@ Table&nbsp;12.5: Time in Shop, in Hours, in the First Five Replications of TwoWe
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> w.rep_id <span class="op">&lt;=</span> <span class="dv">5</span></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> w.rep_id;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-rep_id
-</th>
-<th style="text-align:right;">
-stat_count
-</th>
-<th style="text-align:right;">
-average
-</th>
-<th style="text-align:right;">
-minimum
-</th>
-<th style="text-align:right;">
-maximum
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> rep_id </th>
+   <th style="text-align:right;"> stat_count </th>
+   <th style="text-align:right;"> average </th>
+   <th style="text-align:right;"> minimum </th>
+   <th style="text-align:right;"> maximum </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-85
-</td>
-<td style="text-align:right;">
-28.126
-</td>
-<td style="text-align:right;">
-19.726
-</td>
-<td style="text-align:right;">
-47.705
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-85
-</td>
-<td style="text-align:right;">
-28.981
-</td>
-<td style="text-align:right;">
-19.795
-</td>
-<td style="text-align:right;">
-48.766
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-86
-</td>
-<td style="text-align:right;">
-36.980
-</td>
-<td style="text-align:right;">
-20.127
-</td>
-<td style="text-align:right;">
-76.134
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-92
-</td>
-<td style="text-align:right;">
-31.599
-</td>
-<td style="text-align:right;">
-19.497
-</td>
-<td style="text-align:right;">
-57.773
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-82
-</td>
-<td style="text-align:right;">
-27.002
-</td>
-<td style="text-align:right;">
-19.303
-</td>
-<td style="text-align:right;">
-51.369
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 85 </td>
+   <td style="text-align:right;"> 28.126 </td>
+   <td style="text-align:right;"> 19.726 </td>
+   <td style="text-align:right;"> 47.705 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 85 </td>
+   <td style="text-align:right;"> 28.981 </td>
+   <td style="text-align:right;"> 19.795 </td>
+   <td style="text-align:right;"> 48.766 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 86 </td>
+   <td style="text-align:right;"> 36.980 </td>
+   <td style="text-align:right;"> 20.127 </td>
+   <td style="text-align:right;"> 76.134 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 92 </td>
+   <td style="text-align:right;"> 31.599 </td>
+   <td style="text-align:right;"> 19.497 </td>
+   <td style="text-align:right;"> 57.773 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 82 </td>
+   <td style="text-align:right;"> 27.002 </td>
+   <td style="text-align:right;"> 19.303 </td>
+   <td style="text-align:right;"> 51.369 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1366,108 +1134,52 @@ Table&nbsp;12.6: Simulated Utilization of Each Work Center, Averaged over 30 Rep
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'PNT:R:Util'</span>)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> stat_name, exp_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-exp_name
-</th>
-<th style="text-align:left;">
-stat_name
-</th>
-<th style="text-align:right;">
-average
-</th>
-<th style="text-align:right;">
-std_dev
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> exp_name </th>
+   <th style="text-align:left;"> stat_name </th>
+   <th style="text-align:right;"> average </th>
+   <th style="text-align:right;"> std_dev </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:left;">
-PNT:R:Util
-</td>
-<td style="text-align:right;">
-0.848
-</td>
-<td style="text-align:right;">
-0.078
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:left;">
-PNT:R:Util
-</td>
-<td style="text-align:right;">
-0.848
-</td>
-<td style="text-align:right;">
-0.078
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:left;">
-SAW:R:Util
-</td>
-<td style="text-align:right;">
-0.693
-</td>
-<td style="text-align:right;">
-0.077
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:left;">
-SAW:R:Util
-</td>
-<td style="text-align:right;">
-0.693
-</td>
-<td style="text-align:right;">
-0.077
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:left;">
-WLD:R:Util
-</td>
-<td style="text-align:right;">
-0.539
-</td>
-<td style="text-align:right;">
-0.058
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:left;">
-WLD:R:Util
-</td>
-<td style="text-align:right;">
-0.802
-</td>
-<td style="text-align:right;">
-0.082
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:left;"> PNT:R:Util </td>
+   <td style="text-align:right;"> 0.848 </td>
+   <td style="text-align:right;"> 0.078 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:left;"> PNT:R:Util </td>
+   <td style="text-align:right;"> 0.848 </td>
+   <td style="text-align:right;"> 0.078 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:left;"> SAW:R:Util </td>
+   <td style="text-align:right;"> 0.693 </td>
+   <td style="text-align:right;"> 0.077 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:left;"> SAW:R:Util </td>
+   <td style="text-align:right;"> 0.693 </td>
+   <td style="text-align:right;"> 0.077 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:left;"> WLD:R:Util </td>
+   <td style="text-align:right;"> 0.539 </td>
+   <td style="text-align:right;"> 0.058 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:left;"> WLD:R:Util </td>
+   <td style="text-align:right;"> 0.802 </td>
+   <td style="text-align:right;"> 0.082 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1499,163 +1211,73 @@ Table&nbsp;12.7: Summaries over 30 Replications of Four Responses, Both Experime
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'WLD:Q:TimeInQ'</span>, <span class="st">'PNT:Q:TimeInQ'</span>)</span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> a.stat_name, e.exp_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-stat_name
-</th>
-<th style="text-align:left;">
-exp_name
-</th>
-<th style="text-align:right;">
-average
-</th>
-<th style="text-align:right;">
-std_dev
-</th>
-<th style="text-align:right;">
-half_width
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> stat_name </th>
+   <th style="text-align:left;"> exp_name </th>
+   <th style="text-align:right;"> average </th>
+   <th style="text-align:right;"> std_dev </th>
+   <th style="text-align:right;"> half_width </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-PNT:Q:TimeInQ
-</td>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:right;">
-482.438
-</td>
-<td style="text-align:right;">
-338.937
-</td>
-<td style="text-align:right;">
-126.561
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PNT:Q:TimeInQ
-</td>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:right;">
-235.022
-</td>
-<td style="text-align:right;">
-166.786
-</td>
-<td style="text-align:right;">
-62.279
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:right;">
-33.537
-</td>
-<td style="text-align:right;">
-7.282
-</td>
-<td style="text-align:right;">
-2.719
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:right;">
-33.654
-</td>
-<td style="text-align:right;">
-7.258
-</td>
-<td style="text-align:right;">
-2.710
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WLD:Q:TimeInQ
-</td>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WLD:Q:TimeInQ
-</td>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:right;">
-264.834
-</td>
-<td style="text-align:right;">
-190.690
-</td>
-<td style="text-align:right;">
-71.205
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:right;">
-5.200
-</td>
-<td style="text-align:right;">
-1.750
-</td>
-<td style="text-align:right;">
-0.653
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:right;">
-5.217
-</td>
-<td style="text-align:right;">
-1.748
-</td>
-<td style="text-align:right;">
-0.653
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> PNT:Q:TimeInQ </td>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:right;"> 482.438 </td>
+   <td style="text-align:right;"> 338.937 </td>
+   <td style="text-align:right;"> 126.561 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNT:Q:TimeInQ </td>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:right;"> 235.022 </td>
+   <td style="text-align:right;"> 166.786 </td>
+   <td style="text-align:right;"> 62.279 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:right;"> 33.537 </td>
+   <td style="text-align:right;"> 7.282 </td>
+   <td style="text-align:right;"> 2.719 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:right;"> 33.654 </td>
+   <td style="text-align:right;"> 7.258 </td>
+   <td style="text-align:right;"> 2.710 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WLD:Q:TimeInQ </td>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WLD:Q:TimeInQ </td>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:right;"> 264.834 </td>
+   <td style="text-align:right;"> 190.690 </td>
+   <td style="text-align:right;"> 71.205 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:right;"> 5.200 </td>
+   <td style="text-align:right;"> 1.750 </td>
+   <td style="text-align:right;"> 0.653 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:right;"> 5.217 </td>
+   <td style="text-align:right;"> 1.748 </td>
+   <td style="text-align:right;"> 0.653 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1684,61 +1306,31 @@ Table&nbsp;12.8: Time in Shop Summarized in SQL, with t = 2.045
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> exp_name</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> exp_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-exp_name
-</th>
-<th style="text-align:right;">
-reps
-</th>
-<th style="text-align:right;">
-average
-</th>
-<th style="text-align:right;">
-std_dev
-</th>
-<th style="text-align:right;">
-half_width
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> exp_name </th>
+   <th style="text-align:right;"> reps </th>
+   <th style="text-align:right;"> average </th>
+   <th style="text-align:right;"> std_dev </th>
+   <th style="text-align:right;"> half_width </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-ThreeWelders
-</td>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:right;">
-33.537
-</td>
-<td style="text-align:right;">
-7.282
-</td>
-<td style="text-align:right;">
-2.719
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TwoWelders
-</td>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:right;">
-33.654
-</td>
-<td style="text-align:right;">
-7.258
-</td>
-<td style="text-align:right;">
-2.710
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> ThreeWelders </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 33.537 </td>
+   <td style="text-align:right;"> 7.282 </td>
+   <td style="text-align:right;"> 2.719 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TwoWelders </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 33.654 </td>
+   <td style="text-align:right;"> 7.258 </td>
+   <td style="text-align:right;"> 2.710 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1770,94 +1362,46 @@ Table&nbsp;12.9: Time in Shop in the First Five Replications, Both Experiments
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> rep_id <span class="op">&lt;=</span> <span class="dv">5</span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> rep_id;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-rep_id
-</th>
-<th style="text-align:right;">
-two_welders
-</th>
-<th style="text-align:right;">
-three_welders
-</th>
-<th style="text-align:right;">
-difference
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> rep_id </th>
+   <th style="text-align:right;"> two_welders </th>
+   <th style="text-align:right;"> three_welders </th>
+   <th style="text-align:right;"> difference </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-28.126
-</td>
-<td style="text-align:right;">
-27.745
-</td>
-<td style="text-align:right;">
--0.382
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-28.981
-</td>
-<td style="text-align:right;">
-28.962
-</td>
-<td style="text-align:right;">
--0.019
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-36.980
-</td>
-<td style="text-align:right;">
-36.971
-</td>
-<td style="text-align:right;">
--0.009
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-31.599
-</td>
-<td style="text-align:right;">
-31.131
-</td>
-<td style="text-align:right;">
--0.468
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-27.002
-</td>
-<td style="text-align:right;">
-26.859
-</td>
-<td style="text-align:right;">
--0.142
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 28.126 </td>
+   <td style="text-align:right;"> 27.745 </td>
+   <td style="text-align:right;"> -0.382 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 28.981 </td>
+   <td style="text-align:right;"> 28.962 </td>
+   <td style="text-align:right;"> -0.019 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 36.980 </td>
+   <td style="text-align:right;"> 36.971 </td>
+   <td style="text-align:right;"> -0.009 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 31.599 </td>
+   <td style="text-align:right;"> 31.131 </td>
+   <td style="text-align:right;"> -0.468 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 27.002 </td>
+   <td style="text-align:right;"> 26.859 </td>
+   <td style="text-align:right;"> -0.142 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1926,32 +1470,20 @@ Table&nbsp;12.11: The Paired Differences of the First Five Replications Summariz
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stat_name <span class="op">=</span> <span class="st">'TimeInShop'</span></span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> rep_id <span class="op">&lt;=</span> <span class="dv">5</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-reps
-</th>
-<th style="text-align:right;">
-average
-</th>
-<th style="text-align:right;">
-std_dev
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> reps </th>
+   <th style="text-align:right;"> average </th>
+   <th style="text-align:right;"> std_dev </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
--0.204
-</td>
-<td style="text-align:right;">
-0.211
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> -0.204 </td>
+   <td style="text-align:right;"> 0.211 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1976,44 +1508,24 @@ Table&nbsp;12.12: The Paired Difference in Time in Shop, ThreeWelders minus TwoW
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ksl_db.pw_diff_within_rep_view</span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> stat_name <span class="op">=</span> <span class="st">'TimeInShop'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-reps
-</th>
-<th style="text-align:right;">
-average
-</th>
-<th style="text-align:right;">
-std_dev
-</th>
-<th style="text-align:right;">
-half_width
-</th>
-<th style="text-align:right;">
-correlation
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> reps </th>
+   <th style="text-align:right;"> average </th>
+   <th style="text-align:right;"> std_dev </th>
+   <th style="text-align:right;"> half_width </th>
+   <th style="text-align:right;"> correlation </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:right;">
--0.1164
-</td>
-<td style="text-align:right;">
-0.1615
-</td>
-<td style="text-align:right;">
-0.0603
-</td>
-<td style="text-align:right;">
-0.9998
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> -0.1164 </td>
+   <td style="text-align:right;"> 0.1615 </td>
+   <td style="text-align:right;"> 0.0603 </td>
+   <td style="text-align:right;"> 0.9998 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2043,76 +1555,40 @@ Table&nbsp;12.13: Paired Differences, ThreeWelders minus TwoWelders, for Five Re
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> stat_name</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> stat_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-stat_name
-</th>
-<th style="text-align:right;">
-average
-</th>
-<th style="text-align:right;">
-half_width
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> stat_name </th>
+   <th style="text-align:right;"> average </th>
+   <th style="text-align:right;"> half_width </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-PNT:Q:TimeInQ
-</td>
-<td style="text-align:right;">
-247.417
-</td>
-<td style="text-align:right;">
-68.080
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SAW:Q:TimeInQ
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:right;">
--0.116
-</td>
-<td style="text-align:right;">
-0.060
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WLD:Q:TimeInQ
-</td>
-<td style="text-align:right;">
--264.834
-</td>
-<td style="text-align:right;">
-71.197
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:right;">
--0.017
-</td>
-<td style="text-align:right;">
-0.009
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> PNT:Q:TimeInQ </td>
+   <td style="text-align:right;"> 247.417 </td>
+   <td style="text-align:right;"> 68.080 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SAW:Q:TimeInQ </td>
+   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:right;"> -0.116 </td>
+   <td style="text-align:right;"> 0.060 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WLD:Q:TimeInQ </td>
+   <td style="text-align:right;"> -264.834 </td>
+   <td style="text-align:right;"> 71.197 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:right;"> -0.017 </td>
+   <td style="text-align:right;"> 0.009 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2162,120 +1638,60 @@ Table&nbsp;12.14: Three Responses of Three Replications of TwoWelders, Long
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> rep_id <span class="op">&lt;=</span> <span class="dv">3</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> rep_id, stat_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-rep_id
-</th>
-<th style="text-align:left;">
-stat_name
-</th>
-<th style="text-align:right;">
-rep_value
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> rep_id </th>
+   <th style="text-align:left;"> stat_name </th>
+   <th style="text-align:right;"> rep_value </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-LotsCompleted
-</td>
-<td style="text-align:right;">
-85.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:right;">
-28.126
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:right;">
-3.908
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-LotsCompleted
-</td>
-<td style="text-align:right;">
-85.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:right;">
-28.981
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:right;">
-4.094
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-LotsCompleted
-</td>
-<td style="text-align:right;">
-86.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:right;">
-36.980
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:right;">
-5.904
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> LotsCompleted </td>
+   <td style="text-align:right;"> 85.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:right;"> 28.126 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:right;"> 3.908 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> LotsCompleted </td>
+   <td style="text-align:right;"> 85.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:right;"> 28.981 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:right;"> 4.094 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> LotsCompleted </td>
+   <td style="text-align:right;"> 86.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:right;"> 36.980 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:right;"> 5.904 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2352,66 +1768,34 @@ Table&nbsp;12.16: The Same Responses, Wide, by the Query
 <span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> rep_id</span>
 <span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> rep_id;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-rep_id
-</th>
-<th style="text-align:right;">
-lots_completed
-</th>
-<th style="text-align:right;">
-time_in_shop
-</th>
-<th style="text-align:right;">
-work_in_process
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> rep_id </th>
+   <th style="text-align:right;"> lots_completed </th>
+   <th style="text-align:right;"> time_in_shop </th>
+   <th style="text-align:right;"> work_in_process </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-85.000
-</td>
-<td style="text-align:right;">
-28.126
-</td>
-<td style="text-align:right;">
-3.908
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-85.000
-</td>
-<td style="text-align:right;">
-28.981
-</td>
-<td style="text-align:right;">
-4.094
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-86.000
-</td>
-<td style="text-align:right;">
-36.980
-</td>
-<td style="text-align:right;">
-5.904
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 85.000 </td>
+   <td style="text-align:right;"> 28.126 </td>
+   <td style="text-align:right;"> 3.908 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 85.000 </td>
+   <td style="text-align:right;"> 28.981 </td>
+   <td style="text-align:right;"> 4.094 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 86.000 </td>
+   <td style="text-align:right;"> 36.980 </td>
+   <td style="text-align:right;"> 5.904 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2446,76 +1830,40 @@ Table&nbsp;12.17: Work in Process Predicted by Little’s Law and Observed, TwoW
 <span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> rep_id <span class="op">&lt;=</span> <span class="dv">5</span></span>
 <span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> rep_id;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-rep_id
-</th>
-<th style="text-align:right;">
-predicted_wip
-</th>
-<th style="text-align:right;">
-observed_wip
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> rep_id </th>
+   <th style="text-align:right;"> predicted_wip </th>
+   <th style="text-align:right;"> observed_wip </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3.985
-</td>
-<td style="text-align:right;">
-3.908
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-4.106
-</td>
-<td style="text-align:right;">
-4.094
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-5.300
-</td>
-<td style="text-align:right;">
-5.904
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-4.845
-</td>
-<td style="text-align:right;">
-4.716
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-3.690
-</td>
-<td style="text-align:right;">
-3.635
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3.985 </td>
+   <td style="text-align:right;"> 3.908 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 4.106 </td>
+   <td style="text-align:right;"> 4.094 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 5.300 </td>
+   <td style="text-align:right;"> 5.904 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4.845 </td>
+   <td style="text-align:right;"> 4.716 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 3.690 </td>
+   <td style="text-align:right;"> 3.635 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2554,120 +1902,60 @@ Table&nbsp;12.18: The Wide Table Made Long Again
 <span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> wide</span>
 <span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> rep_id, stat_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-rep_id
-</th>
-<th style="text-align:left;">
-stat_name
-</th>
-<th style="text-align:right;">
-rep_value
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> rep_id </th>
+   <th style="text-align:left;"> stat_name </th>
+   <th style="text-align:right;"> rep_value </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-LotsCompleted
-</td>
-<td style="text-align:right;">
-85.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:right;">
-28.126
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:right;">
-3.908
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-LotsCompleted
-</td>
-<td style="text-align:right;">
-85.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:right;">
-28.981
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:right;">
-4.094
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-LotsCompleted
-</td>
-<td style="text-align:right;">
-86.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-TimeInShop
-</td>
-<td style="text-align:right;">
-36.980
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-WorkInProcess
-</td>
-<td style="text-align:right;">
-5.904
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> LotsCompleted </td>
+   <td style="text-align:right;"> 85.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:right;"> 28.126 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:right;"> 3.908 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> LotsCompleted </td>
+   <td style="text-align:right;"> 85.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:right;"> 28.981 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:right;"> 4.094 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> LotsCompleted </td>
+   <td style="text-align:right;"> 86.000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> TimeInShop </td>
+   <td style="text-align:right;"> 36.980 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> WorkInProcess </td>
+   <td style="text-align:right;"> 5.904 </td>
+  </tr>
 </tbody>
 </table>
 </div>

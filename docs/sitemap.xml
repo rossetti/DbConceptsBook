@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/index.html</loc>
-    <lastmod>2026-11-20T14:56:08.846Z</lastmod>
+    <lastmod>2026-11-20T15:17:32.010Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/00-author.html</loc>
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/05-Chapter5.html</loc>
-    <lastmod>2026-11-20T14:28:03.541Z</lastmod>
+    <lastmod>2026-11-20T20:01:15.362Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/06-Chapter6.html</loc>
@@ -54,11 +54,11 @@
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/12-Chapter12.html</loc>
-    <lastmod>2026-11-20T14:28:03.548Z</lastmod>
+    <lastmod>2026-11-20T20:01:15.362Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/13-AppPostgreSQLSetup.html</loc>
-    <lastmod>2026-11-13T20:16:07.489Z</lastmod>
+    <lastmod>2026-11-20T20:01:15.363Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/14-AppKSLSetup.html</loc>
@@ -66,7 +66,7 @@
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/15-AppSampleDatabases.html</loc>
-    <lastmod>2026-10-31T14:51:09.068Z</lastmod>
+    <lastmod>2026-11-20T20:01:15.363Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/16-AppERDandUML.html</loc>
@@ -93,11 +93,15 @@
     <lastmod>2026-11-13T20:16:07.490Z</lastmod>
   </url>
   <url>
+    <loc>https://rossetti.github.io/DbConceptsBook/22-AppSpatial.html</loc>
+    <lastmod>2026-11-20T20:01:15.364Z</lastmod>
+  </url>
+  <url>
     <loc>https://rossetti.github.io/DbConceptsBook/references.html</loc>
     <lastmod>2026-09-25T14:36:26.032Z</lastmod>
   </url>
   <url>
     <loc>https://rossetti.github.io/DbConceptsBook/dbconcepts-book.pdf</loc>
-    <lastmod>2026-11-20T15:08:48.828Z</lastmod>
+    <lastmod>2026-11-20T22:07:00.176Z</lastmod>
   </url>
 </urlset>

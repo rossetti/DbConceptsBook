@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A textbook and course notes on database concepts, design, and SQL for industrial engineering students, with applications to production, inventory, logistics, and quality data.">
+
+<title>Appendix J — Spatial Data in PostgreSQL – Database Concepts for Industrial Engineers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./21-AppAssistants.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-6b6957c917596b414ec0b78690761e87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-16fe07f7d199e5def18177371a518124.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-058a955ac2cfbb4d3d59ca5e3054ba6c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="css/cover.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./22-AppSpatial.html"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Database Concepts for Industrial Engineers</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./slides/index.html" title="Lecture Slides" class="quarto-navigation-tool px-1" aria-label="Lecture Slides"><i class="bi bi-easel"></i></a>
+    <a href="./activities/index.html" title="Class Activities" class="quarto-navigation-tool px-1" aria-label="Class Activities"><i class="bi bi-people"></i></a>
+    <a href="./interactive/index.html" title="Companion" class="quarto-navigation-tool px-1" aria-label="Companion"><i class="bi bi-ui-checks"></i></a>
+    <a href="./dbconcepts-book.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-author.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Author</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Chapter1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Databases in Industrial Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reading and Querying a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Chapter2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Relational Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Querying Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Chapter4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aggregation and Analytical Queries</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Designing and Building a Database</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Chapter5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Class Modeling with UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Chapter6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">From Class Models to Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Chapter7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normalization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Chapter8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Defining and Populating Tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Chapter9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Views, Transactions, and Concurrency</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Databases in Practice</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Chapter10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programming with Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Chapter11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Warehousing and Decision Support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Chapter12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Databases for Simulation and Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-AppPostgreSQLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Installing PostgreSQL and Its Tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-AppKSLSetup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Kotlin and KSL Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-AppSampleDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">The Book’s Databases</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-AppERDandUML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Translating Between Crow’s Foot and UML</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-AppDiagramTools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tools for Drawing UML and ER Diagrams</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-AppSQLReference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">SQL Quick Reference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-AppEmbeddedDatabases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Embedded Databases: SQLite and DuckDB</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-AppNoSQL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">NoSQL and Other Data Stores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-AppAssistants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Connecting an AI Assistant to a Database</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-AppSpatial.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-appspatial-why" id="toc-sec-appspatial-why" class="nav-link active" data-scroll-target="#sec-appspatial-why"><span class="header-section-number">J.1</span> Why locations need a type of their own</a></li>
+  <li><a href="#sec-appspatial-install" id="toc-sec-appspatial-install" class="nav-link" data-scroll-target="#sec-appspatial-install"><span class="header-section-number">J.2</span> Installing PostGIS</a></li>
+  <li><a href="#sec-appspatial-types" id="toc-sec-appspatial-types" class="nav-link" data-scroll-target="#sec-appspatial-types"><span class="header-section-number">J.3</span> Points, lines, and polygons</a></li>
+  <li><a href="#sec-appspatial-adding" id="toc-sec-appspatial-adding" class="nav-link" data-scroll-target="#sec-appspatial-adding"><span class="header-section-number">J.4</span> Giving the stops a location</a></li>
+  <li><a href="#sec-appspatial-distance" id="toc-sec-appspatial-distance" class="nav-link" data-scroll-target="#sec-appspatial-distance"><span class="header-section-number">J.5</span> Distance and length</a></li>
+  <li><a href="#sec-appspatial-near" id="toc-sec-appspatial-near" class="nav-link" data-scroll-target="#sec-appspatial-near"><span class="header-section-number">J.6</span> Near, nearest, and inside</a></li>
+  <li><a href="#sec-appspatial-join" id="toc-sec-appspatial-join" class="nav-link" data-scroll-target="#sec-appspatial-join"><span class="header-section-number">J.7</span> A spatial join</a></li>
+  <li><a href="#sec-appspatial-loading" id="toc-sec-appspatial-loading" class="nav-link" data-scroll-target="#sec-appspatial-loading"><span class="header-section-number">J.8</span> Loading spatial data from files</a></li>
+  <li><a href="#sec-appspatial-summary" id="toc-sec-appspatial-summary" class="nav-link" data-scroll-target="#sec-appspatial-summary"><span class="header-section-number">J.9</span> Summary</a></li>
+  <li><a href="#sec-appspatial-exercises" id="toc-sec-appspatial-exercises" class="nav-link" data-scroll-target="#sec-appspatial-exercises"><span class="header-section-number">J.10</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-AppPostgreSQLSetup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./22-AppSpatial.html"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-appspatial" class="quarto-section-identifier">Appendix J — Spatial Data in PostgreSQL</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note callout-titled" title="Learning objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After reading this appendix you should be able to:</p>
+<ul>
+<li>explain why a latitude and a longitude stored as two numbers cannot answer questions of distance or nearness</li>
+<li>install PostGIS in a database and give an existing table a location column</li>
+<li>choose between the <code>geometry</code> and <code>geography</code> types, and name the spatial reference system of a location</li>
+<li>write queries that measure a distance, find the nearest location, select the locations within a distance, and test whether a location lies inside an area</li>
+<li>join two tables on a spatial condition, and build the distance matrix a logistics model reads</li>
+<li>recognize the data conditions under which a spatial query gives a wrong answer</li>
+</ul>
+</div>
+</div>
+<p>Many of the questions an industrial engineer asks of operational data are questions about places. Which warehouse is nearest each customer? How far does a truck travel to serve a region? Which stops lie within a walk of a new employer? A civil engineer asks the same kind of question about roads, transit routes, and service areas. Each one needs a distance, a nearness, or a boundary, and an ordinary table answers none of them well.</p>
+<p>This appendix shows how PostgreSQL stores and queries locations through <strong>PostGIS</strong>, an extension that adds spatial types and functions to the database. PostGIS is not part of the SQL standard, and every function in this appendix whose name begins with <code>ST_</code> is PostGIS’s. Its functions follow the Open Geospatial Consortium’s Simple Features specification, which other database systems also implement, so the ideas carry over even where the names differ. We work first with Millbrook Transit’s stops and routes, and then with the cities of HG Industries’ customers and warehouses.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Following along">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Following along
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The appendix uses two of your databases. The Millbrook Transit queries run in <code>dbconcepts_transit</code> (<a href="15-AppSampleDatabases.html#sec-appsampledbs-transit" class="quarto-xref"><span>Section C.10</span></a>), after you run <code>sql/spatial/sp-transit-location.sql</code> from the companion code in it. The HG Industries queries run in <code>dbconcepts_history</code> (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-bookdbs" class="quarto-xref"><span>Section A.5</span></a>), after you run <code>sql/spatial/sp-hg-locations.sql</code> in it. Both scripts install PostGIS in their database, which needs PostGIS installed with your server (<a href="#sec-appspatial-install" class="quarto-xref"><span>Section J.2</span></a>). Neither changes a table of the book’s database, and a reload of the book’s database leaves what they add in place. Reloading Millbrook Transit removes its location column, so run <code>sp-transit-location.sql</code> again after a reload.</p>
+</div>
+</div>
+<section id="sec-appspatial-why" class="level2" data-number="J.1">
+<h2 data-number="J.1" class="anchored" data-anchor-id="sec-appspatial-why"><span class="header-section-number">J.1</span> Why locations need a type of their own</h2>
+<p>Recall from <a href="05-Chapter5.html#sec-cm-attribute-parts" class="quarto-xref"><span>Section 5.3.1</span></a> that a point of a transit network records a <code>latitude</code> and a <code>longitude</code> as two attributes, since a request for the stop nearest a rider computes a distance from both. Each is an ordinary number in <code>transit.point</code>, and a query can compare one latitude with another. Computing a distance from them, however, is harder than it looks.</p>
+<p>A first attempt treats the two numbers as coordinates on a flat sheet and applies the distance formula of plane geometry. The following query uses it to ask which of two stops, Maple Turnaround and Riverside Apartments, lies nearer the Plant Gate stop.</p>
+<div id="tbl-appspatial-degrees" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-degrees-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.1: Two Stops’ Distances from Plant Gate, in Degrees
+</figcaption>
+<div aria-describedby="tbl-appspatial-degrees-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> b.point_code <span class="kw">AS</span> <span class="kw">stop</span>, b.name,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>(<span class="fu">SQRT</span>(<span class="fu">POWER</span>(b.latitude <span class="op">-</span> a.latitude, <span class="dv">2</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           <span class="op">+</span> <span class="fu">POWER</span>(b.longitude <span class="op">-</span> a.longitude, <span class="dv">2</span>)), <span class="dv">4</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>           <span class="kw">AS</span> degrees</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.point <span class="kw">AS</span> a, transit.point <span class="kw">AS</span> b</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> a.point_code <span class="op">=</span> <span class="st">'PLG'</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> b.point_code <span class="kw">IN</span> (<span class="st">'MTP'</span>, <span class="st">'RIV'</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> degrees;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> stop </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> degrees </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> MTP </td>
+   <td style="text-align:left;"> Maple Turnaround </td>
+   <td style="text-align:right;"> 0.0207 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> RIV </td>
+   <td style="text-align:left;"> Riverside Apartments </td>
+   <td style="text-align:right;"> 0.0213 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-degrees" class="quarto-xref">Table&nbsp;<span>J.1</span></a> puts Maple Turnaround nearer. The answer is wrong, for two reasons. First, the result is in degrees, not in miles, and no single factor turns it into miles. Second, a degree of longitude is shorter than a degree of latitude everywhere except at the equator. The meridians meet at the poles, so at Millbrook’s latitude, about 36 degrees north, a degree of longitude is about 0.81 of a degree of latitude. The formula counts an east-west difference as if it were a north-south one, and Riverside Apartments lies mostly east of Plant Gate. Thus, the flat formula misranks the two stops, as <a href="#sec-appspatial-distance" class="quarto-xref"><span>Section J.5</span></a> shows by measuring them correctly.</p>
+<p>A spatial type removes both faults. It holds a location as one value, it comes with functions that know the shape of the Earth and report distances in meters, and it can be indexed so that “near” is found quickly. PostGIS, open source under the GNU General Public License, is the most widely used spatial extension for PostgreSQL, and much GIS software, QGIS among it, reads and writes PostGIS tables directly. The next section installs it.</p>
+</section>
+<section id="sec-appspatial-install" class="level2" data-number="J.2">
+<h2 data-number="J.2" class="anchored" data-anchor-id="sec-appspatial-install"><span class="header-section-number">J.2</span> Installing PostGIS</h2>
+<p>PostGIS is installed with the server and then enabled in each database that uses it. How it is installed depends on how you installed PostgreSQL (<a href="13-AppPostgreSQLSetup.html#sec-apppostgres-install" class="quarto-xref"><span>Section A.1</span></a>):</p>
+<ul>
+<li><strong>Postgres.app</strong> (macOS) includes PostGIS; there is nothing to install.</li>
+<li><strong>Homebrew</strong> (macOS): run <code>brew install postgis</code>.</li>
+<li><strong>The EDB installer</strong> (Windows): run Stack Builder, which the installer offers at its end and which is also in the Start menu, choose your server, and select PostGIS under Spatial Extensions. <a href="13-AppPostgreSQLSetup.html#sec-apppostgres-install" class="quarto-xref"><span>Section A.1</span></a> says that Stack Builder is not needed; this appendix is the exception.</li>
+<li><strong>Linux</strong>: install your distribution’s PostGIS package for your server’s version, for example <code>postgresql-18-postgis-3</code>.</li>
+</ul>
+<p>An extension belongs to one database. The following statement enables PostGIS in the database you are connected to, and the companion scripts begin with it. Creating an extension needs a user allowed to create one, which the user your PostgreSQL installation made for you is.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> EXTENSION <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> postgis;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The check is a query that only PostGIS can answer:</p>
+<div id="tbl-appspatial-version" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-version-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.2: The PostGIS Version
+</figcaption>
+<div aria-describedby="tbl-appspatial-version-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> postgis_lib_version() <span class="kw">AS</span> postgis;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> postgis </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 3.6.3 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>If the statement fails with a message that the extension’s control file cannot be found, PostGIS is not installed with the server, and the steps above come first. Notice that enabling PostGIS in <code>dbconcepts_transit</code> does not enable it in <code>dbconcepts_history</code>; each companion script enables it in its own database.</p>
+</section>
+<section id="sec-appspatial-types" class="level2" data-number="J.3">
+<h2 data-number="J.3" class="anchored" data-anchor-id="sec-appspatial-types"><span class="header-section-number">J.3</span> Points, lines, and polygons</h2>
+<p>PostGIS stores three kinds of shape that this appendix uses. A <strong>point</strong> is one location, such as a transit stop or a city. A <strong>line string</strong> is a sequence of points joined by straight lines, such as a route through its stops. A <strong>polygon</strong> is an area bounded by a closed line, such as a service area or a county. Each is one value of a column, as a date or a number is.</p>
+<p>A shape is written for people in <strong>well-known text</strong>, a standard notation that names the kind of shape and lists its coordinates. The Transit Center is <code>POINT(-94.1574 36.0621)</code>. Notice the order: well-known text, like nearly every GIS, writes the longitude first, as the horizontal coordinate x, and the latitude second, as y. Writing them the other way round is the commonest mistake with spatial data, and PostGIS does not refuse it. The following query makes a <code>geography</code> point from the Transit Center’s coordinates in the wrong order.</p>
+<div id="tbl-appspatial-swapped" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-swapped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.3: The Transit Center with Its Coordinates Exchanged
+</figcaption>
+<div aria-describedby="tbl-appspatial-swapped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> ST_AsText(ST_MakePoint(<span class="fl">36.0621</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>           <span class="op">-</span><span class="fl">94.1574</span>):<span class="ch">:geography</span>) <span class="kw">AS</span> location;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> location </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> POINT(36.0621 -85.8426) </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>No latitude lies beyond 90 degrees, so -94.1574 cannot be one. PostGIS does not stop; it moves the value into range, with no more than a notice that most tools do not show, and <a href="#tbl-appspatial-swapped" class="quarto-xref">Table&nbsp;<span>J.3</span></a> puts the Transit Center near the South Pole. Where both numbers are below 90, as in much of Europe, the exchanged point is not even moved: it is valid, and wrong. Thus, the order of the coordinates is yours to get right.</p>
+<p>Coordinates mean nothing until the system they belong to is named. A <strong>spatial reference identifier (SRID)</strong> is the number that names it. The number 4326 names the latitude and longitude of the GPS system, measured in degrees, and every location in this appendix uses it. Surveyors and civil engineers often work instead in a projected system, such as the Arkansas North state plane system, whose coordinates are feet east and north of an origin. PostGIS converts between systems with <code>ST_Transform</code>, which this appendix does not need.</p>
+<p>PostGIS offers two types for a shape. A value of type <strong><code>geometry</code></strong> is measured on a flat plane, in the units of its coordinates, so a distance between two latitude and longitude points comes out in degrees, with the fault of <a href="#sec-appspatial-why" class="quarto-xref"><span>Section J.1</span></a>. A value of type <strong><code>geography</code></strong> is measured on the Earth’s surface, and its distances and areas come out in meters. For locations given as latitude and longitude, you should use <code>geography</code> unless a function you need exists only for <code>geometry</code>. This appendix uses <code>geography</code> for every stored location, and converts to <code>geometry</code> only to build a line.</p>
+<p><a href="#tbl-appspatial-functions" class="quarto-xref">Table&nbsp;<span>J.4</span></a> lists the functions this appendix uses.</p>
+<div id="tbl-appspatial-functions" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.4: The PostGIS Functions Used in This Appendix
+</figcaption>
+<div aria-describedby="tbl-appspatial-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>ST_MakePoint(x, y)</code></td>
+<td style="text-align: left;">A point from a longitude and a latitude, in that order</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ST_SetSRID(shape, srid)</code></td>
+<td style="text-align: left;">The shape, labeled with a spatial reference system</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ST_AsText(shape)</code></td>
+<td style="text-align: left;">The shape in well-known text</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ST_AsGeoJSON(shape)</code></td>
+<td style="text-align: left;">The shape as a GeoJSON document</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ST_Distance(a, b)</code></td>
+<td style="text-align: left;">The distance between two shapes; meters for <code>geography</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ST_DWithin(a, b, d)</code></td>
+<td style="text-align: left;">True if the shapes lie within <code>d</code> of each other</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ST_MakeLine(point)</code></td>
+<td style="text-align: left;">As an aggregate, a line string through the points, in order</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ST_Length(line)</code></td>
+<td style="text-align: left;">The length of a line; meters for <code>geography</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ST_Buffer(shape, d)</code></td>
+<td style="text-align: left;">The area within <code>d</code> of the shape</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ST_Covers(a, b)</code></td>
+<td style="text-align: left;">True if no part of <code>b</code> lies outside <code>a</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The next section uses the first three to give Millbrook’s stops a location.</p>
+</section>
+<section id="sec-appspatial-adding" class="level2" data-number="J.4">
+<h2 data-number="J.4" class="anchored" data-anchor-id="sec-appspatial-adding"><span class="header-section-number">J.4</span> Giving the stops a location</h2>
+<p>The companion script <code>sql/spatial/sp-transit-location.sql</code> adds a location column to <code>transit.point</code>. After enabling PostGIS, it runs one statement:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> transit.point</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ADD</span> <span class="kw">COLUMN</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> location</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        geography(Point, <span class="dv">4326</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> (</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            ST_SetSRID(ST_MakePoint(longitude,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                                    latitude),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">4326</span>):<span class="ch">:geography</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        ) STORED;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Let’s read it from the inside out. <code>ST_MakePoint</code> builds a point from the stop’s <code>longitude</code> and <code>latitude</code>, longitude first. <code>ST_SetSRID</code> labels the point with SRID 4326, so that PostGIS knows the numbers are GPS degrees, and the cast <code>::geography</code> makes it a <code>geography</code> value. The column’s type, <code>geography(Point, 4326)</code>, accepts only points in that system. Recall from <a href="08-Chapter8.html#sec-ddl-alter" class="quarto-xref"><span>Section 8.6</span></a> that <code>ALTER TABLE ... ADD COLUMN</code> adds a column to a table that already holds rows; <code>IF NOT EXISTS</code> lets the script run twice without error.</p>
+<p>The new column holds the same fact as <code>latitude</code> and <code>longitude</code>, which is the redundancy of <a href="07-Chapter7.html#sec-nf-anomalies" class="quarto-xref"><span>Section 7.2</span></a>: a stop moved by an <code>UPDATE</code> of its latitude could keep its old location. The clause <code>GENERATED ALWAYS AS (...) STORED</code> prevents that. It makes <code>location</code> a <strong>generated column</strong>, which the database computes from the other columns of the row whenever the row is written, and which no statement may set directly. Thus, the three columns cannot disagree. Generated columns are in the SQL standard, and PostgreSQL implements them.</p>
+<p>The following query shows two stops’ coordinates beside their locations, written as well-known text.</p>
+<div id="tbl-appspatial-wkt" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-wkt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.5: Two Stops’ Coordinates and Locations
+</figcaption>
+<div aria-describedby="tbl-appspatial-wkt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> point_code, latitude, longitude,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>       ST_AsText(location) <span class="kw">AS</span> location</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.point</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> point_code <span class="kw">IN</span> (<span class="st">'TC'</span>, <span class="st">'PLG'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> point_code;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> point_code </th>
+   <th style="text-align:right;"> latitude </th>
+   <th style="text-align:right;"> longitude </th>
+   <th style="text-align:left;"> location </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> PLG </td>
+   <td style="text-align:right;"> 36.07320 </td>
+   <td style="text-align:right;"> -94.17510 </td>
+   <td style="text-align:left;"> POINT(-94.1751 36.0732) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TC </td>
+   <td style="text-align:right;"> 36.06210 </td>
+   <td style="text-align:right;"> -94.15740 </td>
+   <td style="text-align:left;"> POINT(-94.1574 36.0621) </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-wkt" class="quarto-xref">Table&nbsp;<span>J.5</span></a> shows each location with its longitude first. Notice that the query selects <code>ST_AsText(location)</code>, not <code>location</code> itself. A spatial value is stored in a binary form, and a query that selects it shows a long string of hexadecimal digits that no one can read. DataGrip and DBeaver can also draw a spatial column on a map in their result viewers; each tool’s documentation describes how. The next section measures distances between the locations.</p>
+</section>
+<section id="sec-appspatial-distance" class="level2" data-number="J.5">
+<h2 data-number="J.5" class="anchored" data-anchor-id="sec-appspatial-distance"><span class="header-section-number">J.5</span> Distance and length</h2>
+<p><code>ST_Distance</code> between two <code>geography</code> values returns the distance between them along the Earth’s surface, in meters. A mile is 1,609.344 meters, so dividing by that number gives miles. The following query repeats the question of <a href="#tbl-appspatial-degrees" class="quarto-xref">Table&nbsp;<span>J.1</span></a> with it.</p>
+<div id="tbl-appspatial-miles" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-miles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.6: Two Stops’ Distances from Plant Gate, in Miles
+</figcaption>
+<div aria-describedby="tbl-appspatial-miles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> b.point_code <span class="kw">AS</span> <span class="kw">stop</span>, b.name,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>((ST_Distance(a.location, b.location)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>           <span class="op">/</span> <span class="fl">1609.344</span>):<span class="ch">:NUMERIC</span>, <span class="dv">2</span>) <span class="kw">AS</span> miles</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.point <span class="kw">AS</span> a, transit.point <span class="kw">AS</span> b</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> a.point_code <span class="op">=</span> <span class="st">'PLG'</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> b.point_code <span class="kw">IN</span> (<span class="st">'MTP'</span>, <span class="st">'RIV'</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> miles;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> stop </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> miles </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> RIV </td>
+   <td style="text-align:left;"> Riverside Apartments </td>
+   <td style="text-align:right;"> 1.20 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MTP </td>
+   <td style="text-align:left;"> Maple Turnaround </td>
+   <td style="text-align:right;"> 1.39 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-miles" class="quarto-xref">Table&nbsp;<span>J.6</span></a> reverses the order of <a href="#tbl-appspatial-degrees" class="quarto-xref">Table&nbsp;<span>J.1</span></a>: Riverside Apartments is the nearer stop. The cast to <code>NUMERIC</code> lets <code>ROUND</code> keep two decimal places, since <code>ST_Distance</code> returns a floating-point number. The distance is a straight line over the ground, the distance a bird would fly, not the distance a bus drives. That limit is what the following example puts to use.</p>
+<div id="exm-appspatial-segments" class="theorem example">
+<p><span class="theorem-title"><strong>Example J.1 (Checking recorded segment lengths)</strong></span> <em>The system.</em> Millbrook Transit records each segment of a route in <code>transit.segment</code>, with the stops at its two ends and its length in miles, <code>length_miles</code>, as driven on the road.</p>
+<p><em>The request.</em> The planner who maintains the network asks whether any recorded length is impossible.</p>
+<p>A road between two stops can be longer than the straight line between them, and never shorter. Thus, a segment whose recorded length is less than the straight-line distance between its stops is recorded wrongly. The query joins each segment to its two stops, as <a href="03-Chapter3.html#sec-q-inner-joins" class="quarto-xref"><span>Section 3.6</span></a> joins any table to two rows of another, and keeps the segments that fail the test. The condition compares meters with meters.</p>
+<div id="tbl-appspatial-segments" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-segments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.7: Segments Recorded Shorter Than the Straight Line
+</figcaption>
+<div aria-describedby="tbl-appspatial-segments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> s.segment_pk <span class="kw">AS</span> <span class="kw">segment</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       a.point_code <span class="kw">AS</span> from_stop,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>       b.point_code <span class="kw">AS</span> to_stop,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>       s.length_miles <span class="kw">AS</span> recorded,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>((ST_Distance(a.location, b.location)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>           <span class="op">/</span> <span class="fl">1609.344</span>):<span class="ch">:NUMERIC</span>, <span class="dv">2</span>) <span class="kw">AS</span> straight</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.<span class="kw">segment</span> <span class="kw">AS</span> s</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> transit.point <span class="kw">AS</span> a</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> a.point_pk <span class="op">=</span> s.start_point_fk</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> transit.point <span class="kw">AS</span> b</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> b.point_pk <span class="op">=</span> s.end_point_fk</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> s.length_miles <span class="op">*</span> <span class="fl">1609.344</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      <span class="op">&lt;</span> ST_Distance(a.location, b.location)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> s.segment_pk;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> segment </th>
+   <th style="text-align:left;"> from_stop </th>
+   <th style="text-align:left;"> to_stop </th>
+   <th style="text-align:right;"> recorded </th>
+   <th style="text-align:right;"> straight </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> LIB </td>
+   <td style="text-align:left;"> UNI </td>
+   <td style="text-align:right;"> 1.25 </td>
+   <td style="text-align:right;"> 1.28 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:left;"> UNI </td>
+   <td style="text-align:left;"> OAK </td>
+   <td style="text-align:right;"> 0.75 </td>
+   <td style="text-align:right;"> 0.77 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> Millbrook has 15 segments, so the query considers 15 rows and can return at most 15. <a href="#tbl-appspatial-segments" class="quarto-xref">Table&nbsp;<span>J.7</span></a> returns two, and in each the straight distance exceeds the recorded length, as the condition requires.</p>
+<p><em>Interpretation.</em> The segments from the Public Library to University Center and from University Center to Oak Park are each recorded about 0.02 miles shorter than any road between their stops could be. Either the lengths or the stops’ coordinates are wrong, and someone must measure again. Recall that <code>route.distance_miles</code> is the sum of its segments’ lengths, so route 2’s recorded distance is suspect as well.</p>
+<p><em>Where it breaks.</em> The test finds only lengths that are too short. A length recorded far too long, such as 12.5 for 1.25, passes it. A coordinate entered with its latitude and longitude exchanged puts a stop in Antarctica and makes every segment touching it fail. A segment whose recorded length is close to its straight line deserves a look too, since few roads run straight. Recall from <a href="#tbl-appspatial-swapped" class="quarto-xref">Table&nbsp;<span>J.3</span></a> that the exchanged coordinates are not refused, so nothing but a check like this one finds them.</p>
+</div>
+<p>A route is a line string through its stops. The aggregate form of <code>ST_MakeLine</code> builds one from a group of points, in the order its own <code>ORDER BY</code> gives, as <code>ARRAY_AGG</code> and <code>STRING_AGG</code> take an order within the group (<a href="04-Chapter4.html#sec-agg-groupby" class="quarto-xref"><span>Section 4.2</span></a>). It works on <code>geometry</code>, so each location is cast to that type first. The following query builds each route’s line through the stops at which its segments start, in sequence order. Every Millbrook route is a loop that returns to the Transit Center, so <code>ST_AddPoint</code> appends the line’s first point to its end to close it, and <code>ST_Length</code> measures it, cast back to <code>geography</code> so the answer is in meters.</p>
+<div id="tbl-appspatial-route-lines" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-route-lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.8: Each Route’s Line Through Its Stops
+</figcaption>
+<div aria-describedby="tbl-appspatial-route-lines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> route_line <span class="kw">AS</span> (</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> s.route_fk,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         ST_MakeLine(p.location:<span class="ch">:geometry</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                     <span class="kw">ORDER</span> <span class="kw">BY</span> s.sequence_number)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>           <span class="kw">AS</span> line</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> transit.<span class="kw">segment</span> <span class="kw">AS</span> s</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> transit.point <span class="kw">AS</span> p</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> p.point_pk <span class="op">=</span> s.start_point_fk</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">GROUP</span> <span class="kw">BY</span> s.route_fk)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> r.route_number,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>       r.distance_miles <span class="kw">AS</span> recorded,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>       ST_NPoints(l.line) <span class="kw">AS</span> stops,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>((ST_Length(ST_AddPoint(l.line,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>           ST_StartPoint(l.line)):<span class="ch">:geography</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>           <span class="op">/</span> <span class="fl">1609.344</span>):<span class="ch">:NUMERIC</span>, <span class="dv">2</span>) <span class="kw">AS</span> line_miles</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> route_line <span class="kw">AS</span> l</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> transit.route <span class="kw">AS</span> r <span class="kw">ON</span> r.route_pk <span class="op">=</span> l.route_fk</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> r.route_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> route_number </th>
+   <th style="text-align:right;"> recorded </th>
+   <th style="text-align:right;"> stops </th>
+   <th style="text-align:right;"> line_miles </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3.60 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 2.54 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 4.15 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 3.46 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3.70 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 2.94 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-route-lines" class="quarto-xref">Table&nbsp;<span>J.8</span></a> shows each route’s line about 70 to 85 percent as long as its recorded distance, which is what a street network allows. The line through the stops is the shortest path that visits them in order, a lower bound on the distance driven, not an estimate of it. A request for driving distance needs the street network itself, which PostGIS can hold and an extension called pgRouting can search; this appendix stops at straight lines. Notice also that the <code>ORDER BY</code> inside the aggregate is essential: without it, the points may be joined in any order, and the line zigzags between stops that the bus never drives between. The next section asks which locations are near one another.</p>
+</section>
+<section id="sec-appspatial-near" class="level2" data-number="J.6">
+<h2 data-number="J.6" class="anchored" data-anchor-id="sec-appspatial-near"><span class="header-section-number">J.6</span> Near, nearest, and inside</h2>
+<p><code>ST_DWithin</code> asks whether two shapes lie within a given distance of each other, in meters for <code>geography</code>. The following query finds the stops within half a mile, 804.672 meters, of the Transit Center: the stops a rider could reach on foot by a transfer.</p>
+<div id="tbl-appspatial-within" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-within-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.9: Stops Within Half a Mile of the Transit Center
+</figcaption>
+<div aria-describedby="tbl-appspatial-within-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> b.point_code <span class="kw">AS</span> <span class="kw">stop</span>, b.name,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>((ST_Distance(a.location, b.location)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="op">/</span> <span class="fl">1609.344</span>):<span class="ch">:NUMERIC</span>, <span class="dv">2</span>) <span class="kw">AS</span> miles</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.point <span class="kw">AS</span> a</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> transit.point <span class="kw">AS</span> b</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> b.point_pk <span class="op">&lt;&gt;</span> a.point_pk</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a> <span class="kw">AND</span> ST_DWithin(a.location, b.location, <span class="fl">804.672</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> a.point_code <span class="op">=</span> <span class="st">'TC'</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> miles;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> stop </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> miles </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> MKT </td>
+   <td style="text-align:left;"> Market Square </td>
+   <td style="text-align:right;"> 0.25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LIB </td>
+   <td style="text-align:left;"> Public Library </td>
+   <td style="text-align:right;"> 0.32 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BRG </td>
+   <td style="text-align:left;"> Bridge Street Timing Point </td>
+   <td style="text-align:right;"> 0.44 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-within" class="quarto-xref">Table&nbsp;<span>J.9</span></a> lists three stops. The condition <code>ST_Distance(a.location, b.location) &lt; 804.672</code> would return the same rows, and you should still write <code>ST_DWithin</code>. The reason is speed: PostgreSQL can answer <code>ST_DWithin</code> with a spatial index, which finds the nearby locations without measuring the distance to every one, while a condition on <code>ST_Distance</code> must measure them all. A spatial index is created with <code>CREATE INDEX ... USING GIST (location)</code>; at Millbrook’s twelve stops it makes no difference, and at a million GPS readings it makes all of it.</p>
+<p>The nearest location is found by sorting on distance and keeping the first rows. PostGIS provides the operator <code>&lt;-&gt;</code>, the distance between two shapes, for that sort, since it too can use a spatial index. The following query finds the three stops nearest a rider at longitude -94.1700, latitude 36.0600.</p>
+<div id="tbl-appspatial-nearest" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-nearest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.10: The Three Stops Nearest a Rider
+</figcaption>
+<div aria-describedby="tbl-appspatial-nearest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> point_code <span class="kw">AS</span> <span class="kw">stop</span>, name,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>((ST_Distance(location,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>           ST_MakePoint(<span class="op">-</span><span class="fl">94.1700</span>, <span class="fl">36.0600</span>):<span class="ch">:geography</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>           <span class="op">/</span> <span class="fl">1609.344</span>):<span class="ch">:NUMERIC</span>, <span class="dv">2</span>) <span class="kw">AS</span> miles</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.point</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> location</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="op">&lt;-&gt;</span> ST_MakePoint(<span class="op">-</span><span class="fl">94.1700</span>, <span class="fl">36.0600</span>):<span class="ch">:geography</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">3</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> stop </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> miles </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> BRG </td>
+   <td style="text-align:left;"> Bridge Street Timing Point </td>
+   <td style="text-align:right;"> 0.33 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MTP </td>
+   <td style="text-align:left;"> Maple Turnaround </td>
+   <td style="text-align:right;"> 0.44 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MKT </td>
+   <td style="text-align:left;"> Market Square </td>
+   <td style="text-align:right;"> 0.63 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-nearest" class="quarto-xref">Table&nbsp;<span>J.10</span></a> puts the Bridge Street Timing Point first, a third of a mile away. Notice that the nearest stop by a straight line need not be the one with the shortest walk. A river, a rail line, or a highway without a crossing can make the second stop the better one, and the database knows nothing of them. Notice also that <code>LIMIT 3</code> cuts off ties: had a fourth stop been exactly as far as the third, it would have been dropped without notice, as <a href="03-Chapter3.html#sec-q-orderby" class="quarto-xref"><span>Section 3.4</span></a> warns of any <code>LIMIT</code>.</p>
+<p>An area is a polygon, and <code>ST_Buffer</code> makes one from any shape: the area within a given distance of it. A <strong>service area</strong> of a route is the area within a quarter mile, 402.336 meters, of its line, a common planning standard for the distance riders will walk to a bus. The following query builds each route’s service area from its line and asks which stops it covers, with <code>ST_Covers</code>, which is true when no part of the second shape lies outside the first.</p>
+<div id="tbl-appspatial-coverage" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.11: The Stops in Each Route’s Service Area
+</figcaption>
+<div aria-describedby="tbl-appspatial-coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> route_line <span class="kw">AS</span> (</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> s.route_fk,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>         ST_MakeLine(p.location:<span class="ch">:geometry</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                     <span class="kw">ORDER</span> <span class="kw">BY</span> s.sequence_number)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>           <span class="kw">AS</span> line</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> transit.<span class="kw">segment</span> <span class="kw">AS</span> s</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> transit.point <span class="kw">AS</span> p</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> p.point_pk <span class="op">=</span> s.start_point_fk</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">GROUP</span> <span class="kw">BY</span> s.route_fk),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>service_area <span class="kw">AS</span> (</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> route_fk,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>         ST_Buffer(ST_AddPoint(line,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>             ST_StartPoint(line)):<span class="ch">:geography</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>             <span class="fl">402.336</span>) <span class="kw">AS</span> area</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> route_line)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> r.route_number,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> stops_covered,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>       STRING_AGG(p.point_code, <span class="st">' '</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                  <span class="kw">ORDER</span> <span class="kw">BY</span> p.point_code) <span class="kw">AS</span> stops</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> service_area <span class="kw">AS</span> a</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> transit.route <span class="kw">AS</span> r <span class="kw">ON</span> r.route_pk <span class="op">=</span> a.route_fk</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> transit.point <span class="kw">AS</span> p</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> ST_Covers(a.area, p.location)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> r.route_number</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> r.route_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> route_number </th>
+   <th style="text-align:right;"> stops_covered </th>
+   <th style="text-align:left;"> stops </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> IND MKT PLG TC UNI </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:left;"> IND LIB MKT OAK RIV TC UNI </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> BRG FGR HOS MKT MTP TC </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-coverage" class="quarto-xref">Table&nbsp;<span>J.11</span></a> shows each route’s service area covering stops the route does not serve. Route 1 stops at TC, MKT, PLG, and IND, and its area also covers University Center (UNI), a stop of route 2. Route 2 stops at TC, LIB, UNI, OAK, and RIV, and its area also covers Market Square (MKT) and the Industrial Park (IND). For the planner, these are candidate stops: places where a route already runs close enough that a stop would serve riders. Notice that the join’s condition is a spatial test, not an equality of keys; <a href="#sec-appspatial-join" class="quarto-xref"><span>Section J.7</span></a> develops that idea. A stop exactly on a service area’s boundary is covered by <code>ST_Covers</code>, while <code>ST_Contains</code>, a similar function for <code>geometry</code>, counts only what lies strictly inside, which is one more reason to say which test a request means.</p>
+<div id="fig-appspatial-service-areas" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-appspatial-service-areas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/spatial-transit-service-areas.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-appspatial-service-areas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;J.1: Millbrook Transit’s Routes, Stops, and Quarter-Mile Service Areas
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-appspatial-service-areas" class="quarto-xref">Figure&nbsp;<span>J.1</span></a> draws the shapes of <a href="#tbl-appspatial-route-lines" class="quarto-xref">Table&nbsp;<span>J.8</span></a> and <a href="#tbl-appspatial-coverage" class="quarto-xref">Table&nbsp;<span>J.11</span></a>, each from a query of the database: every route’s line through its stops in its own color, and around it, dashed, the area within a quarter mile of the line. A service area is the line widened by a quarter mile on every side, so it has rounded ends and corners. Notice University Center (UNI) inside route 1’s red area, although only the blue route 2 stops there, and Market Square (MKT) and the Industrial Park (IND) inside route 2’s blue area. Notice also the long red line from Market Square to Plant Gate: a route drawn through its stops crosses blocks the bus drives around, which is why <a href="#tbl-appspatial-route-lines" class="quarto-xref">Table&nbsp;<span>J.8</span></a> measures it shorter than the road. The map has no streets, since the database holds none.</p>
+</section>
+<section id="sec-appspatial-join" class="level2" data-number="J.7">
+<h2 data-number="J.7" class="anchored" data-anchor-id="sec-appspatial-join"><span class="header-section-number">J.7</span> A spatial join</h2>
+<p>A join whose condition is a spatial test pairs rows by where they are, not by a key they share. It is evaluated as every join of <a href="03-Chapter3.html#sec-q-inner-joins" class="quarto-xref"><span>Section 3.6</span></a> is: the cross product of the two tables, then the condition applied to each pair. The following example evaluates one by hand, on HG Industries’ warehouses and customers.</p>
+<p>HG’s tables record a city and a state, not a location. The companion script <code>sql/spatial/sp-hg-locations.sql</code> adds a table of its own, <code>geo.city_location</code>, with one row for each city of a customer or a warehouse. Its coordinates are the U.S. Census Bureau’s: each is a point inside the city’s boundary, from the Bureau’s 2025 Gazetteer of places, which is in the public domain. The table has no foreign key to HG’s tables. A query joins it to <code>customer</code> or <code>warehouse</code> on the pair of columns <code>city</code> and <code>state</code>, which identify a city, since a city’s name alone does not (there is a Springfield in Missouri and one in Arkansas). Thus, a city’s location is recorded once, however many customers it has.</p>
+<div id="exm-appspatial-radius" class="theorem example">
+<p><span class="theorem-title"><strong>Example J.2 (Customers within a day’s drive of each warehouse)</strong></span> <em>The system.</em> HG Industries ships from two warehouses, in Fayetteville, Arkansas, and Tulsa, Oklahoma, to the 30 customers of the year of history (<a href="15-AppSampleDatabases.html#sec-appsampledbs-history" class="quarto-xref"><span>Section C.7</span></a>), in <code>dbconcepts_history</code>.</p>
+<p><em>The request.</em> The distribution manager plans a delivery route on which a truck leaves a warehouse, delivers, and returns within one shift. That holds for a customer within 100 miles of the warehouse. Which customers lie within 100 miles of each warehouse?</p>
+<p>Let’s evaluate the join by hand on a slice: both warehouses, and the four customers in Fort Smith, Joplin, Muskogee, and Texarkana, one in each of the four states HG serves.</p>
+<div id="tbl-appspatial-slice" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-slice-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.12: The Four Customers of the Slice
+</figcaption>
+<div aria-describedby="tbl-appspatial-slice-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customer_number, name, city, state</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.customer</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> city <span class="kw">IN</span> (<span class="st">'Fort Smith'</span>, <span class="st">'Joplin'</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">'Muskogee'</span>, <span class="st">'Texarkana'</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> customer_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> city </th>
+   <th style="text-align:left;"> state </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Midtown Tool Supply </td>
+   <td style="text-align:left;"> Joplin </td>
+   <td style="text-align:left;"> MO </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1005 </td>
+   <td style="text-align:left;"> Prairie Garden Center </td>
+   <td style="text-align:left;"> Fort Smith </td>
+   <td style="text-align:left;"> AR </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1013 </td>
+   <td style="text-align:left;"> Muskogee Tool and Farm </td>
+   <td style="text-align:left;"> Muskogee </td>
+   <td style="text-align:left;"> OK </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1025 </td>
+   <td style="text-align:left;"> Piney Woods Hardware </td>
+   <td style="text-align:left;"> Texarkana </td>
+   <td style="text-align:left;"> TX </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>The cross product of the two warehouses and the four customers of <a href="#tbl-appspatial-slice" class="quarto-xref">Table&nbsp;<span>J.12</span></a> has 2 × 4 = 8 pairs, each a warehouse and a customer the join considers:</p>
+<div id="tbl-appspatial-pairs" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.13: The Eight Pairs of the Cross Product
+</figcaption>
+<div aria-describedby="tbl-appspatial-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Warehouse</th>
+<th style="text-align: center;">Customer</th>
+<th style="text-align: left;">City</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1004</td>
+<td style="text-align: left;">Joplin</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1005</td>
+<td style="text-align: left;">Fort Smith</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1013</td>
+<td style="text-align: left;">Muskogee</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1025</td>
+<td style="text-align: left;">Texarkana</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1004</td>
+<td style="text-align: left;">Joplin</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1005</td>
+<td style="text-align: left;">Fort Smith</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1013</td>
+<td style="text-align: left;">Muskogee</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1025</td>
+<td style="text-align: left;">Texarkana</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The condition needs each pair’s distance, which only the database can compute. The following query computes it for the eight pairs of <a href="#tbl-appspatial-pairs" class="quarto-xref">Table&nbsp;<span>J.13</span></a>, joining each warehouse and each customer to its city’s location.</p>
+<div id="tbl-appspatial-cross" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-cross-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.14: The Eight Pairs with Their Distances
+</figcaption>
+<div aria-describedby="tbl-appspatial-cross-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> w.warehouse_code <span class="kw">AS</span> warehouse,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>       c.customer_number <span class="kw">AS</span> customer, c.city,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>((ST_Distance(wl.location, cl.location)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>           <span class="op">/</span> <span class="fl">1609.344</span>):<span class="ch">:NUMERIC</span>, <span class="dv">1</span>) <span class="kw">AS</span> miles</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.warehouse <span class="kw">AS</span> w</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> wl</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> wl.city <span class="op">=</span> w.city <span class="kw">AND</span> wl.state <span class="op">=</span> w.state</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">CROSS</span> <span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> cl</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> cl.city <span class="op">=</span> c.city <span class="kw">AND</span> cl.state <span class="op">=</span> c.state</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> c.city <span class="kw">IN</span> (<span class="st">'Fort Smith'</span>, <span class="st">'Joplin'</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'Muskogee'</span>, <span class="st">'Texarkana'</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> w.warehouse_code, c.customer_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> warehouse </th>
+   <th style="text-align:left;"> customer </th>
+   <th style="text-align:left;"> city </th>
+   <th style="text-align:right;"> miles </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Joplin </td>
+   <td style="text-align:right;"> 71.7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:left;"> C-1005 </td>
+   <td style="text-align:left;"> Fort Smith </td>
+   <td style="text-align:right;"> 51.1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:left;"> C-1013 </td>
+   <td style="text-align:left;"> Muskogee </td>
+   <td style="text-align:right;"> 70.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:left;"> C-1025 </td>
+   <td style="text-align:left;"> Texarkana </td>
+   <td style="text-align:right;"> 180.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-TUL </td>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Joplin </td>
+   <td style="text-align:right;"> 101.7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-TUL </td>
+   <td style="text-align:left;"> C-1005 </td>
+   <td style="text-align:left;"> Fort Smith </td>
+   <td style="text-align:right;"> 101.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-TUL </td>
+   <td style="text-align:left;"> C-1013 </td>
+   <td style="text-align:left;"> Muskogee </td>
+   <td style="text-align:right;"> 40.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-TUL </td>
+   <td style="text-align:left;"> C-1025 </td>
+   <td style="text-align:left;"> Texarkana </td>
+   <td style="text-align:right;"> 211.6 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p>Now we apply the condition, a distance of 100 miles or less, to each pair of <a href="#tbl-appspatial-cross" class="quarto-xref">Table&nbsp;<span>J.14</span></a>:</p>
+<div id="tbl-appspatial-ledger" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-ledger-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.15: Evaluating the 100-Mile Condition by Hand
+</figcaption>
+<div aria-describedby="tbl-appspatial-ledger-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Warehouse</th>
+<th style="text-align: center;">Customer</th>
+<th style="text-align: right;">Miles</th>
+<th style="text-align: center;">Within 100 miles</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1004</td>
+<td style="text-align: right;">71.7</td>
+<td style="text-align: center;">true</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1005</td>
+<td style="text-align: right;">51.1</td>
+<td style="text-align: center;">true</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1013</td>
+<td style="text-align: right;">70.5</td>
+<td style="text-align: center;">true</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-FAY</td>
+<td style="text-align: center;">C-1025</td>
+<td style="text-align: right;">180.8</td>
+<td style="text-align: center;">false</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1004</td>
+<td style="text-align: right;">101.7</td>
+<td style="text-align: center;">false</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1005</td>
+<td style="text-align: right;">101.4</td>
+<td style="text-align: center;">false</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1013</td>
+<td style="text-align: right;">40.5</td>
+<td style="text-align: center;">true</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">W-TUL</td>
+<td style="text-align: center;">C-1025</td>
+<td style="text-align: right;">211.6</td>
+<td style="text-align: center;">false</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-ledger" class="quarto-xref">Table&nbsp;<span>J.15</span></a> predicts four pairs: three customers for Fayetteville and one for Tulsa. The query writes the condition with <code>ST_DWithin</code> and the distance in meters:</p>
+<div id="tbl-appspatial-radius" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-radius-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.16: Customers of the Slice Within 100 Miles of a Warehouse
+</figcaption>
+<div aria-describedby="tbl-appspatial-radius-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> w.warehouse_code <span class="kw">AS</span> warehouse,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>       c.customer_number <span class="kw">AS</span> customer, c.city</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.warehouse <span class="kw">AS</span> w</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> wl</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> wl.city <span class="op">=</span> w.city <span class="kw">AND</span> wl.state <span class="op">=</span> w.state</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">CROSS</span> <span class="kw">JOIN</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> cl</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> cl.city <span class="op">=</span> c.city <span class="kw">AND</span> cl.state <span class="op">=</span> c.state</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> c.city <span class="kw">IN</span> (<span class="st">'Fort Smith'</span>, <span class="st">'Joplin'</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'Muskogee'</span>, <span class="st">'Texarkana'</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> ST_DWithin(wl.location, cl.location,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">100</span> <span class="op">*</span> <span class="fl">1609.344</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> w.warehouse_code, c.customer_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> warehouse </th>
+   <th style="text-align:left;"> customer </th>
+   <th style="text-align:left;"> city </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Joplin </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:left;"> C-1005 </td>
+   <td style="text-align:left;"> Fort Smith </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:left;"> C-1013 </td>
+   <td style="text-align:left;"> Muskogee </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-TUL </td>
+   <td style="text-align:left;"> C-1013 </td>
+   <td style="text-align:left;"> Muskogee </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><em>The check.</em> <a href="#tbl-appspatial-radius" class="quarto-xref">Table&nbsp;<span>J.16</span></a> holds the four pairs that <a href="#tbl-appspatial-ledger" class="quarto-xref">Table&nbsp;<span>J.15</span></a> predicted, and no others. Without the condition on <code>c.city</code>, the same query answers the request for all 30 customers.</p>
+<p><em>Interpretation.</em> Muskogee is within a day’s drive of both warehouses, and Texarkana of neither. Joplin and Fort Smith lie just beyond 100 miles of Tulsa and well within it of Fayetteville, so the Fayetteville truck serves them.</p>
+<p><em>Where it breaks.</em> Each distance is between two cities’ points, not between a dock and a customer’s door, and a straight line, not a road. Joplin’s 101.7 miles from Tulsa and Fort Smith’s 101.4 are within two miles of the limit, so a customer on the near edge of either city may well be within it, and the road distance is certainly longer. A condition near its threshold decides nothing at this precision; the next example meets the same fault.</p>
+</div>
+<p>A join that pairs each warehouse with every customer, with a distance for each pair, is the <strong>distance matrix</strong> of a logistics model. A transportation or facility location model reads it as its cost coefficients, one per pair of an origin and a destination. The cross tab of <a href="04-Chapter4.html#sec-agg-case" class="quarto-xref"><span>Section 4.4</span></a> turns the long form of <a href="#tbl-appspatial-cross" class="quarto-xref">Table&nbsp;<span>J.14</span></a> into the matrix form, one row per customer and one column per warehouse, which is how a solver or a spreadsheet usually expects it.</p>
+<p>The last question of this appendix compares a rule with geography. Recall from <a href="11-Chapter11.html#sec-dw-star" class="quarto-xref"><span>Section 11.2</span></a> that the sales star schema derives each customer’s sales region from its state: Oklahoma, Kansas, and Texas belong to the Tulsa region, and the rest to the Fayetteville region. A rule by state is simple, and it assumes that each state lies nearer one warehouse. The following query finds the customers for whom it does not, by ranking the warehouses by distance for each customer with <code>ROW_NUMBER</code> (<a href="04-Chapter4.html#sec-agg-window-ranking" class="quarto-xref"><span>Section 4.5.5</span></a>) and comparing the nearest with the customer’s region in <code>sales.customer_dim</code>.</p>
+<div id="tbl-appspatial-region" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.17: Customers Whose Region Is Not Their Nearest Warehouse’s
+</figcaption>
+<div aria-describedby="tbl-appspatial-region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> ranked <span class="kw">AS</span> (</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> c.customer_number, c.city, c.state,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>         w.warehouse_code,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ROW_NUMBER</span>() <span class="kw">OVER</span> (</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>           <span class="kw">PARTITION</span> <span class="kw">BY</span> c.customer_number</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>           <span class="kw">ORDER</span> <span class="kw">BY</span> ST_Distance(cl.location,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                                wl.location))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>           <span class="kw">AS</span> nearness</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> distribution.customer <span class="kw">AS</span> c</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> cl</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> cl.city <span class="op">=</span> c.city <span class="kw">AND</span> cl.state <span class="op">=</span> c.state</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">CROSS</span> <span class="kw">JOIN</span> distribution.warehouse <span class="kw">AS</span> w</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> wl</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> wl.city <span class="op">=</span> w.city <span class="kw">AND</span> wl.state <span class="op">=</span> w.state)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> r.customer_number <span class="kw">AS</span> customer, r.city,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>       r.state, d.sales_region,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>       r.warehouse_code <span class="kw">AS</span> nearest</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ranked <span class="kw">AS</span> r</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> sales.customer_dim <span class="kw">AS</span> d</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> d.customer_number <span class="op">=</span> r.customer_number</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> r.nearness <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> d.sales_region</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>      <span class="op">&lt;&gt;</span> <span class="cf">CASE</span> r.warehouse_code</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>           <span class="cf">WHEN</span> <span class="st">'W-FAY'</span> <span class="cf">THEN</span> <span class="st">'Fayetteville region'</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>           <span class="cf">ELSE</span> <span class="st">'Tulsa region'</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>         <span class="cf">END</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> customer </th>
+   <th style="text-align:left;"> city </th>
+   <th style="text-align:left;"> state </th>
+   <th style="text-align:left;"> sales_region </th>
+   <th style="text-align:left;"> nearest </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> C-1025 </td>
+   <td style="text-align:left;"> Texarkana </td>
+   <td style="text-align:left;"> TX </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:left;"> W-FAY </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-region" class="quarto-xref">Table&nbsp;<span>J.17</span></a> returns one customer of 30: Piney Woods Hardware in Texarkana, Texas, which the rule sends to Tulsa although it lies nearer Fayetteville (<a href="#tbl-appspatial-cross" class="quarto-xref">Table&nbsp;<span>J.14</span></a>). For the 29 others the rule and the map agree. Texarkana sits on the Arkansas line, and a rule that follows state lines misplaces the customers that sit on them.</p>
+<div id="fig-appspatial-warehouses" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-appspatial-warehouses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/diagrams/spatial-hg-warehouse-radius.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-appspatial-warehouses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;J.2: HG Industries’ Warehouses, Customer Cities, and 100-Mile Circles
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-appspatial-warehouses" class="quarto-xref">Figure&nbsp;<span>J.2</span></a> draws HG’s 29 customer cities from <code>geo.city_location</code>, with the two warehouses as squares and, dashed around each, the circle of points 100 miles from it, made by <code>ST_Buffer</code>. The customers the text names are labeled. Muskogee lies in both circles, as <a href="#tbl-appspatial-radius" class="quarto-xref">Table&nbsp;<span>J.16</span></a> found, and Joplin lies on the edge of Tulsa’s, 101.7 miles away. Texarkana, in red, lies outside both circles, almost due south of Fayetteville, while Tulsa lies well to its northwest; the map makes the rule’s mistake visible at a glance. Tyler, farther south and west, is the city the next query measures.</p>
+<p>The check that the rule agrees elsewhere is not as firm as it looks, however. The following query measures the distances for Tyler, Texas.</p>
+<div id="tbl-appspatial-tyler" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="s_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-tyler-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.18: Tyler’s Distances from the Two Warehouses
+</figcaption>
+<div aria-describedby="tbl-appspatial-tyler-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> w.warehouse_code <span class="kw">AS</span> warehouse,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ROUND</span>((ST_Distance(wl.location, cl.location)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>           <span class="op">/</span> <span class="fl">1609.344</span>):<span class="ch">:NUMERIC</span>, <span class="dv">1</span>) <span class="kw">AS</span> miles</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> distribution.warehouse <span class="kw">AS</span> w</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> wl</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> wl.city <span class="op">=</span> w.city <span class="kw">AND</span> wl.state <span class="op">=</span> w.state</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="kw">CROSS</span> <span class="kw">JOIN</span> geo.city_location <span class="kw">AS</span> cl</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> cl.city <span class="op">=</span> <span class="st">'Tyler'</span> <span class="kw">AND</span> cl.state <span class="op">=</span> <span class="st">'TX'</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> miles;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> warehouse </th>
+   <th style="text-align:right;"> miles </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> W-TUL </td>
+   <td style="text-align:right;"> 264.9 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> W-FAY </td>
+   <td style="text-align:right;"> 266.9 </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-tyler" class="quarto-xref">Table&nbsp;<span>J.18</span></a> puts Tyler two miles nearer Tulsa, out of more than 260. Each city is one point for a place several miles across, chosen by the Census Bureau to lie inside the city’s boundary, not at a warehouse’s dock or a customer’s door. Moving either point by a mile or two would change the answer. Thus, a nearest-facility answer within a few miles of a tie is not decided by city-level locations, and you should say so when you report it, or record each customer’s own location.</p>
+</section>
+<section id="sec-appspatial-loading" class="level2" data-number="J.8">
+<h2 data-number="J.8" class="anchored" data-anchor-id="sec-appspatial-loading"><span class="header-section-number">J.8</span> Loading spatial data from files</h2>
+<p>This appendix built every location from coordinates already in a table. Spatial data more often arrives in files, in one of two forms.</p>
+<p><strong>GeoJSON</strong> is a JSON document that describes a shape, and many web services and GPS devices write it. <code>ST_AsGeoJSON</code> writes a shape in it, and <code>ST_GeomFromGeoJSON</code> reads one, as a <code>geometry</code> to be cast to <code>geography</code>. Recall from <a href="20-AppNoSQL.html#sec-appnosql-jsonb" class="quarto-xref"><span>Section H.4</span></a> that PostgreSQL stores JSON documents; a GeoJSON file loaded into a <code>JSONB</code> column can be turned into shapes by a query.</p>
+<div id="tbl-appspatial-geojson" class="cell quarto-float quarto-figure quarto-figure-left anchored" data-stage="transit_geo">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-appspatial-geojson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;J.19: The Transit Center as a GeoJSON Document
+</figcaption>
+<div aria-describedby="tbl-appspatial-geojson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> point_code,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>       ST_AsGeoJSON(location) <span class="kw">AS</span> geojson</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> transit.point</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> point_code <span class="op">=</span> <span class="st">'TC'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="book-result">
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> point_code </th>
+   <th style="text-align:left;"> geojson </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> TC </td>
+   <td style="text-align:left;"> {"type":"Point","coordinates":[-94.1574,36.0621]} </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-appspatial-geojson" class="quarto-xref">Table&nbsp;<span>J.19</span></a> shows the document for one point, with its coordinates in the same order as well-known text, longitude first.</p>
+<p>A <strong>shapefile</strong> is an older format that GIS software still uses for boundaries, such as counties, census tracts, and flood zones. PostGIS comes with a command-line program, <code>shp2pgsql</code>, that turns a shapefile into SQL statements that create and fill a table, and DBeaver can import a shapefile into a table as well. The U.S. Census Bureau publishes its TIGER/Line boundary files as shapefiles, in the public domain, and OpenStreetMap publishes roads and places under a license that requires credit to its contributors. Both are large, and the book ships neither; the exercises point to one.</p>
+<p>Once spatial data is in PostgreSQL, a desktop GIS such as QGIS can connect to the database, as DataGrip and DBeaver do, and draw any table with a spatial column as a layer of a map. The queries of this appendix then become layers: a service area, the customers within a day’s drive, the one customer the sales rule misplaces.</p>
+</section>
+<section id="sec-appspatial-summary" class="level2" data-number="J.9">
+<h2 data-number="J.9" class="anchored" data-anchor-id="sec-appspatial-summary"><span class="header-section-number">J.9</span> Summary</h2>
+<p><strong>A location is one value, not two numbers.</strong> A latitude and a longitude stored as ordinary numbers cannot give a distance in miles, and the distance formula of plane geometry misranks locations because a degree of longitude is shorter than a degree of latitude. A spatial type holds the location whole and measures it correctly.</p>
+<p><strong>PostGIS adds spatial types and functions to PostgreSQL.</strong> It is an extension, installed with the server and enabled in each database. Its <code>ST_</code> functions follow the Simple Features specification, and they are not part of the SQL standard.</p>
+<p><strong>Coordinates need a reference system and the right type.</strong> SRID 4326 names GPS latitude and longitude. A <code>geography</code> value measures on the Earth, in meters; a <code>geometry</code> value measures on a plane, in its coordinates’ units. Well-known text and most functions put the longitude first.</p>
+<p><strong>Distance, nearness, and containment are queries.</strong> <code>ST_Distance</code> measures, <code>ST_DWithin</code> selects within a distance, the <code>&lt;-&gt;</code> operator sorts by nearness, and <code>ST_Buffer</code> and <code>ST_Covers</code> build an area and test what lies inside it. <code>ST_DWithin</code> and <code>&lt;-&gt;</code> can use a spatial index.</p>
+<p><strong>A spatial join pairs rows by where they are.</strong> It is a cross product and a condition, like any join, and it produces the distance matrix that a transportation or facility location model reads.</p>
+<p><strong>Straight lines and city points bound the answer; they do not give it.</strong> A straight-line distance is a lower bound on a road distance, and a city’s point stands for an area miles across. A query result near a threshold or a tie is not decided at that precision.</p>
+</section>
+<section id="sec-appspatial-exercises" class="level2" data-number="J.10">
+<h2 data-number="J.10" class="anchored" data-anchor-id="sec-appspatial-exercises"><span class="header-section-number">J.10</span> Exercises</h2>
+<div id="exr-appspatial-terms" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise J.1</strong></span> Answer each in one or two sentences.</p>
+<ol type="a">
+<li>What does the SRID 4326 say about a location’s coordinates?</li>
+<li>A colleague stores GPS readings in a <code>geometry</code> column with SRID 4326 and reports the distance between two readings as 0.012. What is the unit, and why is the number not a distance in miles or meters?</li>
+<li>Write the Plant Gate stop of <a href="#tbl-appspatial-wkt" class="quarto-xref">Table&nbsp;<span>J.5</span></a> in well-known text.</li>
+<li>Name the kind of shape (point, line string, or polygon) that represents a forklift’s position, the path a forklift drove in a shift, and the warehouse’s floor.</li>
+</ol>
+</div>
+<div id="exr-appspatial-true-false" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise J.2</strong></span> True or false? Justify each answer in one sentence.</p>
+<ol type="a">
+<li>Distance in degrees, times 69, is distance in miles.</li>
+<li><code>POINT(36.06 -94.16)</code> is a point in Arkansas.</li>
+<li>The stop nearest a rider by <code>ST_Distance</code> is the stop with the shortest walk.</li>
+<li><code>ST_DWithin(a, b, d)</code> and <code>ST_Distance(a, b) &lt;= d</code> return the same rows, so the choice between them does not matter.</li>
+<li>A generated column can be set by an <code>UPDATE</code> statement.</li>
+</ol>
+</div>
+<div id="exr-appspatial-hospital" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise J.3</strong></span> Run <code>sql/spatial/sp-transit-location.sql</code> in <code>dbconcepts_transit</code>. List every stop within one mile of Millbrook Hospital (point code <code>HOS</code>), with its point code, its name, and its distance in miles to two decimal places, nearest first. Do not list the hospital itself.</p>
+</div>
+<div id="exr-appspatial-segment-ratio" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise J.4</strong></span> In <code>dbconcepts_transit</code>, after <code>sp-transit-location.sql</code>, compute for each of the 15 segments the ratio of its recorded length to the straight-line distance between its stops, rounded to two decimal places. List the segment’s number (<code>segment_pk</code>), the point codes of its two stops, and the ratio, smallest ratio first.</p>
+<ol type="a">
+<li>Which segments have a ratio below 1, and what does such a ratio mean?</li>
+<li>Which segment has the largest ratio? Give one reason, in terms of the streets, that a ratio well above 1 can be correct.</li>
+</ol>
+</div>
+<div id="exr-appspatial-order-miles" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise J.5</strong></span> Run <code>sql/spatial/sp-hg-locations.sql</code> in <code>dbconcepts_history</code>. Suppose that every order is delivered from one warehouse, and that its delivery distance is the straight-line distance between the warehouse’s city and the customer’s city.</p>
+<ol type="a">
+<li>Under the sales region rule (a customer in Oklahoma, Kansas, or Texas is served from Tulsa, and every other customer from Fayetteville), what is the total delivery distance of all orders in <code>customer_order</code>, in miles, rounded to a whole number?</li>
+<li>What is the total if every customer is served from its nearest warehouse instead?</li>
+<li>Explain the difference between (a) and (b) in terms of a single customer, and say how many of its orders account for it.</li>
+<li>Name one cost that this comparison leaves out and that could favor the rule.</li>
+</ol>
+</div>
+<div id="exr-appspatial-gps" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise J.6</strong></span> HG Industries fits each of its delivery trucks with a GPS unit that reports the truck’s position every 30 seconds while the engine runs. The distribution manager wants to know, for each truck and each day, how long it spent inside the Fayetteville plant’s yard, waiting to be loaded.</p>
+<ol type="a">
+<li>Draw a UML class model of trucks and their position reports (<a href="05-Chapter5.html" class="quarto-xref"><span>Chapter 5</span></a>). State the multiplicity of the association.</li>
+<li>Map it to tables (<a href="06-Chapter6.html" class="quarto-xref"><span>Chapter 6</span></a>), and write the relational schema in the notation of <a href="02-Chapter2.html#sec-rm-schema-notation" class="quarto-xref"><span>Section 2.4</span></a>, with the position as a <code>geography</code> column. The tables are hypothetical; say so in the caption.</li>
+<li>What else must the database hold to answer the manager’s question, and what type should its column be?</li>
+<li>Describe, without writing it, a query that answers the question. Which function of <a href="#tbl-appspatial-functions" class="quarto-xref">Table&nbsp;<span>J.4</span></a> does it use, and what does it assume about the readings between two reports 30 seconds apart?</li>
+</ol>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/rossetti\.github\.io\/DbConceptsBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./21-AppAssistants.html" class="pagination-link" aria-label="Connecting an AI Assistant to a Database">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Connecting an AI Assistant to a Database</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1147,309 +1147,127 @@ Manuel D. Rossetti, PhD P.E.
 <h2>The flat order report, first six orders: the result</h2>
 <div class="cell" data-stage="d3" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-customer_number
-</th>
-<th style="text-align:left;">
-customer_name
-</th>
-<th style="text-align:right;">
-line_number
-</th>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-<th style="text-align:right;">
-quantity
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:left;"> customer_name </th>
+   <th style="text-align:right;"> line_number </th>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:left;"> description </th>
+   <th style="text-align:right;"> quantity </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:left;">
-C-1003
-</td>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:left;">
-Convertible hand truck
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:left;">
-C-1002
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:left;">
-C-1002
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:left;">
-Convertible hand truck
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:left;">
-C-1002
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5005
-</td>
-<td style="text-align:left;">
-C-1004
-</td>
-<td style="text-align:left;">
-Midtown Tool Supply
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5006
-</td>
-<td style="text-align:left;">
-C-1006
-</td>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-25
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5006
-</td>
-<td style="text-align:left;">
-C-1006
-</td>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:left;">
-Convertible hand truck
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:left;"> C-1003 </td>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:left;"> Convertible hand truck </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:left;"> C-1002 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:left;"> C-1002 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:left;"> Convertible hand truck </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:left;"> C-1002 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 20 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5005 </td>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Midtown Tool Supply </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5006 </td>
+   <td style="text-align:left;"> C-1006 </td>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5006 </td>
+   <td style="text-align:left;"> C-1006 </td>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:left;"> Convertible hand truck </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1488,98 +1306,50 @@ Convertible hand truck
 <h2>Rows that hold each customer’s name: the result</h2>
 <div class="cell" data-stage="d3" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-customer_number
-</th>
-<th style="text-align:left;">
-customer_name
-</th>
-<th style="text-align:right;">
-rows_holding_the_name
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:left;"> customer_name </th>
+   <th style="text-align:right;"> rows_holding_the_name </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1002
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1003
-</td>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1004
-</td>
-<td style="text-align:left;">
-Midtown Tool Supply
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1005
-</td>
-<td style="text-align:left;">
-Prairie Garden Center
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1006
-</td>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1007
-</td>
-<td style="text-align:left;">
-Tri-County Farm and Home
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1002 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1003 </td>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Midtown Tool Supply </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1005 </td>
+   <td style="text-align:left;"> Prairie Garden Center </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1006 </td>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1007 </td>
+   <td style="text-align:left;"> Tri-County Farm and Home </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1613,38 +1383,22 @@ Tri-County Farm and Home
 <span id="cb3-15"><a href></a>       <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> order_number) <span class="kw">AS</span> orders</span>
 <span id="cb3-16"><a href></a><span class="kw">FROM</span> order_report;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-rows
-</th>
-<th style="text-align:right;">
-customers
-</th>
-<th style="text-align:right;">
-products
-</th>
-<th style="text-align:right;">
-orders
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> rows </th>
+   <th style="text-align:right;"> customers </th>
+   <th style="text-align:right;"> products </th>
+   <th style="text-align:right;"> orders </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
-29
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-614
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1065 </td>
+   <td style="text-align:right;"> 29 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 614 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1730,20 +1484,17 @@ orders
 <span id="cb4-12"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> customer_number</span>
 <span id="cb4-13"><a href></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> customer_name) <span class="op">&gt;</span> <span class="dv">1</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-customer_number
-</th>
-<th style="text-align:right;">
-names
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:right;"> names </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-</tr>
+  <tr>
+
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1792,50 +1543,30 @@ names
 <span id="cb5-10"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> o.order_number</span>
 <span id="cb5-11"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.order_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:left;">
-products
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:left;"> products </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:left;">
-HT-100, GC-300
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:left;">
-HT-100, HT-200, GC-300
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:left;">
-HT-100, GC-300, HT-100
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:left;"> HT-100, GC-300 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:left;"> HT-200 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:left;"> HT-100, HT-200, GC-300 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:left;"> HT-100, GC-300, HT-100 </td>
+  </tr>
 </tbody>
 </table>
 </div>

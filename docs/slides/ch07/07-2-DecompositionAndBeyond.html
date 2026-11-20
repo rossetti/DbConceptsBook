@@ -1164,26 +1164,18 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb2-12"><a href></a>         <span class="kw">AS</span> order_lines,</span>
 <span id="cb2-13"><a href></a>       (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> order_report) <span class="kw">AS</span> report_rows;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-order_lines
-</th>
-<th style="text-align:right;">
-report_rows
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> order_lines </th>
+   <th style="text-align:right;"> report_rows </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1065
-</td>
-<td style="text-align:right;">
-1065
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1065 </td>
+   <td style="text-align:right;"> 1065 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1293,192 +1285,88 @@ report_rows
 <h2>The two parts joined on product_number: the result</h2>
 <div class="cell" data-stage="d3" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:right;">
-line_number
-</th>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:right;">
-quantity
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:right;"> line_number </th>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:right;"> quantity </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1533,217 +1421,91 @@ GC-300
 <h2>The inspection sheet, first four lots of FR-110: the result</h2>
 <div class="cell" data-stage="q" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-lot_number
-</th>
-<th style="text-align:left;">
-characteristic
-</th>
-<th style="text-align:left;">
-part_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-employee_number
-</th>
-<th style="text-align:left;">
-operator_name
-</th>
-<th style="text-align:right;">
-measured_value
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> lot_number </th>
+   <th style="text-align:left;"> characteristic </th>
+   <th style="text-align:left;"> part_number </th>
+   <th style="text-align:left;"> description </th>
+   <th style="text-align:left;"> employee_number </th>
+   <th style="text-align:left;"> operator_name </th>
+   <th style="text-align:right;"> measured_value </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-L7004-01
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-204
-</td>
-<td style="text-align:left;">
-Robert Hayes
-</td>
-<td style="text-align:right;">
-3.1000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-L7004-01
-</td>
-<td style="text-align:left;">
-Weld strength
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-204
-</td>
-<td style="text-align:left;">
-Robert Hayes
-</td>
-<td style="text-align:right;">
-1840.0000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-L7004-02
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-203
-</td>
-<td style="text-align:left;">
-Linda Nguyen
-</td>
-<td style="text-align:right;">
-2.4000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-L7004-02
-</td>
-<td style="text-align:left;">
-Weld strength
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-203
-</td>
-<td style="text-align:left;">
-Linda Nguyen
-</td>
-<td style="text-align:right;">
-1795.0000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-L7004-03
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-204
-</td>
-<td style="text-align:left;">
-Robert Hayes
-</td>
-<td style="text-align:right;">
-3.3000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-L7004-03
-</td>
-<td style="text-align:left;">
-Weld strength
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-204
-</td>
-<td style="text-align:left;">
-Robert Hayes
-</td>
-<td style="text-align:right;">
-1460.0000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-L7004-04
-</td>
-<td style="text-align:left;">
-Coating thickness
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-203
-</td>
-<td style="text-align:left;">
-Linda Nguyen
-</td>
-<td style="text-align:right;">
-2.3000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-L7004-04
-</td>
-<td style="text-align:left;">
-Weld strength
-</td>
-<td style="text-align:left;">
-FR-110
-</td>
-<td style="text-align:left;">
-Hand truck frame
-</td>
-<td style="text-align:left;">
-E-203
-</td>
-<td style="text-align:left;">
-Linda Nguyen
-</td>
-<td style="text-align:right;">
-1822.0000
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> L7004-01 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-204 </td>
+   <td style="text-align:left;"> Robert Hayes </td>
+   <td style="text-align:right;"> 3.1000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> L7004-01 </td>
+   <td style="text-align:left;"> Weld strength </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-204 </td>
+   <td style="text-align:left;"> Robert Hayes </td>
+   <td style="text-align:right;"> 1840.0000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> L7004-02 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-203 </td>
+   <td style="text-align:left;"> Linda Nguyen </td>
+   <td style="text-align:right;"> 2.4000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> L7004-02 </td>
+   <td style="text-align:left;"> Weld strength </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-203 </td>
+   <td style="text-align:left;"> Linda Nguyen </td>
+   <td style="text-align:right;"> 1795.0000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> L7004-03 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-204 </td>
+   <td style="text-align:left;"> Robert Hayes </td>
+   <td style="text-align:right;"> 3.3000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> L7004-03 </td>
+   <td style="text-align:left;"> Weld strength </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-204 </td>
+   <td style="text-align:left;"> Robert Hayes </td>
+   <td style="text-align:right;"> 1460.0000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> L7004-04 </td>
+   <td style="text-align:left;"> Coating thickness </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-203 </td>
+   <td style="text-align:left;"> Linda Nguyen </td>
+   <td style="text-align:right;"> 2.3000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> L7004-04 </td>
+   <td style="text-align:left;"> Weld strength </td>
+   <td style="text-align:left;"> FR-110 </td>
+   <td style="text-align:left;"> Hand truck frame </td>
+   <td style="text-align:left;"> E-203 </td>
+   <td style="text-align:left;"> Linda Nguyen </td>
+   <td style="text-align:right;"> 1822.0000 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1833,26 +1595,18 @@ Linda Nguyen
 <span id="cb6-13"><a href></a>         <span class="kw">AS</span> measurements,</span>
 <span id="cb6-14"><a href></a>       (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> sheet) <span class="kw">AS</span> sheet_rows;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-measurements
-</th>
-<th style="text-align:right;">
-sheet_rows
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> measurements </th>
+   <th style="text-align:right;"> sheet_rows </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-34
-</td>
-<td style="text-align:right;">
-34
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 34 </td>
+   <td style="text-align:right;"> 34 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1944,34 +1698,22 @@ sheet_rows
 <span id="cb7-7"><a href></a><span class="kw">WHERE</span> m.machine_number <span class="op">=</span> <span class="st">&#39;M-04&#39;</span></span>
 <span id="cb7-8"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-machine_number
-</th>
-<th style="text-align:left;">
-operator
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> machine_number </th>
+   <th style="text-align:left;"> operator </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-M-04
-</td>
-<td style="text-align:left;">
-Linda Nguyen
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-M-04
-</td>
-<td style="text-align:left;">
-Maria Lopez
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> M-04 </td>
+   <td style="text-align:left;"> Linda Nguyen </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> M-04 </td>
+   <td style="text-align:left;"> Maria Lopez </td>
+  </tr>
 </tbody>
 </table>
 </div>

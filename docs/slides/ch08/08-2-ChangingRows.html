@@ -1176,102 +1176,46 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb5-11"><a href></a><span class="kw">WHERE</span> c.customer_number <span class="op">=</span> <span class="st">&#39;C-1009&#39;</span></span>
 <span id="cb5-12"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> l.line_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-customer_pk
-</th>
-<th style="text-align:right;">
-customer_order_pk
-</th>
-<th style="text-align:right;">
-line_number
-</th>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:right;">
-quantity
-</th>
-<th style="text-align:right;">
-unit_price
-</th>
-<th style="text-align:right;">
-value
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> customer_pk </th>
+   <th style="text-align:right;"> customer_order_pk </th>
+   <th style="text-align:right;"> line_number </th>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:right;"> quantity </th>
+   <th style="text-align:right;"> unit_price </th>
+   <th style="text-align:right;"> value </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-<td style="text-align:right;">
-952.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-<td style="text-align:right;">
-1068.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-139.00
-</td>
-<td style="text-align:right;">
-1390.00
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 13 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 119.00 </td>
+   <td style="text-align:right;"> 952.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 13 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 89.00 </td>
+   <td style="text-align:right;"> 1068.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 13 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 139.00 </td>
+   <td style="text-align:right;"> 1390.00 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1333,43 +1277,25 @@ HT-200
 <span id="cb8-4"><a href></a><span class="kw">WHERE</span> product_number <span class="kw">LIKE</span> <span class="st">&#39;GC-%&#39;</span></span>
 <span id="cb8-5"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:right;">
-list_price
-</th>
-<th style="text-align:right;">
-new_price
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:right;"> list_price </th>
+   <th style="text-align:right;"> new_price </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-<td style="text-align:right;">
-124.95
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:right;">
-149.00
-</td>
-<td style="text-align:right;">
-156.45
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 119.00 </td>
+   <td style="text-align:right;"> 124.95 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:right;"> 149.00 </td>
+   <td style="text-align:right;"> 156.45 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1387,65 +1313,35 @@ GC-400
 <span id="cb10-2"><a href></a><span class="kw">FROM</span> distribution.product</span>
 <span id="cb10-3"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:left;">
-description
-</th>
-<th style="text-align:right;">
-list_price
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:left;"> description </th>
+   <th style="text-align:right;"> list_price </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:left;">
-Steel garden cart
-</td>
-<td style="text-align:right;">
-124.95
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:left;">
-Poly garden cart
-</td>
-<td style="text-align:right;">
-156.45
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:left;">
-Two-wheel hand truck
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:left;">
-Convertible hand truck
-</td>
-<td style="text-align:right;">
-139.00
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:left;"> Steel garden cart </td>
+   <td style="text-align:right;"> 124.95 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:left;"> Poly garden cart </td>
+   <td style="text-align:right;"> 156.45 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:left;"> Two-wheel hand truck </td>
+   <td style="text-align:right;"> 89.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:left;"> Convertible hand truck </td>
+   <td style="text-align:right;"> 139.00 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1484,34 +1380,22 @@ Convertible hand truck
 <span id="cb13-7"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> o.order_number</span>
 <span id="cb13-8"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> o.order_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:right;">
-lines
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:right;"> lines </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5011
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5012
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5011 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5012 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1529,26 +1413,18 @@ SO-5012
 <span id="cb15-3"><a href></a>         <span class="kw">AS</span> lines_of_so5012</span>
 <span id="cb15-4"><a href></a><span class="kw">FROM</span> distribution.order_line;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-order_lines
-</th>
-<th style="text-align:right;">
-lines_of_so5012
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> order_lines </th>
+   <th style="text-align:right;"> lines_of_so5012 </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
 </tbody>
 </table>
 </div>

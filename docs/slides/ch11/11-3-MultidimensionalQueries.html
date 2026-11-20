@@ -1127,65 +1127,35 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb1-11"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> p.product_line, c.sales_region</span>
 <span id="cb1-12"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> p.product_line, c.sales_region;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_line
-</th>
-<th style="text-align:left;">
-sales_region
-</th>
-<th style="text-align:right;">
-sales
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_line </th>
+   <th style="text-align:left;"> sales_region </th>
+   <th style="text-align:right;"> sales </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-Fayetteville region
-</td>
-<td style="text-align:right;">
-92824.47
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-Tulsa region
-</td>
-<td style="text-align:right;">
-94379.36
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-Fayetteville region
-</td>
-<td style="text-align:right;">
-72245.58
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-Tulsa region
-</td>
-<td style="text-align:right;">
-68045.59
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> Fayetteville region </td>
+   <td style="text-align:right;"> 92824.47 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:right;"> 94379.36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> Fayetteville region </td>
+   <td style="text-align:right;"> 72245.58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:right;"> 68045.59 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1365,98 +1335,50 @@ Tulsa region
 <h2>The same roll-up in SQL: the result</h2>
 <div class="cell" data-stage="s" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_line
-</th>
-<th style="text-align:left;">
-sales_region
-</th>
-<th style="text-align:right;">
-sales
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_line </th>
+   <th style="text-align:left;"> sales_region </th>
+   <th style="text-align:right;"> sales </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-Fayetteville region
-</td>
-<td style="text-align:right;">
-92824.47
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-Tulsa region
-</td>
-<td style="text-align:right;">
-94379.36
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:right;">
-187203.83
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-Fayetteville region
-</td>
-<td style="text-align:right;">
-72245.58
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-Tulsa region
-</td>
-<td style="text-align:right;">
-68045.59
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:right;">
-140291.17
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:left;">
-NULL
-</td>
-<td style="text-align:right;">
-327495.00
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> Fayetteville region </td>
+   <td style="text-align:right;"> 92824.47 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:right;"> 94379.36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:right;"> 187203.83 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> Fayetteville region </td>
+   <td style="text-align:right;"> 72245.58 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:right;"> 68045.59 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:right;"> 140291.17 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:left;"> NULL </td>
+   <td style="text-align:right;"> 327495.00 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1491,50 +1413,30 @@ NULL
 <span id="cb3-5"><a href></a><span class="kw">GROUP</span> <span class="kw">BY</span> d.calendar_quarter</span>
 <span id="cb3-6"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> d.calendar_quarter;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-calendar_quarter
-</th>
-<th style="text-align:right;">
-sales
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> calendar_quarter </th>
+   <th style="text-align:right;"> sales </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-349063.00
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-437131.67
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-303379.72
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-439452.60
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 349063.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 437131.67 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 303379.72 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 439452.60 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1563,109 +1465,55 @@ sales
 <h2>Sales by year and quarter, with subtotals: the result</h2>
 <div class="cell" data-stage="s" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-year_label
-</th>
-<th style="text-align:left;">
-quarter_label
-</th>
-<th style="text-align:right;">
-sales
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> year_label </th>
+   <th style="text-align:left;"> quarter_label </th>
+   <th style="text-align:right;"> sales </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-2026
-</td>
-<td style="text-align:left;">
-Q1
-</td>
-<td style="text-align:right;">
-21568.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2026
-</td>
-<td style="text-align:left;">
-Q2
-</td>
-<td style="text-align:right;">
-437131.67
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2026
-</td>
-<td style="text-align:left;">
-Q3
-</td>
-<td style="text-align:right;">
-303379.72
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2026
-</td>
-<td style="text-align:left;">
-Q4
-</td>
-<td style="text-align:right;">
-439452.60
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2026
-</td>
-<td style="text-align:left;">
-All quarters
-</td>
-<td style="text-align:right;">
-1201531.99
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2027
-</td>
-<td style="text-align:left;">
-Q1
-</td>
-<td style="text-align:right;">
-327495.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2027
-</td>
-<td style="text-align:left;">
-All quarters
-</td>
-<td style="text-align:right;">
-327495.00
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-All years
-</td>
-<td style="text-align:left;">
-All quarters
-</td>
-<td style="text-align:right;">
-1529026.99
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> 2026 </td>
+   <td style="text-align:left;"> Q1 </td>
+   <td style="text-align:right;"> 21568.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2026 </td>
+   <td style="text-align:left;"> Q2 </td>
+   <td style="text-align:right;"> 437131.67 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2026 </td>
+   <td style="text-align:left;"> Q3 </td>
+   <td style="text-align:right;"> 303379.72 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2026 </td>
+   <td style="text-align:left;"> Q4 </td>
+   <td style="text-align:right;"> 439452.60 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2026 </td>
+   <td style="text-align:left;"> All quarters </td>
+   <td style="text-align:right;"> 1201531.99 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2027 </td>
+   <td style="text-align:left;"> Q1 </td>
+   <td style="text-align:right;"> 327495.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2027 </td>
+   <td style="text-align:left;"> All quarters </td>
+   <td style="text-align:right;"> 327495.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> All years </td>
+   <td style="text-align:left;"> All quarters </td>
+   <td style="text-align:right;"> 1529026.99 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1717,120 +1565,60 @@ All quarters
 <h2>Sales of 2026 by every combination of line and region: the result</h2>
 <div class="cell" data-stage="s" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-product_line
-</th>
-<th style="text-align:left;">
-sales_region
-</th>
-<th style="text-align:right;">
-sales
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> product_line </th>
+   <th style="text-align:left;"> sales_region </th>
+   <th style="text-align:right;"> sales </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-Fayetteville region
-</td>
-<td style="text-align:right;">
-253811.04
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-Tulsa region
-</td>
-<td style="text-align:right;">
-270799.22
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-Fayetteville region
-</td>
-<td style="text-align:right;">
-326640.68
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-Tulsa region
-</td>
-<td style="text-align:right;">
-350281.05
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Garden carts
-</td>
-<td style="text-align:left;">
-(all)
-</td>
-<td style="text-align:right;">
-524610.26
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Hand trucks
-</td>
-<td style="text-align:left;">
-(all)
-</td>
-<td style="text-align:right;">
-676921.73
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-(all)
-</td>
-<td style="text-align:left;">
-Fayetteville region
-</td>
-<td style="text-align:right;">
-580451.72
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-(all)
-</td>
-<td style="text-align:left;">
-Tulsa region
-</td>
-<td style="text-align:right;">
-621080.27
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-(all)
-</td>
-<td style="text-align:left;">
-(all)
-</td>
-<td style="text-align:right;">
-1201531.99
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> Fayetteville region </td>
+   <td style="text-align:right;"> 253811.04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:right;"> 270799.22 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> Fayetteville region </td>
+   <td style="text-align:right;"> 326640.68 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:right;"> 350281.05 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Garden carts </td>
+   <td style="text-align:left;"> (all) </td>
+   <td style="text-align:right;"> 524610.26 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hand trucks </td>
+   <td style="text-align:left;"> (all) </td>
+   <td style="text-align:right;"> 676921.73 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> (all) </td>
+   <td style="text-align:left;"> Fayetteville region </td>
+   <td style="text-align:right;"> 580451.72 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> (all) </td>
+   <td style="text-align:left;"> Tulsa region </td>
+   <td style="text-align:right;"> 621080.27 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> (all) </td>
+   <td style="text-align:left;"> (all) </td>
+   <td style="text-align:right;"> 1201531.99 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1880,95 +1668,45 @@ Tulsa region
 <span id="cb7-4"><a href></a><span class="kw">WHERE</span> calendar_year <span class="op">=</span> <span class="dv">2027</span> <span class="kw">AND</span> calendar_month <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb7-5"><a href></a><span class="kw">ORDER</span> <span class="kw">BY</span> product_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-calendar_year
-</th>
-<th style="text-align:right;">
-calendar_month
-</th>
-<th style="text-align:left;">
-product_number
-</th>
-<th style="text-align:right;">
-quantity
-</th>
-<th style="text-align:right;">
-sales
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> calendar_year </th>
+   <th style="text-align:right;"> calendar_month </th>
+   <th style="text-align:left;"> product_number </th>
+   <th style="text-align:right;"> quantity </th>
+   <th style="text-align:right;"> sales </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-2027
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-GC-300
-</td>
-<td style="text-align:right;">
-421
-</td>
-<td style="text-align:right;">
-48775.72
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2027
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-GC-400
-</td>
-<td style="text-align:right;">
-505
-</td>
-<td style="text-align:right;">
-73026.39
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2027
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-HT-100
-</td>
-<td style="text-align:right;">
-237
-</td>
-<td style="text-align:right;">
-20695.17
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2027
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-HT-200
-</td>
-<td style="text-align:right;">
-228
-</td>
-<td style="text-align:right;">
-30994.22
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 2027 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> GC-300 </td>
+   <td style="text-align:right;"> 421 </td>
+   <td style="text-align:right;"> 48775.72 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2027 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> GC-400 </td>
+   <td style="text-align:right;"> 505 </td>
+   <td style="text-align:right;"> 73026.39 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2027 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> HT-100 </td>
+   <td style="text-align:right;"> 237 </td>
+   <td style="text-align:right;"> 20695.17 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2027 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> HT-200 </td>
+   <td style="text-align:right;"> 228 </td>
+   <td style="text-align:right;"> 30994.22 </td>
+  </tr>
 </tbody>
 </table>
 </div>

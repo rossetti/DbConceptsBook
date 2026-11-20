@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="701" viewBox="0 0 640 701" font-family="Helvetica, Arial, sans-serif">
+<rect width="100%" height="100%" fill="white"/>
+<path d="M 467.6 262.1 L 464.7 289.2 L 456.7 315.1 L 443.9 339.0 L 426.7 360.0 L 405.9 377.2 L 382.3 390.1 L 356.7 398.2 L 330.0 401.1 L 303.3 398.8 L 277.5 391.3 L 253.6 379.0 L 232.4 362.2 L 214.8 341.7 L 201.4 318.1 L 192.8 292.4 L 189.3 265.5 L 191.2 238.4 L 198.4 212.2 L 210.6 187.9 L 227.5 166.5 L 248.5 148.7 L 272.6 135.4 L 299.1 127.1 L 326.7 124.0 L 354.4 126.4 L 381.0 134.1 L 405.5 146.8 L 426.9 164.0 L 444.4 185.1 L 457.3 209.1 L 465.1 235.1 L 467.6 262.1 Z" fill="#2f5d9b" fill-opacity="0.07" stroke="#2f5d9b" stroke-width="1.2" stroke-dasharray="5 4"/>
+<path d="M 332.4 254.3 L 330.1 281.3 L 322.5 307.4 L 310.1 331.5 L 293.3 352.8 L 272.8 370.4 L 249.3 383.7 L 223.8 392.2 L 197.2 395.5 L 170.5 393.7 L 144.6 386.7 L 120.5 374.8 L 99.1 358.4 L 81.1 338.2 L 67.3 314.9 L 58.3 289.4 L 54.3 262.5 L 55.7 235.5 L 62.3 209.2 L 74.1 184.7 L 90.6 163.0 L 111.2 144.9 L 135.1 131.2 L 161.4 122.3 L 188.9 118.8 L 216.7 120.6 L 243.4 127.8 L 268.2 140.1 L 289.9 156.9 L 307.8 177.6 L 321.2 201.4 L 329.4 227.3 L 332.4 254.3 Z" fill="#2f5d9b" fill-opacity="0.07" stroke="#2f5d9b" stroke-width="1.2" stroke-dasharray="5 4"/>
+<circle cx="526.5" cy="291.5" r="3.5" fill="#8a8a8a"/>
+<circle cx="323.4" cy="235.7" r="3.5" fill="#8a8a8a"/>
+<circle cx="460.8" cy="357.7" r="3.5" fill="#8a8a8a"/>
+<rect x="322.9" y="257.0" width="11" height="11" fill="black"/>
+<text x="338.4" y="254.5" font-size="12" text-anchor="start" font-weight="bold" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Fayetteville, AR</text>
+<circle cx="312.5" cy="331.5" r="3.5" fill="black"/>
+<text x="320.5" y="345.5" font-size="12" text-anchor="start" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Fort Smith, AR</text>
+<circle cx="410.1" cy="246.2" r="3.5" fill="#8a8a8a"/>
+<circle cx="600.0" cy="286.6" r="3.5" fill="#8a8a8a"/>
+<circle cx="469.2" cy="391.1" r="3.5" fill="#8a8a8a"/>
+<circle cx="495.8" cy="440.1" r="3.5" fill="#8a8a8a"/>
+<circle cx="329.5" cy="239.0" r="3.5" fill="#8a8a8a"/>
+<circle cx="408.5" cy="338.4" r="3.5" fill="#8a8a8a"/>
+<circle cx="329.3" cy="251.1" r="3.5" fill="#8a8a8a"/>
+<circle cx="170.7" cy="40.0" r="3.5" fill="#8a8a8a"/>
+<circle cx="80.8" cy="107.9" r="3.5" fill="#8a8a8a"/>
+<circle cx="396.5" cy="210.9" r="3.5" fill="#8a8a8a"/>
+<circle cx="302.3" cy="166.7" r="3.5" fill="black"/>
+<text x="310.3" y="160.7" font-size="12" text-anchor="start" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Joplin, MO</text>
+<circle cx="386.2" cy="207.5" r="3.5" fill="#8a8a8a"/>
+<circle cx="312.1" cy="188.6" r="3.5" fill="#8a8a8a"/>
+<circle cx="396.5" cy="155.3" r="3.5" fill="#8a8a8a"/>
+<circle cx="202.7" cy="265.9" r="3.5" fill="#8a8a8a"/>
+<circle cx="40.0" cy="230.5" r="3.5" fill="#8a8a8a"/>
+<circle cx="235.7" cy="293.8" r="3.5" fill="black"/>
+<text x="227.7" y="307.8" font-size="12" text-anchor="end" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Muskogee, OK</text>
+<circle cx="80.9" cy="341.9" r="3.5" fill="#8a8a8a"/>
+<circle cx="102.6" cy="200.6" r="3.5" fill="#8a8a8a"/>
+<circle cx="101.9" cy="256.8" r="3.5" fill="#8a8a8a"/>
+<rect x="187.7" y="251.6" width="11" height="11" fill="black"/>
+<text x="183.2" y="249.1" font-size="12" text-anchor="end" font-weight="bold" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Tulsa, OK</text>
+<circle cx="220.9" cy="492.0" r="3.5" fill="#8a8a8a"/>
+<circle cx="334.8" cy="512.9" r="5" fill="#b03030"/>
+<text x="342.8" y="516.9" font-size="12" text-anchor="start" font-weight="normal" fill="#b03030" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Texarkana, TX</text>
+<circle cx="239.6" cy="621.0" r="3.5" fill="black"/>
+<text x="247.6" y="625.0" font-size="12" text-anchor="start" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Tyler, TX</text>
+<rect x="34.5" y="669.5" width="11" height="11" fill="black"/>
+<text x="52.0" y="679.0" font-size="11" text-anchor="start" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Warehouse</text>
+<circle cx="140" cy="675.0" r="3.5" fill="#8a8a8a"/>
+<text x="150.0" y="679.0" font-size="11" text-anchor="start" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Customer city</text>
+<path d="M 255 675.0 h 26" stroke="#2f5d9b" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="287.0" y="679.0" font-size="11" text-anchor="start" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">100 miles from a warehouse</text>
+<path d="M 600.0 22.0 l -6 16 l 6 -5 l 6 5 Z" fill="black"/>
+<text x="600.0" y="52.0" font-size="11" text-anchor="middle" font-weight="bold" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">N</text>
+<path d="M 530.9 76.0 v -5 h 69.1 v 5" fill="none" stroke="black" stroke-width="1.2"/>
+<text x="565.4" y="90.0" font-size="11" text-anchor="middle" font-weight="normal" fill="black" stroke="white" stroke-width="3" stroke-linejoin="round" paint-order="stroke">50 miles</text>
+</svg>

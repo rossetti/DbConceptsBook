@@ -1222,38 +1222,22 @@ Manuel D. Rossetti, PhD P.E.
 <span id="cb4-5"><a href aria-hidden="true" tabindex="-1"></a>       (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> quality.inspection)</span>
 <span id="cb4-6"><a href aria-hidden="true" tabindex="-1"></a>           <span class="kw">AS</span> inspections;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-current_user
-</th>
-<th style="text-align:right;">
-customers
-</th>
-<th style="text-align:right;">
-parts
-</th>
-<th style="text-align:right;">
-inspections
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> current_user </th>
+   <th style="text-align:right;"> customers </th>
+   <th style="text-align:right;"> parts </th>
+   <th style="text-align:right;"> inspections </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-dbconcepts_assistant
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:right;">
-20
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> dbconcepts_assistant </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 20 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1367,55 +1351,37 @@ ERROR:  permission denied for table customer</code></pre>
 <span id="cb9-3"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">&#39;distribution&#39;</span></span>
 <span id="cb9-4"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> table_name;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-table_name
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> table_name </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-customer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-customer_order
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-order_line
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-product
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-shipment
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-shipment_line
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-stock_level
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-warehouse
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> customer </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> customer_order </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> order_line </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> product </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> shipment </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> shipment_line </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> stock_level </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> warehouse </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1560,109 +1526,55 @@ warehouse
 <span id="cb15-6"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> c.customer_pk, c.customer_number, c.name</span>
 <span id="cb15-7"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> c.customer_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-customer_number
-</th>
-<th style="text-align:left;">
-name
-</th>
-<th style="text-align:right;">
-orders
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> customer_number </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> orders </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-C-1001
-</td>
-<td style="text-align:left;">
-Riverside Hardware
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1002
-</td>
-<td style="text-align:left;">
-Summit Farm Supply
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1003
-</td>
-<td style="text-align:left;">
-Cedar Creek Home Center
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1004
-</td>
-<td style="text-align:left;">
-Midtown Tool Supply
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1005
-</td>
-<td style="text-align:left;">
-Prairie Garden Center
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1006
-</td>
-<td style="text-align:left;">
-Lakeside Distributors
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1007
-</td>
-<td style="text-align:left;">
-Tri-County Farm and Home
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C-1008
-</td>
-<td style="text-align:left;">
-Northgate Hardware
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> C-1001 </td>
+   <td style="text-align:left;"> Riverside Hardware </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1002 </td>
+   <td style="text-align:left;"> Summit Farm Supply </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1003 </td>
+   <td style="text-align:left;"> Cedar Creek Home Center </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1004 </td>
+   <td style="text-align:left;"> Midtown Tool Supply </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1005 </td>
+   <td style="text-align:left;"> Prairie Garden Center </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1006 </td>
+   <td style="text-align:left;"> Lakeside Distributors </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1007 </td>
+   <td style="text-align:left;"> Tri-County Farm and Home </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-1008 </td>
+   <td style="text-align:left;"> Northgate Hardware </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1705,87 +1617,45 @@ Northgate Hardware
 <span id="cb17-12"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> co.order_number</span>
 <span id="cb17-13"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> co.order_number</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:right;">
-order_total_value
-</th>
-<th style="text-align:right;">
-number_of_shipments
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:right;"> order_total_value </th>
+   <th style="text-align:right;"> number_of_shipments </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-1366.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:right;">
-834.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-2250.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:right;">
-6330.00
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5005
-</td>
-<td style="text-align:right;">
-952.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5006
-</td>
-<td style="text-align:right;">
-3420.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 1366.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:right;"> 834.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 2250.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:right;"> 6330.00 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5005 </td>
+   <td style="text-align:right;"> 952.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5006 </td>
+   <td style="text-align:right;"> 3420.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -1899,108 +1769,52 @@ SO-5006
 <span id="cb18-8"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> o.order_number <span class="op">=</span> <span class="st">&#39;SO-5004&#39;</span></span>
 <span id="cb18-9"><a href aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> ol.line_number, s.shipment_number;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:right;">
-line_number
-</th>
-<th style="text-align:right;">
-quantity
-</th>
-<th style="text-align:right;">
-unit_price
-</th>
-<th style="text-align:left;">
-shipment_number
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> line_number </th>
+   <th style="text-align:right;"> quantity </th>
+   <th style="text-align:right;"> unit_price </th>
+   <th style="text-align:left;"> shipment_number </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-<td style="text-align:left;">
-SH-9004
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-89.00
-</td>
-<td style="text-align:left;">
-SH-9005
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-<td style="text-align:left;">
-SH-9004
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-119.00
-</td>
-<td style="text-align:left;">
-SH-9005
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-79.00
-</td>
-<td style="text-align:left;">
-SH-9004
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-79.00
-</td>
-<td style="text-align:left;">
-SH-9005
-</td>
-</tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:right;"> 89.00 </td>
+   <td style="text-align:left;"> SH-9004 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:right;"> 89.00 </td>
+   <td style="text-align:left;"> SH-9005 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 119.00 </td>
+   <td style="text-align:left;"> SH-9004 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 119.00 </td>
+   <td style="text-align:left;"> SH-9005 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 79.00 </td>
+   <td style="text-align:left;"> SH-9004 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 79.00 </td>
+   <td style="text-align:left;"> SH-9005 </td>
+  </tr>
 </tbody>
 </table>
 </div>
@@ -2028,87 +1842,45 @@ SH-9005
 <h2>January’s orders: compute each total in its own step: the result</h2>
 <div class="cell" data-stage="q" data-result-only="true">
 <div class="book-result">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-order_number
-</th>
-<th style="text-align:right;">
-order_value
-</th>
-<th style="text-align:right;">
-shipments
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> order_number </th>
+   <th style="text-align:right;"> order_value </th>
+   <th style="text-align:right;"> shipments </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-SO-5001
-</td>
-<td style="text-align:right;">
-1366.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5002
-</td>
-<td style="text-align:right;">
-834.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5003
-</td>
-<td style="text-align:right;">
-2250.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5004
-</td>
-<td style="text-align:right;">
-3165.00
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5005
-</td>
-<td style="text-align:right;">
-952.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SO-5006
-</td>
-<td style="text-align:right;">
-3420.00
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> SO-5001 </td>
+   <td style="text-align:right;"> 1366.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5002 </td>
+   <td style="text-align:right;"> 834.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5003 </td>
+   <td style="text-align:right;"> 2250.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5004 </td>
+   <td style="text-align:right;"> 3165.00 </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5005 </td>
+   <td style="text-align:right;"> 952.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SO-5006 </td>
+   <td style="text-align:right;"> 3420.00 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
 </tbody>
 </table>
 </div>

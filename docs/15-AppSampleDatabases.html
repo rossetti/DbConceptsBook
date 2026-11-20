@@ -521,6 +521,12 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./22-AppSpatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Spatial Data in PostgreSQL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -1453,185 +1459,101 @@ Table&nbsp;C.9: Rows in Each Table of Millbrook Transit
 <span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">ALL</span></span>
 <span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">'payment'</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> transit.payment;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="book-result book-result-tall">
-<table class="table table-condensed" style="width: auto !important; ">
-<thead>
-<tr>
-<th style="text-align:left;">
-table_name
-</th>
-<th style="text-align:right;">
-row_count
-</th>
-</tr>
-</thead>
+<table data-quarto-disable-processing="true" class="table table-condensed" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> table_name </th>
+   <th style="text-align:right;"> row_count </th>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-route
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-point
-</td>
-<td style="text-align:right;">
-12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-access_point
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-scheduled_point
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-segment
-</td>
-<td style="text-align:right;">
-15
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-day_of_week
-</td>
-<td style="text-align:right;">
-7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-schedule
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-schedule_day
-</td>
-<td style="text-align:right;">
-18
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-schedule_line
-</td>
-<td style="text-align:right;">
-22
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-vehicle
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-driver
-</td>
-<td style="text-align:right;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-assignment
-</td>
-<td style="text-align:right;">
-33
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-route_traversal
-</td>
-<td style="text-align:right;">
-450
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-point_traversal
-</td>
-<td style="text-align:right;">
-2700
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mailing_address
-</td>
-<td style="text-align:right;">
-24
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-person
-</td>
-<td style="text-align:right;">
-36
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-account
-</td>
-<td style="text-align:right;">
-8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-smart_card
-</td>
-<td style="text-align:right;">
-40
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-trip
-</td>
-<td style="text-align:right;">
-339
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-payment
-</td>
-<td style="text-align:right;">
-5
-</td>
-</tr>
+  <tr>
+   <td style="text-align:left;"> route </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> point </td>
+   <td style="text-align:right;"> 12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> access_point </td>
+   <td style="text-align:right;"> 10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> scheduled_point </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> segment </td>
+   <td style="text-align:right;"> 15 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> day_of_week </td>
+   <td style="text-align:right;"> 7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> schedule </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> schedule_day </td>
+   <td style="text-align:right;"> 18 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> schedule_line </td>
+   <td style="text-align:right;"> 22 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> vehicle </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> driver </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> assignment </td>
+   <td style="text-align:right;"> 33 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> route_traversal </td>
+   <td style="text-align:right;"> 450 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> point_traversal </td>
+   <td style="text-align:right;"> 2700 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> mailing_address </td>
+   <td style="text-align:right;"> 24 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> person </td>
+   <td style="text-align:right;"> 36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> account </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> smart_card </td>
+   <td style="text-align:right;"> 40 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> trip </td>
+   <td style="text-align:right;"> 339 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> payment </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
 </tbody>
 </table>
 </div>
 </div>
 </figure>
 </div>
-<p>To load the database, create a database named <code>dbconcepts_transit</code> (or use any database of your own) and run two scripts from <code>code/sql/transit/</code> in order: <code>t-schema.sql</code>, which creates the <code>transit</code> schema and its tables, and <code>t-data.sql</code>, which loads the week. The second is generated by <code>scripts/build-transit-data.py</code> from a seeded random number generator, so it is the same on every machine. Running the first again deletes and recreates the schema.</p>
+<p>To load the database, create a database named <code>dbconcepts_transit</code> (or use any database of your own) and run two scripts from <code>code/sql/transit/</code> in order: <code>t-schema.sql</code>, which creates the <code>transit</code> schema and its tables, and <code>t-data.sql</code>, which loads the week. The second is generated by <code>scripts/build-transit-data.py</code> from a seeded random number generator, so it is the same on every machine. Running the first again deletes and recreates the schema. The appendix on spatial data (<a href="22-AppSpatial.html" class="quarto-xref"><span>Appendix J</span></a>) adds a location column to <code>transit.point</code> with a script of its own, which a reload removes.</p>
 </section>
 <section id="sec-appsampledbs-public" class="level2" data-number="C.11">
 <h2 data-number="C.11" class="anchored" data-anchor-id="sec-appsampledbs-public"><span class="header-section-number">C.11</span> Public sample databases for further practice</h2>
